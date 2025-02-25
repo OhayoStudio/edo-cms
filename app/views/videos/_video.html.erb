@@ -1,0 +1,29 @@
+<div id="<%= dom_id video %>">
+  <!-- <p class="my-5">
+    <strong class="block font-medium mb-1">Title v:</strong>
+    <%= video.title %>
+  </p> -->
+
+  <!-- <div class="my-5">
+    <strong class="block font-medium mb-1">Image:</strong>
+    <%= image_tag rails_blob_url(video.featured_image), class: "w-full h-96
+    object-cover" if video.featured_image.attached? %>
+  </div> -->
+
+  <!-- add the ability to play the video from the video.url in a player -->
+  <div class="relative pb-9-16">
+    <!-- get video_id from video.url -->
+    <% video_id = video.url.split("v=")[1] %>
+    <iframe class="absolute w-full h-full" src="https://www.youtube-nocookie.com/embed/<%= video_id %>?modestbranding=1" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+
+  <p class="my-5">
+    <%= video.description %>
+  </p>
+</div>
+
+<style>
+  .pb-9-16 {
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  }
+</style>

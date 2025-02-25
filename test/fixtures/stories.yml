@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  slug: MyString
+  is_published: false
+  published_at: 2025-02-22 09:57:54
+  storyable: one
+  storyable_type: Storyable
+
+two:
+  slug: MyString
+  is_published: false
+  published_at: 2025-02-22 09:57:54
+  storyable: two
+  storyable_type: Storyable

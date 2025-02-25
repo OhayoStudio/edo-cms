@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      <%= content_for(:title) || "Edo" %>
+    </title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest" , href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon.png" />
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    </script>
+  </head>
+
+  <body class="bg-gray-200 dark:bg-slate-800" data-controller="dark-mode">
+    <header class="bg-slate-900 shadow dark:bg-slate-900 hidden sm:block">
+      <nav class="container px-16 mx-auto flex items-center justify-between">
+        <a href="/" class="text-white text-lg font-serif">Le Webogon</a>
+
+        <ul class="flex gap-8">
+          <li class="p-6">
+            <%= link_to "Articles", articles_path, class: "text-red-400 hover:text-yellow-300 #{current_page?(articles_path) ? 'text-red-400' : 'text-white'}" %>
+          </li>
+          <!-- <li class="p-6">
+            <%= link_to "Authors", authors_path, class: "hover:text-yellow-300 #{current_page?(authors_path) ? 'text-red-400' : 'text-white'}" %>
+          </li> -->
+          <li class="p-6">
+            <%= link_to "Videos", videos_path, class: "text-red-400 hover:text-yellow-300 #{current_page?(videos_path) ? 'text-red-400' : 'text-white'}" %>
+          </li>
+          <li class="p-6">
+            <a href="/about" class="text-white hover:text-yellow-300">About</a>
+            <%#= link_to "About" , authors_path, class: "hover:text-yellow-300  #{current_page?(about_path) ? 'text-red-400' : 'text-white'}" %>
+          </li>
+          <li class="p-4">
+            <%= render "common/darkmode_toggle" %>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <header class="bg-slate-900 shadow dark:bg-slate-900 block sm:hidden">
+      <div class="flex items-center justify-between p-4">
+        <div class="text-white">Le Webogon</div>
+        <button id="hamburger" class="text-white focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+          </svg>
+        </button>
+      </div>
+      <nav id="mobile-menu" class="hidden">
+        <!-- existing code for the list -->
+        <ul class="flex gap-8">
+          <li class="p-6">
+            <%= link_to "Articles", articles_path, class: "text-red-400 hover:text-yellow-300 #{current_page?(articles_path) ? 'text-red-400' : 'text-white'}" %>
+          </li>
+          <li class="p-6">
+            <%= link_to "Videos", videos_path, class: "text-red-400 hover:text-yellow-300 #{current_page?(videos_path) ? 'text-red-400' : 'text-white'}" %>
+          </li>
+          <!-- <li class="p-6">
+            <%= link_to "Authors", authors_path, class: "hover:text-yellow-300 #{current_page?(authors_path) ? 'text-red-400' : 'text-white'}" %>
+          </li> -->
+          <li class="p-6">
+            <a href="/about" class="text-white hover:text-yellow-300">About</a>
+            <%#= link_to "About" , authors_path, class: "hover:text-yellow-300  #{current_page?(about_path) ? 'text-red-400' : 'text-white'}" %>
+          </li>
+          <li class="p-4">
+            <%= render "common/darkmode_toggle" %>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    
+    <div class="py-8">
+      <h1 class="text-center text-gray-400 font-serif text-6xl">
+        Le Webogon
+      </h1>
+    </div>
+    <main class="container mx-auto mt-2 px-5 flex">
+      <%= yield %>
+    </main>
+    <footer class="bg-gray-100 py-8">
+      <div class="container mx-auto text-center text-gray-600">
+        <p>&copy; 2025 Edo. All rights reserved.</p>
+      </div>
+    </footer>
+    <script>
+      document.getElementById('hamburger').addEventListener('click', function() {
+      console.log('hamburger clicked');
+      var menu = document.getElementById('mobile-menu');
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+      } else {
+        menu.classList.add('hidden');
+      }
+    });
+    </script>
+  </body>
+</html>

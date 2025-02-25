@@ -1,0 +1,54 @@
+<div id="<%= dom_id author %>">
+  <p class="my-5">
+    <strong class="block font-medium mb-1">First name:</strong>
+    <%= author.first_name %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Last name:</strong>
+    <%= author.last_name %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Email:</strong>
+    <%= author.email %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Bio:</strong>
+    <%= author.bio %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Website:</strong>
+    <%= author.website %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Avatar:</strong>
+    <%= link_to author.avatar.filename, author.avatar if author.avatar.attached? %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Slug:</strong>
+    <%= author.slug %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Twitter handle:</strong>
+    <%= author.twitter_handle %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Linkedin url:</strong>
+    <%= author.linkedin_url %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Github username:</strong>
+    <%= author.github_username %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Status:</strong>
+    <%= author.status %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Role:</strong>
+    <%= author.role %>
+  </p>
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Deleted at:</strong>
+    <%= author.deleted_at %>
+  </p>
+</div>

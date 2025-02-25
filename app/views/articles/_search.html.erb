@@ -1,0 +1,6 @@
+<%= form_with url: articles_path, method: :get, class: "mt-5" do |f| %>
+<div class="flex gap-2 align-items-center w-full">
+    <%= f.text_field :search, class: "bg-white block shadow rounded-sm outline-none px-3 py-2 w-full", placeholder: "Search articles" %>
+    <%= f.submit "Search", class: "rounded-md px-3.5 py-2.5 bg-yellow-400 hover:bg-yellow-700 text-black block font-medium" %>
+</div>
+<% end %>
