@@ -16,32 +16,30 @@ class PinterestController < ApplicationController
     # redirect_to Pinterest.authorization_url
     # retrieve access token
 
-		puts "================== Params =================="
-		puts params.inspect
+    puts "================== Params =================="
+    puts params.inspect
 
-		puts "================== Code =================="
-		code = params[:code]
+    puts "================== Code =================="
+    code = params[:code]
     puts code
-		puts "================== End =================="
+    puts "================== End =================="
 
-		render json: { code: code, params: params.inspect.to_json }
+    render json: { code: code, params: params.inspect.to_json }
 
     # store access token
 
-		# session[:access_token] = access_token
+    # session[:access_token] = access_token
     # redirect_to root_path
-	end
+  end
 
-	def callback
+  def callback
+    puts "================== Params =================="
+    puts params.inspect
 
-		puts "================== Params =================="
-		puts params.inspect
-
-		puts "================== Code =================="
-		code = params[:code]
-		puts code
-		puts "================== End =================="
-		render json: { code: code, params: params.inspect.to_json }
-	end
-
+    puts "================== Code =================="
+    code = params[:code]
+    puts code
+    puts "================== End =================="
+    render json: { code: code, params: params.inspect.to_json }
+  end
 end

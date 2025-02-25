@@ -7,7 +7,7 @@ class StoriesController < ApplicationController
     @stories = Story.where(is_published: true)
                     .where.not(slug: nil)
                     .order(created_at: :desc)
-                    # .page(params[:page])
+    # .page(params[:page])
 
     @videos = Video.all
 

@@ -27,5 +27,5 @@ class Video < ApplicationRecord
 
     def thumbnail_url
         Rails.application.routes.url_helpers.rails_representation_url(thumbnail, only_path: true)
-    end        
+    end
 end

@@ -65,7 +65,6 @@ class VideosController < ApplicationController
     def set_video
       # @video = Video.find(params.expect(:id))
       @video = Video.friendly.find(params.expect(:id))
-
     end
 
     # Only allow a list of trusted parameters through.

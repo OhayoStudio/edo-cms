@@ -5,14 +5,14 @@ class Article < ApplicationRecord
   # Active Storage and Action Text
   has_rich_text :content
   has_one_attached :featured_image
-  
+
   # Relationships
   belongs_to :author
   belongs_to :category
   has_and_belongs_to_many :tags
 
   # Enums
-  enum :status, %i(draft review published archived)
+  enum :status, %i[draft review published archived]
 
   # Validations
   validates :title, presence: true, length: { minimum: 5, maximum: 200 }
@@ -27,12 +27,12 @@ class Article < ApplicationRecord
   # validates :featured_image, content_type: %i(png jpg jpeg), size: { less_than: 5.megabytes }
 
 
-  
+
   # Callbacks
   before_validation :generate_slug
   before_save :calculate_reading_time
   after_initialize :set_default_status, if: :new_record?
-  
+
   # Scopes
   scope :not_deleted, -> { where(deleted_at: nil) }
   scope :published, -> { where.not(published_at: nil).where(status: :published) }

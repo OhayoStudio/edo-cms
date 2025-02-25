@@ -6,23 +6,23 @@ class Author < ApplicationRecord
   has_many :articles, dependent: :nullify
 
   # Enums
-  enum :status, %i(active inactive)
+  enum :status, %i[active inactive]
 
 
-  enum :role, %i(
+  enum :role, %i[
     writer
     editor
     admin
-    )
+    ]
 
   # Validations
   validates :first_name, presence: true
   validates :last_name, presence: true
-  validates :email, presence: true, 
+  validates :email, presence: true,
                    uniqueness: true,
                    format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :slug, presence: true, uniqueness: true
-  validates :website, format: { with: URI::DEFAULT_PARSER.make_regexp }, 
+  validates :website, format: { with: URI::DEFAULT_PARSER.make_regexp },
                      allow_blank: true
 
   # Callbacks
