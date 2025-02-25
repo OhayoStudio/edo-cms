@@ -1,0 +1,15 @@
+<!-- filepath: app/views/stories/_top_story.html.erb -->
+<% if story.storyable.respond_to?(:featured_image) && story.storyable.featured_image.attached? %>
+<div class="border-b-2 border-gray-600 pb-4 mb-8">
+  <%= link_to story.storyable, class:"group" do %>
+    <%= image_tag story.storyable.featured_image, class: "w-full h-96 object-cover rounded-sm" %>
+    <h1 class="text-6xl font-serif font-bold group-hover:text-gray-500"><%= story.storyable.title %></h1>
+    <p class="text-3xl group-hover:text-gray-500">
+        <%= story.storyable.subtitle %>
+    </p>
+    <p class="group-hover:underline">
+        <%= story.storyable.excerpt %>
+    </p>
+  <% end %>
+</div>
+<% end %>

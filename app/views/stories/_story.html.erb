@@ -1,0 +1,14 @@
+<div class="rounded-sm overflow-hidden bg-white dark:bg-gray-800 dark:text-gray-300">
+  <% if story.storyable.respond_to?(:featured_image) && story.storyable.featured_image.attached? %>
+    <%= link_to story.storyable, class:"group" do %>
+      <%= image_tag story.storyable.featured_image, class: "w-full h-48 object-cover filter grayscale-50 transition-all duration-300 inline max-w-full group-hover:filter-none group-hover:scale-105" %>
+      <h1 class="text-xl font-serif font-bold group-hover:text-gray-500 px-4 py-2"><%= story.storyable.title %></h1>
+      <p class="text-xl group-hover:text-gray-500 px-4 py-1">
+          <%= story.storyable.try(:subtitle)%>
+      </p>
+      <p class="group-hover:underline p-4">
+          <%= story.storyable.try(:excerpt) ||  story.storyable.try(:description)%>...
+      </p>
+    <% end %>
+  <% end %>
+</div>

@@ -1,0 +1,48 @@
+<div class="grid grid-cols-1 md:grid-cols-5 overflow-hidden my-8">
+    <div class="col-span-2">
+        <!-- the feature image of the article linked to the article -->
+        <div class="">
+            <%= link_to article_path(article.slug) do %>
+                <%= image_tag rails_blob_url(article.featured_image), class: "w-full h-56 object-cover"  if article.featured_image.attached? %>
+            <% end %>
+        </div>
+    </div>
+    <div class="col-span-3">
+        <div id="articles" class="min-w-full">
+            <article class="max-w-6xl mx-auto">
+                <div class="sm:p-0 sm:pt-4 md:p-4 md:pt-0">
+                    <!-- <div class="flex items-center gap-2 mb-4">
+                        <span class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded-full">
+                            <%= link_to article.category.slug, category_path(article.category), class: "px-3 py-1 text-sm font-medium" %>
+                        </span>
+                    </div> -->
+
+                    <h1 class="text-2xl font-bold text-gray-900 mb-4 font-serif dark:text-gray-300">
+                        <%= link_to article_path(article.slug) do %>
+                        <%= article.title %>
+                        <% end %>
+                    </h1>
+
+                    <p class="text-gray-600 mb-6 dark:text-gray-300">
+                        <!-- link to article around excerpt -->
+                        <%= link_to article_path(article.slug) do %>
+                            <%= article.excerpt %>...
+                        <% end %>
+                        
+                    </p>
+
+                    <!-- <p>
+                        <%= link_to "Read", article, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+                    </p> -->
+
+                    <!-- <div class="flex items-center gap-2 mb-4">
+                        <span class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded-full">
+                            <%#= link_to article.tags.slug, tagsy_path(article.tags), class: "px-3 py-1 text-sm font-medium" %>
+                        </span>
+                    </div> -->
+
+                </div>
+            </article>
+        </div>
+    </div>
+</div>

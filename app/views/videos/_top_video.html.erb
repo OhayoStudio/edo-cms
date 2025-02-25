@@ -1,0 +1,15 @@
+<!-- filepath: app/views/stories/_top_videol.erb -->
+<% if video.respond_to?(:featured_image) && video.featured_image.attached? %>
+<div class="border-b-2 border-gray-600 pb-4 mb-8">
+  <%= link_to video, class:"group" do %>
+    <%= image_tag video.featured_image, class: "w-full h-96 object-cover rounded-sm" %>
+    <h1 class="text-6xl font-serif font-bold group-hover:text-gray-500"><%= video.title %></h1>
+    <p class="text-3xl group-hover:text-gray-500">
+        <%= video.description %>
+    </p>
+    <!-- <p class="group-hover:underline">
+        <%= video.excerpt %>
+    </p> -->
+  <% end %>
+</div>
+<% end %>
