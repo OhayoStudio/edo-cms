@@ -1,43 +1,52 @@
-<% content_for :title, "Stories" %>
+<div>
+  <div class="w-full">
+    <div id="stories" class="min-w-full dark:text-gray-300 mb-16">
+      <% if @top_story %>
+      <%= render partial:'stories/top_story', locals: { story: @top_story }%>
+      <% end %>
 
-<div class="w-full">
-  <% if notice.present? %>
-  <p
-    class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block"
-    id="notice"
-  >
-    <%= notice %>
-  </p>
-  <% end %>
-
-  <div id="stories" class="min-w-full dark:text-gray-300">
-    <% if @stories.any? %>
-    <!-- Display first Story with is_top = true as top anchored story with a large photo -->
-    <% if @stories.where(is_top: true).any? %> <%= render partial:
-    'stories/top_story', locals: { story: @stories.where(is_top: true).first }
-    %> <% end %>
-
-    <!-- Display all other stories -->
-    <div class="border-b-2 border-gray-600 pb-4 mb-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <% @stories.where.not(is_top: true).each do |story| %>
-        <%= render story %>
-        <% end %>
+      <!-- Display all other stories -->
+      <div id="recent_stories" class="container min-w-full dark:text-gray-300 mx-auto pt-4">
+        <h2 class="md:mt-2 text-4xl font-bold font-serif mb-8 pl-4">Recent Stories</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 m-4">
+          <% @recent_stories.each do |story| %>
+          <%= render story %>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Display an horizontal carousel of the stories that are videos only -->
-  <% if @videos.any? %>
-  <div class="border-b-2 border-gray-600 pb-4 mb-8">
-    <h2 class="text-4xl font-serif font-bold mb-4">Videos</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      <% @videos.each do |video| %>
-      <%= render video %>
-      <% end %>
+    <!-- Display an horizontal carousel of the stories that are videos only -->
+    <% if @videos.any? %>
+    <div id="videos" class="min-w-full dark:text-gray-300 dark:bg-gray-900 text-gray-300 bg-slate-900 p-4">
+      <h2 class="text-4xl font-serif font-bold mb-8 pl-2 pt-4">Videos</h2>
+      <div class="flex flex-col md:flex-row gap-4">
+      <!-- render Videos Component here under -->
+      <%= render VideosComponent.new(videos: @videos)%>
+      </div>
+    </div>
+    <% end %>
+
+    <div id="latest_stories_by_category" class="min-w-full dark:text-gray-300 mt-8">
+      <!-- Display all other stories -->
+      <h2 class="text-4xl font-bold font-serif m-4">Categories</h2>
+      <div class="pb-4 m-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <% @latest_stories_by_category.each do |story| %>
+          <div class="mt-8">
+            <span class="category_name bg-slate-900 text-white p-2 font-medium">
+              <%= link_to story.storyable.try(:category).try(:name), category_path(story.storyable.try(:category)) %>
+            </span>
+            <%= render story %>
+          </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <%#= render InstagramComponent.new %>
     </div>
   </div>
-  <% end %>
 </div>
 
-<% end %>
