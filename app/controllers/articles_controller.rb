@@ -8,17 +8,12 @@ class ArticlesController < ApplicationController
     @articles = @articles.featured if params[:featured].present?
     @articles = @articles.where(category_id: params[:category_id]) if params[:category_id].present?
     @articles = @articles.where(author_id: params[:author_id]) if params[:author_id].present?
-    @articles = @articles.where("title ILIKE ?", "%#{params[:q]}%") if params[:q].present?
-    @articles = @articles.order(published_at: :desc)
+    @articles = @articles.where("title ILIKE ?", "%#{params[:search]}%") if params[:search].present?
+    @articles = @articles.order(published_at: :desc).page(params[:page])
 
     # @articles = @articles.page(params[:page]).per(10)
     @categories = Category.all
     @authors = Author.all
-
-    # respond_to do |format|
-    #   format.html
-    #   format.json { render json: @articles }
-    # end
   end
 
   # GET /articles/1 or /articles/1.json
@@ -41,7 +36,14 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       if @article.save
         # create storyable from @article
-        Story.create(storyable: @article, slug: @article.slug, is_published: false)
+        Story.create(storyable: @article,
+                     slug: @article.slug,
+                     is_published: @article.published_at.present?,
+                     published_at: @article.published_at,
+                     is_top: @article.featured)
+
+       
+        generate_tags(@article)
 
         format.html { redirect_to @article, notice: "Article was successfully created." }
         format.json { render :show, status: :created, location: @article }
@@ -56,6 +58,7 @@ class ArticlesController < ApplicationController
   def update
     respond_to do |format|
       if @article.update(article_params)
+        generate_tags(@article)
         format.html { redirect_to @article, notice: "Article was successfully updated." }
         format.json { render :show, status: :ok, location: @article }
       else
@@ -78,11 +81,25 @@ class ArticlesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_article
-      @article = Article.friendly.find(params.expect(:id))
+      @article = Article.friendly.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def article_params
-      params.expect(article: [ :title, :subtitle, :content, :excerpt, :meta_description, :meta_keywords, :featured, :featured_image, :author_id, :category_id, :reading_time, :view_count, :status, :slug, :published_at ])
+      params.require(:article).permit(:title, :subtitle, :content, :excerpt, :meta_description, :meta_keywords, :featured, :featured_image, :author_id, :category_id, :reading_time, :view_count, :status, :slug, :published_at)
+    end
+
+    def generate_tags(article)
+      #  from comma separated string to array for meta_keywords
+      meta_keywords = article.meta_keywords.split(",").map(&:strip)
+
+      #  keep unique tags
+      meta_keywords.uniq!
+
+      #  for each tag in meta_keywords, create a tag if it doesn't exist
+      meta_keywords.each do |name|
+        tagg = Tag.find_or_create_by(name: name)
+        ArticlesTag.find_or_create_by(article_id: article.id, tag_id: tagg.id)
+      end
     end
 end

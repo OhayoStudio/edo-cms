@@ -2,6 +2,9 @@ class Article < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: :slugged
 
+  paginates_per 3
+  max_paginates_per 3
+
   # Active Storage and Action Text
   has_rich_text :content
   has_one_attached :featured_image
@@ -18,15 +21,13 @@ class Article < ApplicationRecord
   validates :title, presence: true, length: { minimum: 5, maximum: 200 }
   validates :slug, presence: true, uniqueness: true
   validates :meta_description, length: { maximum: 160 }
-  validates :excerpt, length: { maximum: 500 }
+  validates :excerpt, length: { maximum: 150 }
   validates :content, presence: true
   validates :reading_time, numericality: { only_integer: true, greater_than: 0 }
   # validates :view_count, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :status, presence: true
   validates :published_at, presence: true, if: -> { status == :published }
   # validates :featured_image, content_type: %i(png jpg jpeg), size: { less_than: 5.megabytes }
-
-
 
   # Callbacks
   before_validation :generate_slug

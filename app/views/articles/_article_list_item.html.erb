@@ -1,48 +1,62 @@
 <div class="grid grid-cols-1 md:grid-cols-5 overflow-hidden my-8">
-    <div class="col-span-2">
-        <!-- the feature image of the article linked to the article -->
-        <div class="">
+  <div class="col-span-2">
+    <!-- the feature image of the article linked to the article -->
+    <div class="">
+      <%= link_to article_path(article.slug) do %>
+      <%= image_tag rails_blob_url(article.featured_image), class: "w-full h-56 object-cover" if article.featured_image.attached? %>
+      <% end %>
+    </div>
+  </div>
+  <div class="col-span-3">
+    <div id="articles" class="min-w-full">
+      <article class="max-w-6xl mx-auto">
+        <div class="p-2 pt-2 md:p-4 md:pt-0">
+          <h1 class="text-2xl font-bold text-gray-900 mb-4 lora dark:text-gray-300">
             <%= link_to article_path(article.slug) do %>
-                <%= image_tag rails_blob_url(article.featured_image), class: "w-full h-56 object-cover"  if article.featured_image.attached? %>
+            <%= article.title %>
             <% end %>
+          </h1>
+
+          <p class="text-gray-600 mb-6 dark:text-gray-300 lora text-2md">
+            <%= link_to article_path(article.slug) do %>
+            <%= article.excerpt %>...
+            <% end %>
+          </p>
+
+          <div class=" md:pt-0 max-w-screen-lg">
+            <div class="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-gray-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                />
+              </svg>
+              <div class="flex flex-wrap gap-2">
+                <% article.tags.each do |tag| %>
+                  <!-- if current tag is in list make it red -->
+                  <% if tag.slug == params[:id] %>
+                  <span class="px-3 py-1 text-sm text-red-600 bg-gray-100 rounded-full">
+                    <%= link_to tag.name, tag_path(tag.slug) %>
+                  </span>
+                  <% else %>
+                  <span class="px-3 py-1 text-sm text-gray-600 bg-gray-100 rounded-full">
+                    <%= link_to tag.name, tag_path(tag.slug) %>
+                  </span>
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
         </div>
+      </article>
     </div>
-    <div class="col-span-3">
-        <div id="articles" class="min-w-full">
-            <article class="max-w-6xl mx-auto">
-                <div class="sm:p-0 sm:pt-4 md:p-4 md:pt-0">
-                    <!-- <div class="flex items-center gap-2 mb-4">
-                        <span class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded-full">
-                            <%= link_to article.category.slug, category_path(article.category), class: "px-3 py-1 text-sm font-medium" %>
-                        </span>
-                    </div> -->
-
-                    <h1 class="text-2xl font-bold text-gray-900 mb-4 font-serif dark:text-gray-300">
-                        <%= link_to article_path(article.slug) do %>
-                        <%= article.title %>
-                        <% end %>
-                    </h1>
-
-                    <p class="text-gray-600 mb-6 dark:text-gray-300">
-                        <!-- link to article around excerpt -->
-                        <%= link_to article_path(article.slug) do %>
-                            <%= article.excerpt %>...
-                        <% end %>
-                        
-                    </p>
-
-                    <!-- <p>
-                        <%= link_to "Read", article, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-                    </p> -->
-
-                    <!-- <div class="flex items-center gap-2 mb-4">
-                        <span class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded-full">
-                            <%#= link_to article.tags.slug, tagsy_path(article.tags), class: "px-3 py-1 text-sm font-medium" %>
-                        </span>
-                    </div> -->
-
-                </div>
-            </article>
-        </div>
-    </div>
+  </div>
 </div>

@@ -1,46 +1,36 @@
 <!-- Article Show View Preview -->
 <article
-  class="mx-auto bg-white rounded-sm shadow-lg overflow-hidden my-8"
+  class="mx-auto bg-gray-200 md:rounded-sm shadow-lg overflow-hidden dark:text-gray-300 dark:bg-gray-800"
 >
   <!-- add featured_image here -->
   <div class="">
-    <!-- <img src="/api/placeholder/800/400" class="w-full h-96 object-cover" /> -->
-    <%= image_tag rails_blob_url(article.featured_image), class: "w-full h-96
-    object-cover" if article.featured_image.attached? %>
+    <%= image_tag rails_blob_url(article.featured_image), class: "w-full h-full object-cover" if article.featured_image.attached? %>
   </div>
 
-  <div class="flex dark:text-gray-300 dark:bg-gray-800 grid grid-cols-1 md:grid-cols-3">
-  <div class="col-span-2">
-    <div class="p-8">
-      <div class="flex items-center gap-2 mb-4">
-        <span
-          class="px-3 py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded-full"
-        >
-          <!-- <%= article.category.name %> -->
-          <%= link_to article.category.slug, category_path(article.category),
-          class: "px-3 py-1 text-sm" %>
-        </span>
+  <div class="dark:text-gray-300 dark:bg-gray-800">
+    <div class="md:p-8 md:pt-0 padding-action-text text-lg lora max-w-screen-lg mx-auto">
+      <div class="p-8 flex flex-col justify-center items-center">
+
+        <div class="flex flex-col md:flex-row md:justify-between items-center gap-4 mb-4 w-full">
+          <div id="title" class="w-full">
+            <span class="py-1 text-sm font-medium text-gray-600 bg-gray-50 rounded-full">
+              <%= link_to article.category.slug, category_path(article.category), class: "px-3 py-1 text-sm" %>
+            </span>
+            <h1 class="text-4xl font-bold text-gray-900 lora dark:text-gray-300 mt-8">
+              <%= article.title %>
+            </h1>
+      
+            <p class="text-xl text-gray-600 mb-2 dark:text-gray-200 lora"><%= article.subtitle %></p>
+          </div>
+          <div id="search" class="mt-4 md:mt-10">
+            <%= render "articles/search" %>
+          </div>
+        </div>
       </div>
-
-      <h1 class="text-4xl font-bold text-gray-900 mb-4 font-serif dark:text-gray-300">
-        <%= article.title %>
-      </h1>
-
-      <p class="text-xl text-gray-600 mb-6 dark:text-gray-200"><%= article.subtitle %></p>
+      <%= article.content %>
     </div>
-
-    <div class="px-8 pb-8">
-      <div class="prose prose-lg max-w-none">
-        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-      -->
-        <%= article.content %>
-      </div>
-    </div>
-
-    <div class="flex items-center gap-6 mb-8 ml-8">
+    <!-- <div class="flex items-center gap-6 m-4">
       <div class="flex items-center gap-3">
-        <!-- <img src="/api/placeholder/48/48" class="w-12 h-12 rounded-full object-cover" /> -->
         <%= image_tag rails_blob_url(article.author.avatar), class: "w-12 h-12
         rounded-full object-cover" %>
         <div>
@@ -62,22 +52,14 @@
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <!-- February 3, 2024 -->
             <%= article.published_at.strftime("%B %d, %Y") %>
           </div>
         </div>
       </div>
-    </div>
-    
+    </div> -->
   </div>
 
-  <div class="col-span-1 m-4 mt-20">
-    <%= render "articles/search" %>
-  </div>
-</div>
-  
-
-  <div class="px-8 pb-8 border-t border-gray-100 mt-8 pt-8">
+  <div class="md:p-8 md:pt-0 max-w-screen-lg mx-auto">
     <div class="flex items-center gap-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -94,15 +76,11 @@
         />
       </svg>
       <div class="flex flex-wrap gap-2">
-        <span class="px-3 py-1 text-sm text-gray-600 bg-gray-100 rounded-full"
-          >Ruby</span
-        >
-        <span class="px-3 py-1 text-sm text-gray-600 bg-gray-100 rounded-full"
-          >Rails</span
-        >
-        <span class="px-3 py-1 text-sm text-gray-600 bg-gray-100 rounded-full"
-          >Web Development</span
-        >
+        <% article.tags.each do |tag| %>
+        <span class="px-3 py-1 text-sm text-gray-600 bg-gray-100 rounded-full">
+          <%= link_to tag.name, tag_path(tag.slug), class: "text-gray-600" %>
+        </span>
+        <% end %>
       </div>
     </div>
   </div>
