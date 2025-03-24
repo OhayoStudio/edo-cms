@@ -8,6 +8,10 @@ class TagsController < ApplicationController
 
   # GET /tags/1 or /tags/1.json
   def show
+    @articles = @tag.articles.published.page(params[:page])
+    @tags = Tag.all
+    @categories = Category.all
+    render "articles/index"
   end
 
   # GET /tags/new
@@ -60,7 +64,7 @@ class TagsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_tag
-      @tag = Tag.find(params.expect(:id))
+      @tag = Tag.friendly.find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.
