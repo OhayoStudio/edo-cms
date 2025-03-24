@@ -42,3 +42,6 @@
 /config/secrets.yml
 /config/pinterest.yml
 
+# vscode
+.vscode
+.vscode/*

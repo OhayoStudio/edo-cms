@@ -3,25 +3,24 @@ class StoriesController < ApplicationController
 
   # GET /stories or /stories.json
   def index
-   
     @top_story = Story.published.recent.with_slug.top.first
     @recent_stories = Story.published.recent.with_slug
-    @recent_stories = (@recent_stories - [@top_story]).first(4)
+    @recent_stories = (@recent_stories - [ @top_story ]).first(4)
 
     @videos = Video.all.order(created_at: :desc).limit(4)
 
     categories_with_articles = Category.joins(:articles).distinct
     @latest_stories_by_category = []
-    
+
     categories_with_articles.each do |category|
       # Find the most recent story for each category
       latest_story = Story.joins("INNER JOIN articles ON stories.storyable_id = articles.id")
-                          .where(storyable_type: 'Article', 
+                          .where(storyable_type: "Article",
                                 is_published: true,
                                 articles: { category_id: category.id })
                           .order(published_at: :desc)
                           .first
-      
+
       @latest_stories_by_category << latest_story if latest_story
     end
 

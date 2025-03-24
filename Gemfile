@@ -44,8 +44,8 @@ gem "image_processing", "~> 1.2"
 
 # Added by Jerome:
 gem "friendly_id"
-gem 'httparty'
-gem 'kaminari'
+gem "httparty"
+gem "kaminari"
 gem "rails-pinterest"
 gem "view_component"
 
