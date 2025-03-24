@@ -1,1 +1,139 @@
 @import "tailwindcss";
+
+@layer base {
+  .lora {
+    font-family: "Lora", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    @media screen and (max-width: 640px) {
+      font-weight: 500;
+    }
+  }
+
+  ul {
+    list-style-position: outside !important;
+    list-style-image: none !important;
+    list-style-type: circle !important;
+  }
+  
+  ol {
+    list-style-position: outside !important;
+    list-style-image: none !important;
+    list-style-type: decimal !important;
+  }
+
+  .trix-content {
+    font-family: "Lora", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    /* on smartphone makes the font heavier */
+    /* @screen sm { */
+    @media screen and (max-width: 640px) {
+      font-weight: 500;
+    }
+    a {
+      text-decoration: underline;
+    }
+    a:hover {
+      color: #294766;
+    }
+  }
+
+  .pagination {
+    margin: auto;
+    a {
+      text-decoration: dotted underline;
+    }
+  }
+}
+
+@layer theme {
+  /* This is the default theme configuration. */
+  /* You can customize the theme by adding your own configuration here. */
+  /* See https://tailwindcss.com/docs/configuration for more options. */
+  /* */
+  /* For example, to change the primary color to blue, you would add: */
+  /* */
+  /* colors: { */
+  /*   primary: 'blue', */
+  /* } */
+  /* */
+  /* This would change the primary color to blue. */
+  /* */
+  /* You can also add new configuration options, such as: */
+  /* */
+  /* extend: { */
+  /*   spacing: { */
+  /*     '72': '18rem', */
+  /*   } */
+  /* } */
+  /* */
+  /* This would add a new spacing option to the spacing configuration. */
+  /* */
+  /* For more information, see: */
+  /* https://tailwindcss.com/docs/configuration */
+  
+   /* set up colors for dark mode here under */
+  
+  /* .dark {
+    background-color: #294766;
+    color: #f8f8f8;
+    a {
+      color: #f8f8f8;
+    }
+    a:hover {
+      color: #f8f8f8;
+    }
+    .pagination {
+      a {
+        color: #f8f8f8;
+      }
+    }
+  }
+
+  .light {
+    background-color: #f8f8f8;
+    color: #294766;
+    a {
+      color: #294766;
+    }
+    a:hover {
+      color: #294766;
+    }
+    .pagination {
+      a {
+        color: #294766;
+      }
+    }
+  } */
+}
+
+@layer utilities {
+  /* This is the default utilities configuration. */
+  /* You can customize the utilities by adding your own configuration here. */
+  /* See https://tailwindcss.com/docs/configuration for more options. */
+  /* */
+  /* For example, to add a new utility, you would add: */
+  /* */
+  /* utilities: { */
+  /*   underline: 'underline', */
+  /* } */
+  /* */
+  /* This would add a new utility called 'underline'. */
+  /* */
+  /* You can also add new configuration options, such as: */
+  /* */
+  /* extend: { */
+  /*   spacing: { */
+  /*     '72': '18rem', */
+  /*   } */
+  /* } */
+  /* */
+  /* This would add a new spacing option to the spacing configuration. */
+  /* */
+  /* For more information, see: */
+  /* https://tailwindcss.com/docs/configuration */
+}
