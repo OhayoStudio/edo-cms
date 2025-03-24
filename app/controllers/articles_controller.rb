@@ -42,7 +42,7 @@ class ArticlesController < ApplicationController
                      published_at: @article.published_at,
                      is_top: @article.featured)
 
-       
+
         generate_tags(@article)
 
         format.html { redirect_to @article, notice: "Article was successfully created." }
