@@ -1,12 +1,13 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
-  darkMode: 'selector', // Enable dark mode support
+  darkMode: 'class',
   content: [
     './public/*.html',
     './app/helpers/**/*.rb',
     './app/javascript/**/*.js',
-    './app/views/**/*.{erb,haml,html,slim}'
+    './app/views/**/*.{erb,haml,html,slim}',
+    './app/components/**/*.{erb,haml,html,slim}',
   ],
   theme: {
     extend: {
@@ -16,13 +17,11 @@ module.exports = {
     },
   },
   plugins: [
-    require('tailwindcss'),
-    require('autoprefixer'),
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
-    // function ({ addVariant }) {
-    //   addVariant('dark', '&:where(.dark, .dark *)');
-    // },
-  ]
+  ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
 }
