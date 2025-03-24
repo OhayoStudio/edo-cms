@@ -1,0 +1,62 @@
+<!-- app/components/videos/videos.html.erb -->
+ <% main_youtube_id = @main_video.url.split("v=")[1] %>
+
+<div class="flex flex-wrap" data-controller="video-player">
+  <!-- Main video column (75% width) -->
+  <div class="w-3/4 pr-4 rounded-sm">
+    <div class="relative aspect-video bg-gray-100 rounded-sm overflow-hidden" data-video-player-target="mainContainer"
+    style="box-shadow: 3.4px 6.9px 6.9px hsl(0deg 0% 0% / 0.39)">
+      <!-- Main video thumbnail (initially visible) -->
+      <img
+        src="<%= @main_video.thumbnail_url %>" 
+        alt="<%= @main_video.title %>" 
+        class="w-full h-full object-cover cursor-pointer" 
+        data-video-player-target="mainThumbnail"
+        data-action="click->video-player#playMainVideo"
+        data-video-id="<%= main_youtube_id %>"
+      >
+      
+      <!-- Play icon for main thumbnail -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none" data-video-player-target="mainPlayButton">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 22V2l18 10-18 10z"/>
+        </svg>
+      </div>
+      
+      <!-- YouTube iframe (initially hidden) -->
+      <div class="hidden w-full h-full" data-video-player-target="videoFrame"></div>
+    </div>
+    <h3 class="mt-2 text-xl font-semibold" data-video-player-target="mainTitle"><%= @main_video.title %></h3>
+    <p class="text-gray-600" data-video-player-target="mainDescription"><%= @main_video.description %></p>
+  </div>
+  
+  <!-- Thumbnail column (25% width) -->
+  <div class="w-1/4">
+    <div class="space-y-4">
+      <% videos.each_with_index do |video, index| %>
+        <% youtube_id = video.url.split("v=")[1] %>
+
+        <%# next if index == 0 %> <!-- Skip the first video as it's already in the main slot -->
+        <div class="group cursor-pointer rounded-sm" 
+             data-action="click->video-player#switchVideo"
+             data-video-id="<%= youtube_id %>"
+             data-video-title="<%= video.title %>"
+             data-video-description="<%= video.description %>"
+             data-video-thumbnail="<%= video.thumbnail_url %>"
+             style="box-shadow: 3.4px 6.9px 6.9px hsl(0deg 0% 0% / 0.39)">
+          <div class="relative bg-gray-100 rounded-sm overflow-hidden">
+            <img src="<%= video.thumbnail_url %>" alt="<%= video.title %>" class="w-full aspect-video object-cover">
+            <!-- Play icon for video thumbnails -->
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none" data-video-player-target="thumbnailPlayButton">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 22V2l18 10-18 10z"/>
+              </svg>
+            </div>
+            <!-- <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200"></div> -->
+          </div>
+          <!-- <h4 class="mt-1 text-sm font-medium truncate"><%= video.title %></h4> -->
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

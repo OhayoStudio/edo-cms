@@ -3,8 +3,13 @@ class VideosController < ApplicationController
 
   # GET /videos or /videos.json
   def index
-    @videos = Video.all
+    @videos = Video.all.limit(5) # Main video + 4 thumbnails
+    
+    # Rails 8 way to render component
+    # render component: "videos", locals: { videos: @videos }
+    # render VideosComponent.new(videos: @videos)
   end
+  
 
   # GET /videos/1 or /videos/1.json
   def show
