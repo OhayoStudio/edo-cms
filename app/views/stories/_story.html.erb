@@ -1,13 +1,22 @@
-<div class="rounded-sm overflow-hidden bg-white dark:bg-gray-800 dark:text-gray-300">
+<div class="h-full rounded-sm overflow-hidden bg-white dark:bg-gray-900 dark:text-gray-300 relative mt-2 mb-2">
   <% if story.storyable.respond_to?(:featured_image) && story.storyable.featured_image.attached? %>
+    <% if story.storyable.is_a?(Video) %>
+    <div class="absolute rounded-full p-2 shadow-lg" style="z-index: 10;margin: 5px;right: 5px;background-color: indianred;opacity: 0.8;">
+      <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </div>
+    <% end %>
     <%= link_to story.storyable, class:"group" do %>
       <%= image_tag story.storyable.featured_image, class: "w-full h-48 object-cover filter grayscale-50 transition-all duration-300 inline max-w-full group-hover:filter-none group-hover:scale-105" %>
-      <h1 class="text-xl font-serif font-bold group-hover:text-gray-500 px-4 py-2"><%= story.storyable.title %></h1>
-      <p class="text-xl group-hover:text-gray-500 px-4 py-1">
+      <h1 class="text-xl font-bold group-hover:text-gray-500 px-4 py-2 lora"><%= story.storyable.title %></h1>
+      <p class="text-xl group-hover:text-gray-500 px-4 py-1 lora">
           <%= story.storyable.try(:subtitle)%>
       </p>
-      <p class="group-hover:underline p-4">
-          <%= story.storyable.try(:excerpt) ||  story.storyable.try(:description)%>...
+      <p class="group-hover:underline text-lg p-4 lora">
+          <%#= story.storyable.try(:excerpt) ||  story.storyable.try(:description)%>
+          <%= truncate(strip_tags(story.storyable.try(:excerpt)) || 
+          truncate(strip_tags(story.storyable.try(:description))), length: 150) %>...
       </p>
     <% end %>
   <% end %>
