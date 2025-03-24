@@ -15,7 +15,6 @@ gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
 gem "stimulus-rails"
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem "tailwindcss-ruby"
 gem "tailwindcss-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
@@ -44,9 +43,11 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # Added by Jerome:
-
 gem "friendly_id"
+gem 'httparty'
+gem 'kaminari'
 gem "rails-pinterest"
+gem "view_component"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
