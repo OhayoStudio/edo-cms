@@ -3,6 +3,9 @@ class Category < ApplicationRecord
     extend FriendlyId
     friendly_id :name, use: :slugged
 
+    paginates_per 3
+    max_paginates_per 3
+
     # Self Join for hierarchical categories
     belongs_to :parent, class_name: "Category", optional: true
     has_many :subcategories, class_name: "Category", foreign_key: "parent_id"
