@@ -9,7 +9,7 @@ class CategoriesController < ApplicationController
   # GET /categories/1 or /categories/1.json
   def show
     # Articles under this category
-    @articles = @category.articles
+    @articles = @category.articles.page(params[:page])
     @categories = Category.all
     render "articles/index"
   end
