@@ -1,15 +1,18 @@
 <% content_for :title, "Articles" %>
 
-<div class="w-full">
+<div class="w-full container mx-auto">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
   <!-- Add here only for Mobile and small screens -->
-  <div class="block md:hidden mt-4 relative" data-controller="dropdown">
-    <button data-action="click->dropdown#toggle" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white">
+  <div class="block md:hidden m-4 mb-0 relative" data-controller="dropdown">
+    <button data-action="click->dropdown#toggle" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md bg-white flex items-center">
       <!-- if @category is defiend display it or display "Categories"-->
-      <%= @category ? @category.name : "Categories" %> <i class="fas fa-chevron-down float-right"></i>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
+      <%= @category ? @category.name : "Categories" %>
     </button>
     <div data-dropdown-target="menu" class="hidden absolute mt-1 w-full rounded-md shadow-lg bg-white ">
       <div class="py-1" role="menu" aria-orientation="vertical">
@@ -23,6 +26,14 @@
   <!-- Make a 2 columns design : 1 for article list, second one for search section and categories list section -->
   <div class="grid grid-cols-1 md:grid-cols-3">
     <div class="col-span-2">
+      <!-- only show Tag name or Category name if big screen -->
+      <% if @category %>
+        <h1 class="text-4xl font-serif font-bold mb-4 mt-4 pl-2 dark:text-gray-300"><%= @category.name %></h1>
+      <% end %>
+
+
+      
+
       <div id="articles" class="min-w-full">
         <% if @articles.any? %>
           <% @articles.each do |article| %>
@@ -31,10 +42,13 @@
         <% else %>
           <p class="text-center my-10">No articles found.</p>
         <% end %>
+        <div class="min-w-full dark:text-gray-300 text-gray-900 p-4 flex justify-between pagination">
+          <%= paginate @articles %>
+        </div>
       </div>
     </div>
 
-    <div class="col-span-1 mt-2">
+    <div class="col-span-1 mt-2 p-4">
       <%= form_with url: articles_path, method: :get, class: "mt-5" do |f| %>
         <div class="flex gap-2 align-items-center w-full">
           <%= f.text_field :search, class: "bg-white block shadow rounded-sm outline-none px-3 py-2 w-full", placeholder: "Search articles" %>
@@ -42,15 +56,15 @@
         </div>
       <% end %>
 
-      <h2 class="font-bold mt-8 dark:text-gray-300">CATEGORIES</h2>
+      <h2 class="font-bold mt-8 dark:text-gray-300 px-3">CATEGORIES</h2>
       <div class="mt-5">
         <% @categories.each do |category| %>
-          <div class="flex items-center justify-between gap-2">
-            <p>
-              <%= link_to category.name, category_path(category.slug), class: "px-3 py-1 text-sm font-medium  dark:text-gray-300" %>
-            </p>
+          <div>
+          <%= link_to category_path(category.slug), class: "px-3 text-sm font-medium dark:text-gray-300 flex items-center justify-between" do %>
+            <p><%= category.name %></p>
             <p class="text-gray-500">(<%= category.articles.count %>)</p>            
           </div>
+          <% end %>
           <div class="w-full border-b border-gray-500 p-2 mb-2"></div>
         <% end %>
       </div>
