@@ -1,29 +1,22 @@
-<div id="<%= dom_id video %>">
-  <!-- <p class="my-5">
-    <strong class="block font-medium mb-1">Title v:</strong>
-    <%= video.title %>
-  </p> -->
-
-  <!-- <div class="my-5">
-    <strong class="block font-medium mb-1">Image:</strong>
-    <%= image_tag rails_blob_url(video.featured_image), class: "w-full h-96
-    object-cover" if video.featured_image.attached? %>
-  </div> -->
-
-  <!-- add the ability to play the video from the video.url in a player -->
-  <div class="relative pb-9-16">
-    <!-- get video_id from video.url -->
-    <% video_id = video.url.split("v=")[1] %>
-    <iframe class="absolute w-full h-full" src="https://www.youtube-nocookie.com/embed/<%= video_id %>?modestbranding=1" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<div id="<%= dom_id video %>" data-controller="video-player" data-video-player-video-id-value="<%= video.url.split('v=')[1] %>">
+  <div class="relative" data-video-player-target="container">
+    <% video_id = video.url.split("v=")[1] %>    
+    <div data-video-player-target="thumbnail" data-action="click->video-player#play">
+      <%= image_tag rails_blob_url(video.featured_image), class: "w-full object-cover cursor-pointer hover:opacity-90 transition-opacity" if video.featured_image.attached? %>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="bg-black bg-opacity-50 rounded-full p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.25l13.5 6.75-13.5 6.75V5.25z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="w-full" style="min-height: 300px;" data-video-player-target="player" class="hidden">
+      <iframe class="absolute w-full h-full" src="https://www.youtube.com/embed/<%= video_id %>?modestbranding=1?autoplay=1" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
   </div>
 
-  <p class="my-5">
+  <p class="my-5 pl-4">
     <%= video.description %>
   </p>
 </div>
-
-<style>
-  .pb-9-16 {
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-  }
-</style>

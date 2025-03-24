@@ -26,6 +26,7 @@ class Video < ApplicationRecord
     end
 
     def thumbnail_url
-        Rails.application.routes.url_helpers.rails_representation_url(thumbnail, only_path: true)
+        # get url for featured_image
+        Rails.application.routes.url_helpers.rails_blob_url(featured_image, only_path: true)
     end
 end
