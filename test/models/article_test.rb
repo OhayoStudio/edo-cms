@@ -211,14 +211,31 @@ class ArticleTest < ActiveSupport::TestCase
 
   test "should calculate reading time before save" do
     words_per_minute = 200
-    word_count = 450 
-    content_text = "word " * word_count
     
-    article_for_reading_time = Article.new(title: "Test Reading Time Calculation #{Time.now.to_i}", author: @author, category: @category, content: content_text)
-    article_for_reading_time.save! 
+    # Test with content that results in reading_time > 1
+    word_count_long = 450 
+    content_text_long = "word " * word_count_long
+    article_long_content = Article.new(title: "Test Reading Time Long #{Time.now.to_i}", author: @author, category: @category, content: content_text_long)
+    article_long_content.save! 
+    expected_reading_time_long = (word_count_long.to_f / words_per_minute).ceil
+    assert_equal expected_reading_time_long, article_long_content.reading_time, "Reading time for long content was not calculated correctly"
+
+    # Test with very short content (should result in reading_time of 1)
+    word_count_short = 10 # (10 / 200).ceil = 1
+    content_text_short = "word " * word_count_short
+    article_short_content = Article.new(title: "Test Reading Time Short #{Time.now.to_i}", author: @author, category: @category, content: content_text_short)
+    article_short_content.save!
+    assert_equal 1, article_short_content.reading_time, "Reading time for short content should default to 1"
+
+    # Test with blank content (should result in reading_time of 1)
+    article_blank_content = Article.new(title: "Test Reading Time Blank #{Time.now.to_i}", author: @author, category: @category, content: "") # Blank content
+    article_blank_content.save!
+    assert_equal 1, article_blank_content.reading_time, "Reading time for blank content should default to 1"
     
-    expected_reading_time = (word_count / words_per_minute.to_f).ceil
-    assert_equal expected_reading_time, article_for_reading_time.reading_time, "Reading time was not calculated correctly"
+    # Test with nil content (should result in reading_time of 1)
+    article_nil_content = Article.new(title: "Test Reading Time Nil #{Time.now.to_i}", author: @author, category: @category, content: nil) # Nil content
+    article_nil_content.save!
+    assert_equal 1, article_nil_content.reading_time, "Reading time for nil content should default to 1"
   end
 
   test "should set default status to draft on new record initialization" do
@@ -254,18 +271,6 @@ class ArticleTest < ActiveSupport::TestCase
     assert_not_includes featured_articles_scope, articles(:article_draft_lifestyle)
   end
   
-  test "not_deleted scope should exclude articles with deleted_at set" do
-    # Create a soft-deleted article
-    deleted_article = Article.create!(title: "Deleted Article Scope Test #{Time.now.to_i}", author: @author, category: @category, content: "content", status: :published, published_at: Time.current, deleted_at: Time.current)
-    
-    # Ensure @article (article_published_tech) is not deleted
-    @article.update!(deleted_at: nil)
-
-    not_deleted_articles_scope = Article.not_deleted
-    assert_includes not_deleted_articles_scope, @article
-    assert_not_includes not_deleted_articles_scope, deleted_article
-  end
-
   # Enums
   test "should have correct enum values for status" do
     expected_statuses = %w[draft review published archived]

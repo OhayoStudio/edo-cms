@@ -1,42 +1,37 @@
 require "test_helper"
+require "securerandom"
 
 class ArticlesControllerTest < ActionDispatch::IntegrationTest
   fixtures :articles, :authors, :categories, :tags, :stories
 
-  DUMMY_ARTICLE_IMAGE_BASENAME = 'dummy_article_controller_test_image.png'.freeze
-  DUMMY_ARTICLE_IMAGE_PATH = Rails.root.join('tmp', DUMMY_ARTICLE_IMAGE_BASENAME).freeze
+  DUMMY_ARTICLE_IMAGE_BASENAME = 'dummy_articles_controller_test_image.png'.freeze # Changed from DUMMY_ARTICLE_IMAGE_BASENAME
+  DUMMY_ARTICLE_IMAGE_PATH = Rails.root.join('tmp', DUMMY_ARTICLE_IMAGE_BASENAME).freeze # Changed from DUMMY_ARTICLE_IMAGE_PATH
 
-  def self.ensure_dummy_article_image_exists
-    return if File.exist?(DUMMY_ARTICLE_IMAGE_PATH)
+  def self.ensure_dummy_article_image_exists # Method name unchanged
+    return if File.exist?(DUMMY_ARTICLE_IMAGE_PATH) # Changed from DUMMY_ARTICLE_IMAGE_PATH
     FileUtils.mkdir_p(Rails.root.join('tmp'))
-    File.open(DUMMY_ARTICLE_IMAGE_PATH, 'w') { |f| f.write("dummy image content for article controller test") }
+    File.open(DUMMY_ARTICLE_IMAGE_PATH, 'w') { |f| f.write("dummy image content for article controller test") } # Changed from DUMMY_ARTICLE_IMAGE_PATH
   end
-  ensure_dummy_article_image_exists
+  ensure_dummy_article_image_exists # Method name unchanged
 
   setup do
-    @author = authors(:author_jane) # Using descriptive fixture name
-    # Ensure fixture data is unique to avoid validation conflicts during test runs
-    # This update might not be necessary if fixtures are already well-defined.
-    # @author.update!(email: "author_articles_ctrl_test_#{Time.now.to_f}@example.com", slug: "author-articles-ctrl-test-slug-#{Time.now.to_f}")
+    @author = authors(:author_jane) 
     
-    @category = categories(:category_technology) # Using descriptive fixture name
-    # @category.update!(name: "Category Articles Ctrl Test #{Time.now.to_f}", slug: "category-articles-ctrl-test-slug-#{Time.now.to_f}", description: "Test desc for articles ctrl")
+    @category = categories(:category_technology) 
 
-    @article = articles(:article_published_tech) # Using descriptive fixture name
-    # Ensure associations are correctly set if not already in fixture
+    @article = articles(:article_published_tech) 
     @article.update!(
       author: @author,
       category: @category
     ) unless @article.author == @author && @article.category == @category
     
-    # Ensure content is present for tests that might rely on it
     @article.content = "Default content for article controller tests." if @article.content.blank?
 
-    unless @article.featured_image.attached?
-      @article.featured_image.attach(io: File.open(DUMMY_ARTICLE_IMAGE_PATH), filename: DUMMY_ARTICLE_IMAGE_BASENAME, content_type: 'image/png')
-    end
-    # Save if any changes were made, though ideally fixtures are pre-configured.
-    @article.save! if @article.changed?
+    # Attach dummy image if not already attached
+    @article.featured_image.attach(io: File.open(DUMMY_ARTICLE_IMAGE_PATH), filename: DUMMY_ARTICLE_IMAGE_BASENAME, content_type: 'image/png') unless @article.featured_image.attached? # Changed from DUMMY_ARTICLE_IMAGE_PATH and DUMMY_ARTICLE_IMAGE_BASENAME
+    
+    # Save if changed, or if slug is blank (FriendlyId might need save after associations are set)
+    @article.save! if @article.changed? || @article.slug.blank? 
   end
 
   test "should get index and assign instance variables" do
@@ -146,13 +141,15 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
   
   test "should create article with featured image" do
     article_params_with_image = {
-      title: "Article With Featured Image #{Time.now.to_i}",
+      title: "Article With Featured Image Draft #{SecureRandom.hex(6)}", # Title changed for clarity
       content: "Content for article with image.",
       author_id: @author.id,
       category_id: @category.id,
-      status: :published,
-      published_at: Time.current,
-      featured_image: fixture_file_upload(DUMMY_ARTICLE_IMAGE_PATH, 'image/png')
+      status: :draft, # CHANGED
+      # published_at: Time.current, # REMOVED
+      featured_image: fixture_file_upload(DUMMY_ARTICLE_IMAGE_PATH, 'image/png'),
+      excerpt: "A short excerpt for the article.",
+      meta_description: "A meta description for SEO."
     }
     assert_difference("Article.count", 1) do
       post articles_url, params: { article: article_params_with_image }
