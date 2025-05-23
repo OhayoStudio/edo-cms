@@ -1,25 +1,58 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  description: MyText
-  slug: MyString
-  parent_id: 1
+category_technology:
+  name: Technology
+  description: "Articles related to software, hardware, and the internet."
+  slug: technology # Slugs are auto-generated, but can be set for predictability
+  # parent_id: nil # This is a root category
   position: 1
-  featured: false
-  status: 1
-  meta_title: MyString
-  meta_description: MyText
-  deleted_at: 2025-02-02 11:51:12
+  featured: true
+  status: :active # Using symbol for enum, maps to 0
+  meta_title: "Latest Technology News and Articles"
+  meta_description: "Stay updated with the latest in the world of technology."
+  # deleted_at: nil
 
-two:
-  name: MyString
-  description: MyText
-  slug: MyString
-  parent_id: 1
+category_programming:
+  name: Programming
+  description: "Tutorials, guides, and discussions about software development and coding."
+  slug: programming
+  parent: category_technology # Example of a sub-category, linked to 'category_technology' fixture
   position: 1
   featured: false
-  status: 1
-  meta_title: MyString
-  meta_description: MyText
-  deleted_at: 2025-02-02 11:51:12
+  status: :active
+  meta_title: "Programming Tutorials and Guides"
+  meta_description: "Learn programming languages, frameworks, and best practices."
+  # deleted_at: nil
+
+category_lifestyle:
+  name: Lifestyle
+  description: "Articles about health, wellness, travel, and personal development."
+  slug: lifestyle
+  # parent_id: nil # Another root category
+  position: 2
+  featured: false
+  status: :active
+  meta_title: "Lifestyle Tips and Inspiration"
+  meta_description: "Improve your life with tips on health, travel, and more."
+  # deleted_at: nil
+
+category_inactive:
+  name: Old Gadgets
+  description: "Archived articles about old gadgets."
+  slug: old-gadgets
+  parent: category_technology
+  position: 2
+  featured: false
+  status: :inactive # Using symbol for enum, maps to 1
+  meta_title: "Archive: Old Gadgets"
+  meta_description: "Historical articles on gadgets from the past."
+  # deleted_at: nil
+
+category_deleted:
+  name: Obsolete Software
+  description: "This category is no longer maintained and has been soft-deleted."
+  slug: obsolete-software
+  status: :inactive # Soft-deleted categories are typically also inactive
+  deleted_at: <%= Time.current %>
+  meta_title: "Obsolete Software Archive"
+  meta_description: "Information about software that is no longer current."

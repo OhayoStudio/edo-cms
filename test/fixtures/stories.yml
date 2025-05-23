@@ -1,15 +1,51 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  slug: MyString
-  is_published: false
-  published_at: 2025-02-22 09:57:54
-  storyable: one
-  storyable_type: Storyable
+# Story for an Article
+story_for_article_published_tech:
+  storyable: article_published_tech (Article) # Points to article_published_tech in articles.yml
+  slug: <%= articles(:article_published_tech).slug %> # Use the slug from the associated article
+  is_published: true
+  published_at: <%= articles(:article_published_tech).published_at %>
+  is_top: <%= articles(:article_published_tech).featured %>
+  # created_at and updated_at will be set automatically
 
-two:
-  slug: MyString
-  is_published: false
-  published_at: 2025-02-22 09:57:54
-  storyable: two
-  storyable_type: Storyable
+# Story for another Article (draft)
+story_for_article_draft_lifestyle:
+  storyable: article_draft_lifestyle (Article) # Points to article_draft_lifestyle in articles.yml
+  slug: <%= articles(:article_draft_lifestyle).slug %>
+  is_published: false # Reflects draft status
+  published_at: nil # Drafts don't have a published_at
+  is_top: <%= articles(:article_draft_lifestyle).featured %>
+
+# Story for a Video
+story_for_video_intro_rails:
+  storyable: video_intro_rails (Video) # Points to video_intro_rails in videos.yml
+  slug: <%= videos(:video_intro_rails).slug %> # Use the slug from the associated video
+  is_published: true # Assuming videos are typically published upon creation for stories
+  published_at: <%= Time.current - 2.days %> # Example published date
+  is_top: true # Example: make this a top story
+
+# Story for another Video
+story_for_video_api_design:
+  storyable: video_api_design (Video)
+  slug: <%= videos(:video_api_design).slug %>
+  is_published: true
+  published_at: <%= Time.current - 1.day %>
+  is_top: false
+
+# Story that is not published but has a future published_at (scheduled)
+story_scheduled_article:
+  storyable: article_review_general (Article) # Assuming this article is in 'review' or 'draft'
+  slug: <%= articles(:article_review_general).slug %>-scheduled
+  is_published: false # Not yet published
+  published_at: <%= Time.current + 7.days %> # Scheduled to be published in the future
+  is_top: false
+
+# Story that might be a top story but associated with an archived article (edge case)
+# Depending on logic, this might or might not be displayed. Fixture helps test this.
+story_for_archived_article_as_top:
+  storyable: article_archived_tech (Article)
+  slug: <%= articles(:article_archived_tech).slug %>-top-archived
+  is_published: true # It was published before being archived
+  published_at: <%= articles(:article_archived_tech).published_at %>
+  is_top: true # Marked as top, but storyable is archived. Controller logic will determine visibility.
