@@ -1,4 +1,74 @@
-# one:
-#   record: name_of_fixture (ClassOfFixture)
-#   name: content
-#   body: <p>In a <i>million</i> stars!</p>
+# Fixture for ActionText content for article_published_tech in articles.yml
+article_published_tech_content:
+  record: article_published_tech (Article) # Associates with the 'article_published_tech' fixture in articles.yml
+  name: content # The name of the ActionText attribute on the Article model
+  body: >
+    <div>
+      <h1>Welcome to Rails 7!</h1>
+      <p>
+        This article provides a <strong>comprehensive guide</strong> to getting started with the latest version of Ruby on Rails.
+        We will cover several key areas:
+      </p>
+      <ul>
+        <li>Installation and Setup</li>
+        <li>Key new features in Rails 7 (Hotwire, Turbo, Stimulus)</li>
+        <li>Building your first "Hello, World!" application</li>
+        <li>Understanding MVC architecture in Rails</li>
+        <li>Working with Active Record models</li>
+        <li>Creating controllers and views</li>
+        <li>Routing basics</li>
+      </ul>
+      <p>
+        Whether you are new to web development or an experienced programmer looking to learn Rails, this guide will
+        provide you with the foundational knowledge to build amazing web applications.
+      </p>
+      <p>
+        Let's dive in and explore the power and elegance of <a href="https://rubyonrails.org">Ruby on Rails</a>.
+      </p>
+      <!-- Example of an embedded image or other rich content if needed -->
+      <!-- <action-text-attachment sgid="BAh7CEkiCGdpZAY6BkVUSSIrZ2lkOi8vYXBwL0FjdGl2ZVN0b3JhZ2U6OkJsb2IvZXlKMlpYSnphVzl1Ym5ROUlqc0dZV1J2YTJWdUlpd2laR2x6Y0c5eWRDSTZJazlwWkhaaFpuSjBMbU52YlNJc0lteHZZMkZzY3oxcGRHaHZiaTF6WlhKMmFXTmxYMjVoYldVNkpHVWlJRVkzTURJd01EQXdNREF3TURBd01EQXlJR05zWVhOelBTSXhNakFpQmxvZ0RVTlFJRUpPSWdvPQ==--8104992b57d3593177f88bd9c297695448053031" content-type="image/png" filename="example.png"></action-text-attachment> -->
+    </div>
+
+# Fixture for ActionText content for article_draft_lifestyle in articles.yml
+article_draft_lifestyle_content:
+  record: article_draft_lifestyle (Article)
+  name: content
+  body: >
+    <div>
+      <h2>Planning Your Next Big Adventure?</h2>
+      <p>
+        The world is full of wonders waiting to be explored. In this upcoming article, we'll unveil our top 10 travel
+        destinations for 2025. We're considering factors like:
+      </p>
+      <ol>
+        <li>Cultural richness</li>
+        <li>Natural beauty</li>
+        <li>Affordability</li>
+        <li>Unique experiences</li>
+        <li>Sustainability efforts</li>
+      </ol>
+      <p>
+        Stay tuned as we finalize our research and bring you a list that's sure to ignite your wanderlust! 
+        <em>This content is currently a draft and under review.</em>
+      </p>
+    </div>
+
+# Fixture for ActionText content for article_archived_tech in articles.yml
+article_archived_tech_content:
+  record: article_archived_tech (Article)
+  name: content
+  body: >
+    <div>
+      <p>This article, originally published a while ago, discusses software architecture patterns, specifically comparing Monolithic and Microservices approaches. While some concepts remain timeless, specific technologies mentioned might be outdated. This content is archived for historical purposes.</p>
+      <p>Key takeaways included discussions on scalability, deployment complexity, and team structure implications for each pattern.</p>
+    </div>
+
+# Fixture for ActionText content for article_review_general in articles.yml
+article_review_general_content:
+  record: article_review_general (Article)
+  name: content
+  body: >
+    <div>
+      <p>The role of Artificial Intelligence in content creation is a rapidly evolving topic. This piece is currently under review and aims to explore the various facets of AI's involvement, from automated text generation to AI-assisted graphic design and video editing. We are looking into tools like GPT-3, DALL-E, and others.</p>
+      <p>Ethical considerations and the future impact on creative professions are also key discussion points we are refining.</p>
+    </div>
