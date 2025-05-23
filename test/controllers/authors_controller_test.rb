@@ -14,21 +14,13 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
   ensure_dummy_avatar_exists
 
   setup do
-    @author = authors(:one)
-    @author.update!(
-      email: "author_ctrl_test_one@example.com", 
-      slug: "author-ctrl-test-one-slug",
-      first_name: "AuthorCtrl",
-      last_name: "One"
-    )
+    @author = authors(:author_jane) # Using descriptive fixture name
+    # Ensure fixture data is unique if necessary for specific test logic,
+    # though descriptive fixtures should ideally be pre-configured with valid, distinct data.
+    # Example: if a test relies on @author.email being something specific and unique for that test run.
+    # @author.update!(email: "author_jane_ctrl_test_#{Time.now.to_f}@example.com") 
 
-    @other_author = authors(:two) 
-    @other_author.update!(
-      email: "author_ctrl_test_two@example.com",
-      slug: "author-ctrl-test-two-slug",
-      first_name: "AuthorCtrl",
-      last_name: "Two"
-    )
+    @other_author = authors(:author_john) # Using another descriptive fixture for tests needing a second author
   end
 
   test "should get index and assign authors" do
@@ -46,9 +38,9 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create author with valid parameters" do
     author_params = {
-      first_name: "NewFirst",
-      last_name: "NewLast",
-      email: "new.author.create.#{Time.now.to_i}@example.com",
+      first_name: "NewFirstCtrl",
+      last_name: "NewLastCtrl",
+      email: "new.author.create.ctrl.#{Time.now.to_i}@example.com", # Ensure unique email
       status: :active,
       role: :writer
     }
@@ -69,9 +61,9 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
   test "should create author with an avatar" do
     avatar_file = fixture_file_upload(DUMMY_AVATAR_PATH, 'image/png')
     author_params_with_avatar = {
-      first_name: "AvatarFirst",
-      last_name: "UserLast",
-      email: "avatar.user.create.#{Time.now.to_i}@example.com",
+      first_name: "AvatarFirstCtrl",
+      last_name: "UserLastCtrl",
+      email: "avatar.user.create.ctrl.#{Time.now.to_i}@example.com",
       avatar: avatar_file
     }
     
@@ -85,7 +77,7 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show author and assign it" do
-    get author_url(@author)
+    get author_url(@author) # @author is authors(:author_jane)
     assert_response :success
     assert_equal @author, assigns(:author), "@author instance variable should be assigned correctly"
   end
@@ -97,8 +89,8 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update author with valid parameters" do
-    updated_first_name = "UpdatedFirstNameCtrlTest"
-    updated_email = "updated.author.ctrl.#{Time.now.to_i}@example.com"
+    updated_first_name = "UpdatedFirstNameCtrlTest#{Time.now.to_i}"
+    updated_email = "updated.author.ctrl.update.#{Time.now.to_i}@example.com"
     
     patch author_url(@author), params: { 
       author: { 
@@ -115,9 +107,8 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy author" do
-    # Author model has `has_many :articles, dependent: :nullify`.
-    # So, destroying an author should not fail due to associated articles, and articles' author_id will be set to NULL.
-    author_to_delete = Author.create!(first_name: "ToDeleteFirst", last_name: "ToDeleteLast", email: "to.delete.#{Time.now.to_i}@example.com")
+    # Create an author that can be safely deleted without affecting other tests using @author or @other_author
+    author_to_delete = Author.create!(first_name: "ToDeleteCtrlFirst", last_name: "ToDeleteCtrlLast", email: "to.delete.ctrl.#{Time.now.to_i}@example.com")
 
     assert_difference("Author.count", -1, "Author count should decrease by 1") do
       delete author_url(author_to_delete)
@@ -129,7 +120,7 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
 
   test "should not create author with invalid parameters (e.g., blank first_name)" do
     assert_no_difference("Author.count", "Author count should not change with invalid params") do
-      post authors_url, params: { author: { first_name: "", last_name: "LastName", email: "invalid@creation.com" } }
+      post authors_url, params: { author: { first_name: "", last_name: "LastNameCtrl", email: "invalid.creation.ctrl@example.com" } }
     end
     assert_response :unprocessable_entity, "Response should be :unprocessable_entity for invalid create params"
     assert_template :new, "Should re-render the 'new' template"
@@ -147,6 +138,13 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
   # Note: The controller's set_author uses Author.find (by ID). 
   # If FriendlyId (finding by slug) is desired for this controller, 
   # set_author should be changed to Author.friendly.find, and a test for slug finding should be added.
+  # Example:
+  # test "should show author using slug" do
+  #   get author_url(id: @author.slug) # This assumes to_param returns slug
+  #   assert_response :success
+  #   assert_equal @author, assigns(:author)
+  # end
+
 
   def self.cleanup_dummy_avatar
     FileUtils.rm_f(DUMMY_AVATAR_PATH) if File.exist?(DUMMY_AVATAR_PATH)

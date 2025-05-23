@@ -4,45 +4,35 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   fixtures :tags, :articles, :authors, :categories 
 
   setup do
-    @tag = tags(:one)
-    @tag.update!(
-      name: "Tag Controller Test One #{Time.now.to_f}", # Ensure unique name for tests
-      slug: "tag-controller-test-one-#{Time.now.to_f}"  # Ensure unique slug
-    )
+    @tag = tags(:tag_ruby) # Using descriptive fixture name
+    # Ensure fixture data is unique if necessary for specific test logic.
+    # Example: @tag.update!(name: "Tag Ruby Test #{Time.now.to_f}", slug: "tag-ruby-test-#{Time.now.to_f}")
 
-    @other_tag = tags(:two) 
-    @other_tag.update!(
-      name: "Tag Controller Test Two #{Time.now.to_f}", 
-      slug: "tag-controller-test-two-#{Time.now.to_f}"
-    )
+    @other_tag = tags(:tag_rails) # Using another descriptive fixture name
     
     # Setup for the 'show' action which renders articles/index
-    @author_for_tag_article = authors(:one)
-    @author_for_tag_article.update!(email: "tag_show_author_#{Time.now.to_f}@example.com") # Ensure valid author
-
-    @category_for_tag_article = categories(:one)
-    @category_for_tag_article.update!(name: "Tag Show Category #{Time.now.to_f}", description: "Desc for tag show cat") # Ensure valid category
+    @author_for_tag_article = authors(:author_jane) # Descriptive name
+    @category_for_tag_article = categories(:category_technology) # Descriptive name
     
-    # Create a published article and associate it with @tag for testing the show page
-    @published_article_for_tag = Article.create!(
-      title: "Published Article for Tag Show Test #{Time.now.to_f}", 
+    @published_article_for_tag = articles(:article_published_tech) # Descriptive name
+    # Ensure this article is suitable (e.g., correct author/category if not set by fixture)
+    @published_article_for_tag.update!(
       author: @author_for_tag_article, 
-      category: @category_for_tag_article, 
-      content: "Content for tag show test.", 
-      status: :published, 
-      published_at: Time.current
-    )
-    @tag.articles << @published_article_for_tag
+      category: @category_for_tag_article
+    ) unless @published_article_for_tag.author == @author_for_tag_article && @published_article_for_tag.category == @category_for_tag_article
+    
+    # Ensure the tag is associated with this article
+    @tag.articles << @published_article_for_tag unless @tag.articles.include?(@published_article_for_tag)
 
-    # Create a draft article associated with @tag to ensure it's not shown
+    # Create a draft article associated with @tag to ensure it's not shown on tag page
     @draft_article_for_tag = Article.create!(
-      title: "Draft Article for Tag Show Test #{Time.now.to_f}",
+      title: "Draft Article for Tag Controller Show Test #{Time.now.to_f}",
       author: @author_for_tag_article,
       category: @category_for_tag_article,
-      content: "Draft content.",
+      content: "Draft content for tag controller.",
       status: :draft
     )
-    @tag.articles << @draft_article_for_tag
+    @tag.articles << @draft_article_for_tag unless @tag.articles.include?(@draft_article_for_tag)
   end
 
   test "should get index and assign tags" do
@@ -59,7 +49,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create tag with valid parameters" do
-    unique_tag_name = "New Test Tag Create #{Time.now.to_f}"
+    unique_tag_name = "New Test Tag Create Ctrl #{Time.now.to_f}"
     tag_params = {
       name: unique_tag_name,
       description: "Description for the new test tag created in controller test."
@@ -77,7 +67,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show tag, assign instance variables, and render articles/index template" do
-    get tag_url(@tag) # Uses @tag.to_param which should be its slug
+    get tag_url(@tag) # @tag is tags(:tag_ruby)
     assert_response :success
     
     assert_equal @tag, assigns(:tag), "@tag instance variable should be assigned correctly"
@@ -86,7 +76,6 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil assigns(:categories), "All @categories for sidebar/etc. should be assigned"
     assert_template "articles/index", "Should render the 'articles/index' template for tag show page"
     
-    # Verify that only published articles associated with @tag are shown
     assigned_articles = assigns(:articles)
     assert_includes assigned_articles, @published_article_for_tag
     assert_not_includes assigned_articles, @draft_article_for_tag, "Draft articles should not be shown on tag page"
@@ -97,7 +86,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   end
   
   test "should show tag using its slug directly in URL parameter" do
-    get tag_url(id: @tag.slug) # Explicitly use slug in 'id' param
+    get tag_url(id: @tag.slug) # @tag is tags(:tag_ruby)
     assert_response :success
     assert_equal @tag, assigns(:tag), "Should find tag by slug and assign it"
   end
@@ -109,7 +98,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update tag with valid parameters" do
-    updated_tag_name = "Updated Tag Name Test #{Time.now.to_f}"
+    updated_tag_name = "Updated Tag Name Controller Test #{Time.now.to_f}"
     patch tag_url(@tag), params: { 
       tag: { 
         name: updated_tag_name, 
@@ -125,28 +114,27 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy tag" do
-    # Tag model has has_and_belongs_to_many :articles. Default is no dependent destruction for HABTM.
-    # The join table records (articles_tags) will be deleted. Articles themselves won't.
-    tag_to_delete = Tag.create!(name: "Delete Me Tag Test #{Time.now.to_f}")
-    tag_to_delete.articles << @published_article_for_tag # Associate with an article
+    tag_to_delete = Tag.create!(name: "Delete Me Tag Controller Test #{Time.now.to_f}")
+    # Associate an article to test join table record deletion
+    tag_to_delete.articles << @published_article_for_tag 
 
     assert_difference("Tag.count", -1, "Tag count should decrease by 1") do
-      assert_difference("ArticlesTag.count", -@tag.articles.count) do # Check join table records are removed
-         delete tag_url(@tag) # Use @tag from setup, it has associated articles
+      # Check that join table records are removed.
+      # The number of records removed should be equal to the number of articles associated with tag_to_delete.
+      assert_difference("ArticlesTag.count", -tag_to_delete.articles.count) do
+         delete tag_url(tag_to_delete)
       end
     end
-
 
     assert_redirected_to tags_url, "Should redirect to tags index page after destruction"
     assert_equal "Tag was successfully destroyed.", flash[:notice], "Flash notice for destruction should be set"
     
-    # Verify that the article itself was not deleted
     assert Article.exists?(@published_article_for_tag.id), "Article associated with deleted tag should still exist"
   end
 
   test "should not create tag with invalid parameters (e.g., blank name)" do
     assert_no_difference("Tag.count", "Tag count should not change with invalid params") do
-      post tags_url, params: { tag: { name: "", description: "Attempt to create with blank name" } }
+      post tags_url, params: { tag: { name: "", description: "Attempt to create with blank name in controller test" } }
     end
     assert_response :unprocessable_entity, "Response should be :unprocessable_entity for invalid create params"
     assert_template :new, "Should re-render the 'new' template"
