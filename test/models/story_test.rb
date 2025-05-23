@@ -1,108 +1,129 @@
 require "test_helper"
 
 class StoryTest < ActiveSupport::TestCase
-  fixtures :stories, :articles, :videos, :authors, :categories # Load all relevant fixtures
+  fixtures :stories, :articles, :videos, :authors, :categories 
 
   setup do
-    # Create fresh records for storyables to ensure clean state and avoid fixture modification side effects.
-    @author = authors(:one)
-    @category = categories(:one)
+    # Use descriptive fixture names for storyables
+    @article_published = articles(:article_published_tech)
+    @article_draft = articles(:article_draft_lifestyle)
+    @article_review = articles(:article_review_general) # Used for scheduled story
+    @article_archived = articles(:article_archived_tech)
 
-    @article1 = Article.create!(title: "Test Article One for Story", author: @author, category: @category, content: "Content for article one.", status: :published, published_at: Time.current - 1.day)
-    @video1 = Video.create!(title: "Test Video One for Story", description: "Description for video one.", url: "http://example.com/video1.mp4")
-    # Attach a dummy image if Video model validates presence of featured_image
-    # dummy_file_path = Rails.root.join('test', 'fixtures', 'files', 'test_image.png') # Create this file
-    # @video1.featured_image.attach(io: File.open(dummy_file_path), filename: 'test_image.png', content_type: 'image/png') if @video1.respond_to?(:featured_image)
+    @video_rails_intro = videos(:video_intro_rails)
+    @video_api_design = videos(:video_api_design)
 
-
-    # Setup specific story instances for general tests and scope tests
-    @story_article_published = Story.create!(storyable: @article1, slug: @article1.slug, is_published: true, published_at: @article1.published_at)
-    @story_video_published = Story.create!(storyable: @video1, slug: @video1.slug, is_published: true, published_at: Time.current - 2.days)
+    # Setup specific story instances for general tests and scope tests, referencing descriptive storyables
+    @story_article_published_tech = stories(:story_for_article_published_tech)
+    @story_video_intro_rails = stories(:story_for_video_intro_rails)
     
-    @article2 = Article.create!(title: "Test Article Two for Story", author: @author, category: @category, content: "Content for article two.", status: :draft) # Unpublished storyable
-    @story_article_unpublished = Story.create!(storyable: @article2, slug: @article2.slug, is_published: false, published_at: Time.current)
+    @story_article_draft_lifestyle = stories(:story_for_article_draft_lifestyle)
+    @story_scheduled = stories(:story_scheduled_article)
+    @story_archived_top = stories(:story_for_archived_article_as_top)
 
-    @article3 = Article.create!(title: "Test Article Three for Top Story", author: @author, category: @category, content: "Content for article three.", status: :published, published_at: Time.current - 3.days)
-    @top_story = Story.create!(storyable: @article3, slug: @article3.slug, is_published: true, published_at: @article3.published_at, is_top: true)
+    # For tests needing a generic 'top' story, use one that is published and top
+    @top_story = @story_for_article_published_tech # This one is is_top: true in stories.yml
+    # Or ensure one is explicitly top:
+    # @top_story = stories(:story_for_video_intro_rails) # This is also top in current stories.yml
+    # If a different one is needed, create it or use another descriptive fixture.
   end
 
   test "should belong to a storyable (polymorphic association)" do
-    assert_respond_to @story_article_published, :storyable, "Story should respond to :storyable"
-    assert_instance_of Article, @story_article_published.storyable, "Storyable for article story should be an Article instance"
+    assert_respond_to @story_article_published_tech, :storyable, "Story should respond to :storyable"
+    assert_instance_of Article, @story_article_published_tech.storyable, "Storyable for article story should be an Article instance"
 
-    assert_respond_to @story_video_published, :storyable, "Story should respond to :storyable"
-    assert_instance_of Video, @story_video_published.storyable, "Storyable for video story should be a Video instance"
+    assert_respond_to @story_video_intro_rails, :storyable, "Story should respond to :storyable"
+    assert_instance_of Video, @story_video_intro_rails.storyable, "Storyable for video story should be a Video instance"
   end
   
   test "should be savable with valid storyable and attributes" do
-    article = Article.create!(title: "Savable Story Article", author: @author, category: @category, content: "Content", status: :published, published_at: Time.current)
-    story = Story.new(storyable: article, slug: article.slug, is_published: true, published_at: Time.current)
+    # Use a specific article fixture for creating a new story
+    article_for_new_story = articles(:article_review_general) 
+    story = Story.new(
+      storyable: article_for_new_story, 
+      slug: "savable-story-test-slug-#{Time.now.to_i}", # Ensure unique slug for test
+      is_published: true, 
+      published_at: Time.current
+    )
     assert story.save, "Story should save with valid attributes. Errors: #{story.errors.full_messages.join(", ")}"
   end
 
   # Scopes
   test "published scope should return only published stories" do
     published_stories_scope = Story.published
-    assert_includes published_stories_scope, @story_article_published, "Scope should include published article story"
-    assert_includes published_stories_scope, @story_video_published, "Scope should include published video story"
-    assert_includes published_stories_scope, @top_story, "Scope should include top story as it is also published"
-    assert_not_includes published_stories_scope, @story_article_unpublished, "Scope should exclude unpublished story"
+    assert_includes published_stories_scope, @story_article_published_tech
+    assert_includes published_stories_scope, @story_video_intro_rails
+    assert_includes published_stories_scope, @story_archived_top # This story is published, even if article is archived
+    assert_not_includes published_stories_scope, @story_article_draft_lifestyle # This is is_published: false
+    assert_not_includes published_stories_scope, @story_scheduled # This is is_published: false
   end
 
   test "recent scope should order stories by published_at descending" do
-    # Create stories with precise published_at times for this test
-    story_newest = Story.create!(storyable: @article1, slug: "newest", is_published: true, published_at: Time.current)
-    story_middle = Story.create!(storyable: @video1, slug: "middle", is_published: true, published_at: Time.current - 1.hour)
-    story_oldest = Story.create!(storyable: @article2, slug: "oldest", is_published: true, published_at: Time.current - 1.day) # Ensure this one is published for the scope
-
-    # Include stories from setup that are published
-    expected_order = [story_newest, story_middle, @story_article_published, @story_video_published, @top_story, story_oldest].sort_by(&:published_at).reverse
-
-    recent_stories_scope = Story.recent.where(is_published: true) # Assuming recent scope itself doesn't filter by published status
+    # Fixtures already provide a range of published_at dates.
+    # story_for_article_published_tech: '2023-01-15 10:00:00'
+    # story_for_video_intro_rails: '2023-02-10 12:00:00'
+    # story_for_video_api_design: '2023-02-20 14:30:00'
+    # story_for_archived_article_as_top: '2022-10-01 09:00:00'
     
-    # Filter to only stories created in this test or known published ones from setup to avoid interference.
-    test_story_ids = expected_order.map(&:id)
-    actual_ordered_stories = recent_stories_scope.select { |s| test_story_ids.include?(s.id) }.sort_by(&:published_at).reverse
+    # Get published stories ordered by recent scope
+    recent_stories_from_scope = Story.published.recent.to_a
+    
+    # Manually create the expected order from published fixtures
+    expected_ordered_stories = [
+      stories(:story_for_video_api_design),    # '2023-02-20 14:30:00'
+      stories(:story_for_video_intro_rails), # '2023-02-10 12:00:00'
+      stories(:story_for_article_published_tech), # '2023-01-15 10:00:00'
+      stories(:story_for_archived_article_as_top) # '2022-10-01 09:00:00'
+    ]
 
-
-    assert_equal expected_order.map(&:id), actual_ordered_stories.map(&:id), "Recent scope did not order stories correctly by published_at"
+    assert_equal expected_ordered_stories.map(&:id), recent_stories_from_scope.map(&:id), "Recent scope did not order stories correctly by published_at"
   end
 
   test "with_slug scope should return stories that have a non-nil slug" do
-    story_with_slug = Story.create!(storyable: @article1, slug: "a-definite-slug", is_published: true, published_at: Time.current)
-    # Story model does not validate presence of slug. Assume a story could be created with slug: nil for testing.
-    story_without_slug = Story.create!(storyable: @article2, slug: nil, is_published: true, published_at: Time.current)
+    # All fixtures in stories.yml are defined with slugs.
+    story_with_slug = stories(:story_for_article_published_tech)
+    
+    # Create a story without a slug for testing (if possible and makes sense for the model)
+    # Story model doesn't validate presence of slug.
+    storyable_for_no_slug_test = articles(:article_draft_lifestyle)
+    story_without_slug = Story.create!(storyable: storyable_for_no_slug_test, slug: nil, is_published: false)
 
     stories_with_slugs_scope = Story.with_slug
-    assert_includes stories_with_slugs_scope, story_with_slug, "Scope should include story with a slug"
-    assert_includes stories_with_slugs_scope, @story_article_published # From setup, has slug
+    assert_includes stories_with_slugs_scope, story_with_slug
     assert_not_includes stories_with_slugs_scope, story_without_slug, "Scope should exclude story with a nil slug"
   end
 
   test "limit_3 scope should return at most 3 stories" do
-    # Ensure there are enough stories for the limit to be meaningful
-    # Setup already creates several. Add more if needed.
-    (1..5).each { |i| Story.create!(storyable: @article1, slug: "limit-3-filler-#{i}", is_published: true, published_at: Time.current - i.minutes) }
+    # Ensure there are more than 3 stories by adding some if fixtures are insufficient
+    # For now, assume fixtures + setup provide enough published stories for this.
+    # If not, create more:
+    # (1..5).each { |i| Story.create!(storyable: @article_published, slug: "limit-3-filler-#{i}", is_published: true, published_at: Time.current - i.minutes) }
+    assert_operator Story.published.count, :>=, 3, "Need at least 3 published stories to test limit_3 scope"
     assert_equal 3, Story.limit_3.count, "limit_3 scope should return 3 stories"
   end
 
   test "limit_4 scope should return at most 4 stories" do
-    (1..6).each { |i| Story.create!(storyable: @video1, slug: "limit-4-filler-#{i}", is_published: true, published_at: Time.current - i.minutes) }
+    assert_operator Story.published.count, :>=, 4, "Need at least 4 published stories to test limit_4 scope"
     assert_equal 4, Story.limit_4.count, "limit_4 scope should return 4 stories"
   end
 
   test "top scope should return only stories where is_top is true" do
-    non_top_story = Story.create!(storyable: @article1, slug: "not-a-top-story", is_published: true, published_at: Time.current, is_top: false)
+    # From stories.yml:
+    # story_for_article_published_tech is is_top: true
+    # story_for_video_intro_rails is is_top: true
+    # story_for_video_api_design is is_top: false
+    # story_for_archived_article_as_top is is_top: true
 
     top_stories_scope = Story.top
-    assert_includes top_stories_scope, @top_story, "Scope should include the top story from setup"
-    assert_not_includes top_stories_scope, non_top_story, "Scope should exclude non-top story"
-    assert_not_includes top_stories_scope, @story_article_published, "Scope should exclude story not marked as top"
+    assert_includes top_stories_scope, stories(:story_for_article_published_tech)
+    assert_includes top_stories_scope, stories(:story_for_video_intro_rails)
+    assert_includes top_stories_scope, stories(:story_for_archived_article_as_top)
+    assert_not_includes top_stories_scope, stories(:story_for_video_api_design)
   end
 
   # Methods
   test "to_param should return the slug of the story" do
-    story_with_specific_slug = Story.new(slug: "custom-slug-for-to-param")
-    assert_equal "custom-slug-for-to-param", story_with_specific_slug.to_param, "to_param did not return the correct slug"
+    story_with_known_slug = stories(:story_for_article_published_tech) # slug: "story-for-article-published-tech"
+    assert_equal "story-for-article-published-tech", story_with_known_slug.to_param, "to_param did not return the correct slug"
   end
 end

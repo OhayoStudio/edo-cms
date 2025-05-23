@@ -7,37 +7,25 @@ class VideoTest < ActiveSupport::TestCase
   DUMMY_IMAGE_BASENAME = 'dummy_video_test_image.png'.freeze
   DUMMY_IMAGE_PATH = Rails.root.join('tmp', DUMMY_IMAGE_BASENAME).freeze
 
-  # Create a dummy file once for the test suite if it doesn't change.
-  # Or ensure it's created before each test run if content could vary or get corrupted.
   def self.ensure_dummy_file_exists
     return if File.exist?(DUMMY_IMAGE_PATH)
     FileUtils.mkdir_p(Rails.root.join('tmp'))
     File.open(DUMMY_IMAGE_PATH, 'w') { |f| f.write("tiny dummy image content") }
   end
-  ensure_dummy_file_exists # Call it when the class is loaded
+  ensure_dummy_file_exists 
 
   setup do
-    # Ensure the dummy file is available for each test that might need it.
-    # self.class.ensure_dummy_file_exists # Alternative: call in setup
-
-    @video = videos(:one)
-    # Update fixture records with unique titles to prevent issues if tests run in parallel or fixtures are shared.
-    @video.update!(
-      title: "Video One Test Title #{Time.now.to_f}",
-      description: "Description for video one test.",
-      url: "http://example.com/video1_test.mp4"
-    )
-    # Attach featured_image as it's validated for presence
+    @video = videos(:video_intro_rails) # Using descriptive fixture name
+    # Ensure the fixture has necessary attributes for tests, e.g., an attached image.
+    # The fixture itself should ideally define these, but setup can enforce.
     @video.featured_image.attach(io: File.open(DUMMY_IMAGE_PATH), filename: DUMMY_IMAGE_BASENAME, content_type: 'image/png') unless @video.featured_image.attached?
+    # Ensure slug is present if tests rely on it and it's not guaranteed by fixture save
+    @video.save! if @video.changed? || @video.slug.blank?
 
 
-    @another_video = videos(:two)
-    @another_video.update!(
-      title: "Video Two Test Title #{Time.now.to_f}",
-      description: "Description for video two test.",
-      url: "http://example.com/video2_test.mp4"
-    )
+    @another_video = videos(:video_api_design) # Using another descriptive fixture name
     @another_video.featured_image.attach(io: File.open(DUMMY_IMAGE_PATH), filename: DUMMY_IMAGE_BASENAME, content_type: 'image/png') unless @another_video.featured_image.attached?
+    @another_video.save! if @another_video.changed? || @another_video.slug.blank?
   end
 
   # Validations
@@ -70,7 +58,7 @@ class VideoTest < ActiveSupport::TestCase
   end
 
   test "should validate presence of featured_image" do
-    @video.featured_image.purge # Detach the image
+    @video.featured_image.purge 
     assert_not @video.valid?, "Video should be invalid without a featured_image"
     assert_includes @video.errors[:featured_image], "can't be blank"
   end
@@ -91,27 +79,24 @@ class VideoTest < ActiveSupport::TestCase
     video_for_slug_test.featured_image.attach(io: File.open(DUMMY_IMAGE_PATH), filename: DUMMY_IMAGE_BASENAME, content_type: 'image/png')
     video_for_slug_test.save!
     
-    expected_slug = "a-unique-test-video-title-for-slug-#{Time.now.to_i}".parameterize # Mimic FriendlyId's behavior
-    # We cannot predict the exact slug if FriendlyId adds sequence numbers for uniqueness from other tests/db state.
-    # So, we check if the generated slug contains the parameterized title.
+    expected_slug_prefix = "a-unique-test-video-title-for-slug" # Prefix of the parameterized title
     assert_not_nil video_for_slug_test.slug, "Slug should be generated"
-    assert video_for_slug_test.slug.starts_with?("a-unique-test-video-title-for-slug"), "Slug should be based on the title"
+    assert video_for_slug_test.slug.starts_with?(expected_slug_prefix), "Slug ('#{video_for_slug_test.slug}') should be based on the title ('#{video_for_slug_test.title}')"
   end
 
   test "should_generate_new_friendly_id? should return true if title changed" do
-    @video.title = "A Brand New Video Title For Slug Check"
+    @video.title = "A Brand New Video Title For Slug Check #{Time.now.to_i}" # Ensure it's actually different
     assert @video.should_generate_new_friendly_id?, "should_generate_new_friendly_id? should be true when title changes"
   end
 
   test "should_generate_new_friendly_id? should return false if title has not changed" do
-    # Ensure title is considered unchanged by saving it first or using a freshly loaded record.
-    # If @video.title was just set and not saved, `title_changed?` might be true.
-    clean_video = Video.find(@video.id) # Load a fresh copy
+    # Load a fresh copy to ensure `title_changed?` is false.
+    clean_video = Video.find(@video.id) 
     assert_not clean_video.should_generate_new_friendly_id?, "should_generate_new_friendly_id? should be false when title is unchanged"
   end
 
   test "to_param should return the slug" do
-    # Slug should be present from setup's save!
+    assert_not_nil @video.slug, "Slug should be present for to_param test"
     assert_equal @video.slug, @video.to_param, "to_param should return the video's slug"
   end
 
@@ -121,32 +106,26 @@ class VideoTest < ActiveSupport::TestCase
   end
 
   test "thumbnail method should return an ActiveStorage::VariantWithRecord" do
+    assert @video.featured_image.attached?, "Featured image must be attached for thumbnail test"
     assert_respond_to @video, :thumbnail, "Video should respond to :thumbnail method"
-    # This test assumes Active Storage variants are configured and working.
-    # It primarily checks that the method call doesn't error and returns an expected type.
     assert_nothing_raised { @video.thumbnail }
-    # In a full environment, the result of @video.thumbnail would be an ActiveStorage::VariantWithRecord
-    # For now, just check it's not nil if image is attached.
     assert_not_nil @video.thumbnail, "Thumbnail should not be nil when featured_image is attached"
+    # In a full environment, you might also check:
+    # assert_instance_of ActiveStorage::VariantWithRecord, @video.thumbnail
   end
 
   test "thumbnail_url method should return a string path to the blob" do
+    assert @video.featured_image.attached?, "Featured image must be attached for thumbnail_url test"
     assert_respond_to @video, :thumbnail_url, "Video should respond to :thumbnail_url method"
-    # This test relies on Rails URL helpers and Active Storage routes.
     generated_url = @video.thumbnail_url
     assert_not_nil generated_url, "thumbnail_url should return a non-nil string"
     assert_kind_of String, generated_url, "thumbnail_url should return a String"
-    # Check if the path starts with the expected Active Storage blob path prefix
     assert generated_url.starts_with?("/rails/active_storage/blobs/redirect/") || generated_url.starts_with?("/rails/active_storage/blobs/proxy/"), 
-           "thumbnail_url should be a valid Active Storage path. Got: #{generated_url}"
+           "thumbnail_url ('#{generated_url}') should be a valid Active Storage path."
   end
   
-  # Teardown to clean up any created dummy files
-  # Note: The class-level ensure_dummy_file_exists and this teardown manage the dummy file.
-  # If tests were parallelized at a method level and manipulated the same file, it could be an issue.
-  # For standard Rails test execution, this should be fine.
-  # To be extremely safe, each test creating a file could use a unique filename and clean it up.
-  # However, for a single dummy image used for reads, this is generally okay.
-  # The current DUMMY_IMAGE_PATH is class-level, so all tests use the same file.
-  # If a test *modifies* the dummy file, it could affect others. Here, it's just for attachment.
+  def self.cleanup_dummy_image
+    FileUtils.rm_f(DUMMY_IMAGE_PATH) if File.exist?(DUMMY_IMAGE_PATH)
+  end
+  Minitest.after_run { cleanup_dummy_image }
 end
