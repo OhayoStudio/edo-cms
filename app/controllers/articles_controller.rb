@@ -90,6 +90,7 @@ class ArticlesController < ApplicationController
     end
 
     def generate_tags(article)
+      return if article.meta_keywords.blank?
       #  from comma separated string to array for meta_keywords
       meta_keywords = article.meta_keywords.split(",").map(&:strip)
 

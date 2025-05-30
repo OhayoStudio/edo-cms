@@ -30,6 +30,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
       author: @author_for_tag_article,
       category: @category_for_tag_article,
       content: "Draft content for tag controller.",
+      reading_time: 5,
       status: :draft
     )
     @tag.articles << @draft_article_for_tag unless @tag.articles.include?(@draft_article_for_tag)
