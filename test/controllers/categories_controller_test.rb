@@ -4,14 +4,14 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
   fixtures :categories, :articles, :authors # Ensure authors are available for creating articles
 
   setup do
-    @category = categories(:one)
+    @category = categories(:category_technology)
     @category.update!(
       name: "Category Controller Test One", 
       description: "Test description for category one in controller test", 
       slug: "category-controller-test-one"
     )
 
-    @other_category = categories(:two) 
+    @other_category = categories(:category_lifestyle)
     @other_category.update!(
       name: "Category Controller Test Two", 
       description: "Test description for category two in controller test", 
@@ -19,12 +19,12 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
     )
 
     # Ensure @category has at least one article for the show action test
-    author_for_article = authors(:one) # Assuming authors(:one) is a valid author
+    author_for_article = authors.first
     author_for_article.update!(email: "category_ctrl_author@example.com") unless author_for_article.valid?
 
     # Ensure the article fixture is associated with @category or create a new one.
     # If articles(:one) is used, make sure its category_id points to @category.id or re-associate.
-    article_for_show = articles(:one) 
+    article_for_show = articles.first 
     article_for_show.update!(category: @category, author: author_for_article, title: "Article for Category Show Test", content: "Content", status: :published, published_at: Time.current)
   end
 

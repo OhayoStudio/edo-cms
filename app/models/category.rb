@@ -38,6 +38,6 @@ class Category < ApplicationRecord
     private
 
     def generate_slug
-      self.slug = name.parameterize if name.present?
+      self.slug = name.parameterize if name.present? && (slug.nil? || slug.blank? || slug_changed?)
     end
 end

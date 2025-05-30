@@ -104,13 +104,13 @@ class VideosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy video and its associated story" do
-    video_to_delete = Video.create!(
+    video_to_delete = Video.new!(
       title: "Video for Deletion Controller Test #{Time.now.to_i}", 
       description: "This video will be deleted.", 
       url: "http://example.com/to_be_deleted_video.mp4"
     )
     video_to_delete.featured_image.attach(io: File.open(DUMMY_VIDEO_IMAGE_PATH), filename: DUMMY_VIDEO_IMAGE_BASENAME, content_type: 'image/png')
-    
+    video_to_delete.save!
     # Assuming Video model has `has_one :story, as: :storyable, dependent: :destroy` or similar
     Story.create!(storyable: video_to_delete, slug: video_to_delete.slug, is_published: true, published_at: Time.current)
 
