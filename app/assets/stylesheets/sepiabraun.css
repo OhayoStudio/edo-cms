@@ -1,0 +1,46 @@
+:root {
+  --color-gray-200: #F9F7F0;
+  --color-slate-800: #5e4b35;
+}
+
+.oldsepiabraun {
+    --color-slate-900: #5e4b35;
+    --color-slate-800: #423525;
+    --color-gray-900: #2c221a;
+    --color-gray-800: #7a6a58;
+    --color-gray-700: #b3a290;
+    --color-gray-600: #9c8b7a;
+    --color-gray-500: #bfb1a0;
+    --color-gray-400: #d6c9b8;
+    --color-gray-300: #e8e1d7;
+    --color-gray-200: #f9f7f0;
+    --color-gray-100: #fcfbf7;
+}
+
+.sepiabraun {
+    --color-primary: #704214;
+    --color-primary-header: #703914;
+    --color-primary-darker: #52300f;
+    --color-primary-darkest: #281506;
+
+    --color-secondary: #A67B5B;
+    --color-accent: #D9C4A6;
+    --color-background: #F9F7F0;
+
+    --color-text-primary: var(--color-primary);
+    --color-text: #423525;
+
+    --color-slate-900: var(--color-primary-header);
+    --color-slate-800: var(--color-primary-darkest);
+    --color-gray-900: var(--color-primary-darkest);
+    --color-gray-800: var(--color-text);
+    --color-gray-700: var(--color-acccent);
+    --color-gray-600: var(--color-text);
+    --color-gray-500: var(--color-text);
+    --color-gray-400: var(--color-background);
+    --color-gray-300: var(--color-accent);
+    --color-gray-200: var(--color-background);
+    --color-gray-100: #70421482;    
+}
+
+/* Add more custom variables for your theme as needed */

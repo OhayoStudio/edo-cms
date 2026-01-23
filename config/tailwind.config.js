@@ -14,6 +14,14 @@ module.exports = {
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
+      colors: {
+        gray: {
+          200: 'var(--color-gray-200)',
+        },
+        slate: {
+          800: 'var(--color-slate-800)',
+        },
+      },
     },
   },
   plugins: [
