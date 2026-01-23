@@ -1,8 +1,9 @@
+<div class="mx-auto my-10">
 <div id="<%= dom_id video %>" data-controller="video-player" data-video-player-video-id-value="<%= video.url.split('v=')[1] %>">
-  <div class="relative" data-video-player-target="container">
+  <div class="relative aspect-video overflow-hidden" data-video-player-target="container">
     <% video_id = video.url.split("v=")[1] %>    
     <div data-video-player-target="thumbnail" data-action="click->video-player#play">
-      <%= image_tag rails_blob_url(video.featured_image), class: "w-full object-cover cursor-pointer hover:opacity-90 transition-opacity" if video.featured_image.attached? %>
+      <%#= image_tag rails_blob_url(video.featured_image), class: "w-full object-cover cursor-pointer hover:opacity-90 transition-opacity" if video.featured_image.attached? %>
       <div class="absolute inset-0 flex items-center justify-center">
         <div class="bg-black bg-opacity-50 rounded-full p-3">
           <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -15,8 +16,5 @@
       <iframe class="absolute w-full h-full" src="https://www.youtube.com/embed/<%= video_id %>?modestbranding=1?autoplay=1" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
   </div>
-
-  <p class="my-5 pl-4">
-    <%= video.description %>
-  </p>
+</div>
 </div>
