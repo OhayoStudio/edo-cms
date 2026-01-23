@@ -38,6 +38,25 @@ class Article < ApplicationRecord
   scope :published, -> { where.not(published_at: nil).where(status: :published) }
   scope :featured, -> { where(featured: true) }
 
+  def related_articles(limit = 3)
+    Article.published
+           .where(category_id: category_id)
+           .where.not(id: id)
+           .order(published_at: :desc)
+           .limit(limit)
+  end
+
+  def tag_related_articles(limit = 3)
+    Article.published
+           .joins(:tags)
+           .where(tags: { id: tags.pluck(:id) })
+           .where.not(id: id)
+           .distinct
+           .order(published_at: :desc)
+           .limit(limit)
+  end
+  #
+
   private
 
   def set_default_status

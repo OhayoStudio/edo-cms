@@ -8,7 +8,17 @@ class ArticlesController < ApplicationController
     @articles = @articles.featured if params[:featured].present?
     @articles = @articles.where(category_id: params[:category_id]) if params[:category_id].present?
     @articles = @articles.where(author_id: params[:author_id]) if params[:author_id].present?
-    @articles = @articles.where("title ILIKE ?", "%#{params[:search]}%") if params[:search].present?
+    if params[:search].present?
+      search = "%#{params[:search]}%"
+      @articles = @articles.where(
+        "title ILIKE :q OR subtitle ILIKE :q OR excerpt ILIKE :q",
+        q: search
+      )
+      # find articles by tag name and merge results, avoiding duplicates
+      tagged_articles = Article.joins(:tags).where("tags.name ILIKE :q", q: search)
+      @articles = Article.where(id: @articles.select(:id)).or(Article.where(id: tagged_articles.select(:id)))
+    end
+
     @articles = @articles.order(published_at: :desc).page(params[:page])
 
     # @articles = @articles.page(params[:page]).per(10)
