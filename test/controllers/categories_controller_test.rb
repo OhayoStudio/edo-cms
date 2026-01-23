@@ -6,15 +6,15 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @category = categories(:category_technology)
     @category.update!(
-      name: "Category Controller Test One", 
-      description: "Test description for category one in controller test", 
+      name: "Category Controller Test One",
+      description: "Test description for category one in controller test",
       slug: "category-controller-test-one"
     )
 
     @other_category = categories(:category_lifestyle)
     @other_category.update!(
-      name: "Category Controller Test Two", 
-      description: "Test description for category two in controller test", 
+      name: "Category Controller Test Two",
+      description: "Test description for category two in controller test",
       slug: "category-controller-test-two"
     )
 
@@ -24,7 +24,7 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
 
     # Ensure the article fixture is associated with @category or create a new one.
     # If articles(:one) is used, make sure its category_id points to @category.id or re-associate.
-    article_for_show = articles.first 
+    article_for_show = articles.first
     article_for_show.update!(category: @category, author: author_for_article, title: "Article for Category Show Test", content: "Content", status: :published, published_at: Time.current)
   end
 
@@ -46,7 +46,7 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
     category_params = {
       name: unique_name,
       description: "Description for the new test category created.",
-      status: :active 
+      status: :active
     }
 
     assert_difference("Category.count", 1, "Category count should increment by 1") do
@@ -64,18 +64,18 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
   test "should show category, assign instance variables, and render articles/index template" do
     get category_url(@category) # Uses @category.to_param which should be its slug due to FriendlyId
     assert_response :success
-    
+
     assert_equal @category, assigns(:category), "@category instance variable should be assigned correctly"
     assert_not_nil assigns(:articles), "@articles instance variable (for articles in this category) should be assigned"
     assert_not_nil assigns(:categories), "@categories instance variable (for all categories, e.g. for sidebar) should be assigned"
-    
+
     assigns(:articles).each do |article|
       assert_equal @category.id, article.category_id, "Articles shown should belong to the current category"
     end
-    
+
     assert_template "articles/index", "Should render the 'articles/index' template for category show page"
   end
-  
+
   test "should show category using its slug directly in URL parameter" do
     get category_url(id: @category.slug) # Explicitly use slug in 'id' param
     assert_response :success
@@ -90,15 +90,15 @@ class CategoriesControllerTest < ActionDispatch::IntegrationTest
 
   test "should update category with valid parameters" do
     updated_name = "Updated Category Name Test #{Time.now.to_i}"
-    patch category_url(@category), params: { 
-      category: { 
-        name: updated_name, 
+    patch category_url(@category), params: {
+      category: {
+        name: updated_name,
         description: "Updated category description test."
-      } 
+      }
     }
     assert_redirected_to category_url(@category), "Should redirect to the category's show page after update"
     @category.reload
-    
+
     assert_equal updated_name, @category.name, "Category name should be updated"
     assert_equal "Updated category description test.", @category.description, "Category description should be updated"
     assert_equal "Category was successfully updated.", flash[:notice], "Flash notice for update should be set"

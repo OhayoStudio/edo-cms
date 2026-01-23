@@ -3,31 +3,31 @@ require "test_helper"
 class StoriesControllerTest < ActionDispatch::IntegrationTest
   fixtures :stories, :articles, :videos, :authors, :categories
 
-  DUMMY_VIDEO_FEATURE_IMAGE_BASENAME = 'dummy_stories_ctrl_video_feature.png'.freeze
-  DUMMY_VIDEO_FEATURE_IMAGE_PATH = Rails.root.join('tmp', DUMMY_VIDEO_FEATURE_IMAGE_BASENAME).freeze
+  DUMMY_VIDEO_FEATURE_IMAGE_BASENAME = "dummy_stories_ctrl_video_feature.png".freeze
+  DUMMY_VIDEO_FEATURE_IMAGE_PATH = Rails.root.join("tmp", DUMMY_VIDEO_FEATURE_IMAGE_BASENAME).freeze
 
   def self.ensure_dummy_video_feature_image_exists
     return if File.exist?(DUMMY_VIDEO_FEATURE_IMAGE_PATH)
-    FileUtils.mkdir_p(Rails.root.join('tmp'))
-    File.open(DUMMY_VIDEO_FEATURE_IMAGE_PATH, 'w') { |f| f.write("dummy video feature image for stories controller test") }
+    FileUtils.mkdir_p(Rails.root.join("tmp"))
+    File.open(DUMMY_VIDEO_FEATURE_IMAGE_PATH, "w") { |f| f.write("dummy video feature image for stories controller test") }
   end
   ensure_dummy_video_feature_image_exists
 
   setup do
     # Use descriptive fixture names for authors and categories
-    @author = authors(:author_jane) 
+    @author = authors(:author_jane)
     @category1 = categories(:category_technology)
     @category2 = categories(:category_lifestyle)
 
     # Use descriptive fixture names for storyables (articles and videos)
-    @article1 = articles(:article_published_tech) 
+    @article1 = articles(:article_published_tech)
     @article2 = articles(:article_draft_lifestyle) # This one is a draft, will be used for an unpublished story
     @video1 = videos(:video_intro_rails)
-    
+
     # Ensure storyables have correct associations if not set by fixtures (though good fixtures should handle this)
     @article1.update!(author: @author, category: @category1) unless @article1.author == @author && @article1.category == @category1
     @article2.update!(author: @author, category: @category2) unless @article2.author == @author && @article2.category == @category2
-    @video1.featured_image.attach(io: File.open(DUMMY_VIDEO_FEATURE_IMAGE_PATH), filename: DUMMY_VIDEO_FEATURE_IMAGE_BASENAME, content_type: 'image/png') unless @video1.featured_image.attached?
+    @video1.featured_image.attach(io: File.open(DUMMY_VIDEO_FEATURE_IMAGE_PATH), filename: DUMMY_VIDEO_FEATURE_IMAGE_BASENAME, content_type: "image/png") unless @video1.featured_image.attached?
 
 
     # Use descriptive story fixtures.
@@ -38,7 +38,7 @@ class StoriesControllerTest < ActionDispatch::IntegrationTest
     @story_video1_recent_published_from_fixture = stories(:story_for_video_intro_rails) # Example
 
     @story_unpublished = stories(:story_for_article_draft_lifestyle) # This story is for @article2 (draft)
-    
+
     @story_for_actions = @story_article1_top # Default story for show, edit, update, destroy tests
   end
 
@@ -47,13 +47,13 @@ class StoriesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     assert_equal @story_article1_top, assigns(:top_story), "Incorrect top story assigned"
-    
+
     assert_not_nil assigns(:recent_stories), "@recent_stories should be assigned"
     # Adjust assertions based on actual fixture data for recent stories
     # Example: if story_for_video_api_design and story_for_video_intro_rails are the next most recent (excluding top)
-    expected_recent_stories = [stories(:story_for_video_api_design), stories(:story_for_video_intro_rails)]
+    expected_recent_stories = [ stories(:story_for_video_api_design), stories(:story_for_video_intro_rails) ]
                                 .sort_by(&:published_at).reverse.first(4) # Ensure we take up to 4, ordered
-    
+
     assigns(:recent_stories).each_with_index do |assigned_story, index|
       break if index >= expected_recent_stories.length # Compare only up to the number of expected stories
       assert_equal expected_recent_stories[index].id, assigned_story.id, "Recent story at index #{index} is not as expected or not correctly ordered"
@@ -83,7 +83,7 @@ class StoriesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create story for an Article storyable" do
     # Use a specific article fixture for creating a new story
-    new_article_for_story = articles(:article_review_general) 
+    new_article_for_story = articles(:article_review_general)
     story_params = {
       storyable_id: new_article_for_story.id,
       storyable_type: "Article",
@@ -120,12 +120,12 @@ class StoriesControllerTest < ActionDispatch::IntegrationTest
     new_slug_for_update = "updated-story-slug-ctrl-#{Time.now.to_i}"
     updated_params = {
       is_published: false,
-      published_at: Time.current + 2.days, 
+      published_at: Time.current + 2.days,
       slug: new_slug_for_update
     }
     patch story_url(story_to_update), params: { story: updated_params }
     assert_redirected_to story_url(story_to_update), "Should redirect to the story's show page after update"
-    
+
     story_to_update.reload
     assert_equal false, story_to_update.is_published, "Story's is_published status should be updated"
     assert_in_delta (Time.current + 2.days), story_to_update.published_at, 1.second, "Story's published_at should be updated"
@@ -135,8 +135,8 @@ class StoriesControllerTest < ActionDispatch::IntegrationTest
 
   test "should destroy story" do
     # Use a specific story that can be destroyed, e.g., one not used in other assertions or setup logic.
-    story_to_be_destroyed = stories(:story_scheduled_article) 
-    
+    story_to_be_destroyed = stories(:story_scheduled_article)
+
     assert_difference("Story.count", -1, "Story count should decrease by 1") do
       delete story_url(story_to_be_destroyed)
     end
@@ -144,7 +144,7 @@ class StoriesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to stories_url, "Should redirect to stories index page after destruction"
     assert_equal "Story was successfully destroyed.", flash[:notice], "Flash notice for destruction should be set"
   end
-  
+
   def self.cleanup_dummy_video_feature_image
     FileUtils.rm_f(DUMMY_VIDEO_FEATURE_IMAGE_PATH) if File.exist?(DUMMY_VIDEO_FEATURE_IMAGE_PATH)
   end

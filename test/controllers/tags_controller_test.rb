@@ -1,7 +1,7 @@
 require "test_helper"
 
 class TagsControllerTest < ActionDispatch::IntegrationTest
-  fixtures :tags, :articles, :authors, :categories 
+  fixtures :tags, :articles, :authors, :categories
 
   setup do
     @tag = tags(:tag_ruby) # Using descriptive fixture name
@@ -9,18 +9,18 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
     # Example: @tag.update!(name: "Tag Ruby Test #{Time.now.to_f}", slug: "tag-ruby-test-#{Time.now.to_f}")
 
     @other_tag = tags(:tag_rails) # Using another descriptive fixture name
-    
+
     # Setup for the 'show' action which renders articles/index
     @author_for_tag_article = authors(:author_jane) # Descriptive name
     @category_for_tag_article = categories(:category_technology) # Descriptive name
-    
+
     @published_article_for_tag = articles(:article_published_tech) # Descriptive name
     # Ensure this article is suitable (e.g., correct author/category if not set by fixture)
     @published_article_for_tag.update!(
-      author: @author_for_tag_article, 
+      author: @author_for_tag_article,
       category: @category_for_tag_article
     ) unless @published_article_for_tag.author == @author_for_tag_article && @published_article_for_tag.category == @category_for_tag_article
-    
+
     # Ensure the tag is associated with this article
     @tag.articles << @published_article_for_tag unless @tag.articles.include?(@published_article_for_tag)
 
@@ -70,13 +70,13 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   test "should show tag, assign instance variables, and render articles/index template" do
     get tag_url(@tag) # @tag is tags(:tag_ruby)
     assert_response :success
-    
+
     assert_equal @tag, assigns(:tag), "@tag instance variable should be assigned correctly"
     assert_not_nil assigns(:articles), "@articles for the tag should be assigned"
     assert_not_nil assigns(:tags), "All @tags for sidebar/etc. should be assigned"
     assert_not_nil assigns(:categories), "All @categories for sidebar/etc. should be assigned"
     assert_template "articles/index", "Should render the 'articles/index' template for tag show page"
-    
+
     assigned_articles = assigns(:articles)
     assert_includes assigned_articles, @published_article_for_tag
     assert_not_includes assigned_articles, @draft_article_for_tag, "Draft articles should not be shown on tag page"
@@ -85,7 +85,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
       assert_includes article.tags, @tag, "Articles shown should belong to the current tag"
     end
   end
-  
+
   test "should show tag using its slug directly in URL parameter" do
     get tag_url(id: @tag.slug) # @tag is tags(:tag_ruby)
     assert_response :success
@@ -100,15 +100,15 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update tag with valid parameters" do
     updated_tag_name = "Updated Tag Name Controller Test #{Time.now.to_f}"
-    patch tag_url(@tag), params: { 
-      tag: { 
-        name: updated_tag_name, 
+    patch tag_url(@tag), params: {
+      tag: {
+        name: updated_tag_name,
         description: "Updated tag description in controller test."
-      } 
+      }
     }
     assert_redirected_to tag_url(@tag), "Should redirect to the tag's show page after update"
     @tag.reload
-    
+
     assert_equal updated_tag_name, @tag.name, "Tag name should be updated"
     assert_equal "Updated tag description in controller test.", @tag.description, "Tag description should be updated"
     assert_equal "Tag was successfully updated.", flash[:notice], "Flash notice for update should be set"
@@ -117,7 +117,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
   test "should destroy tag" do
     tag_to_delete = Tag.create!(name: "Delete Me Tag Controller Test #{Time.now.to_f}")
     # Associate an article to test join table record deletion
-    tag_to_delete.articles << @published_article_for_tag 
+    tag_to_delete.articles << @published_article_for_tag
 
     assert_difference("Tag.count", -1, "Tag count should decrease by 1") do
       # Check that join table records are removed.
@@ -129,7 +129,7 @@ class TagsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to tags_url, "Should redirect to tags index page after destruction"
     assert_equal "Tag was successfully destroyed.", flash[:notice], "Flash notice for destruction should be set"
-    
+
     assert Article.exists?(@published_article_for_tag.id), "Article associated with deleted tag should still exist"
   end
 
