@@ -7,8 +7,8 @@ class AuthorTest < ActiveSupport::TestCase
 
   setup do
     # Use a descriptive fixture name. author_jane is an active writer.
-    @author = authors(:author_jane) 
-    
+    @author = authors(:author_jane)
+
     # For uniqueness tests, ensure a second distinct author. author_john is an active editor.
     @another_author = authors(:author_john)
 
@@ -26,7 +26,7 @@ class AuthorTest < ActiveSupport::TestCase
     valid_author = Author.new(
       first_name: "Test",
       last_name: "User",
-      email: "test.user.#{Time.now.to_i}@example.com" 
+      email: "test.user.#{Time.now.to_i}@example.com"
     )
     assert valid_author.valid?, "Author should be valid. Errors: #{valid_author.errors.full_messages.join(", ")}"
   end
@@ -66,7 +66,7 @@ class AuthorTest < ActiveSupport::TestCase
 
     # Reset to a valid state for the instance if other parts of this test or other tests might reuse @author
     @author.email = authors(:author_jane).email # Assuming this is a valid email from the original fixture
-    assert @author.valid? 
+    assert @author.valid?
   end
 
   test "should validate presence of slug" do
@@ -79,7 +79,7 @@ class AuthorTest < ActiveSupport::TestCase
     duplicate_author = Author.new(
       first_name: "Unique",
       last_name: "Name",
-      email: "unique.name.#{Time.now.to_i}@example.com", 
+      email: "unique.name.#{Time.now.to_i}@example.com",
       slug: @author.slug # Use existing author's slug
     )
     assert_not duplicate_author.valid?, "Author with a duplicate slug should be invalid"
@@ -96,10 +96,10 @@ class AuthorTest < ActiveSupport::TestCase
     @author.email = authors(:author_jane).email # Reset email if it was made invalid
     assert @author.valid?, "Author should be valid with a correct website URL. Errors: #{@author.errors.full_messages.join(", ")}"
 
-    @author.website = "" 
+    @author.website = ""
     assert @author.valid?, "Author should be valid with a blank website URL"
 
-    @author.website = nil 
+    @author.website = nil
     assert @author.valid?, "Author should be valid with a nil website URL"
   end
 
@@ -111,19 +111,19 @@ class AuthorTest < ActiveSupport::TestCase
   test "should nullify author_id in articles when author is destroyed" do
     test_author = Author.create!(first_name: "JaneDestroyTest", last_name: "DoeDestroyTest", email: "jane.doe.destroy.#{Time.now.to_i}@example.com")
     category_for_article = categories(:category_technology) # Use a descriptive category fixture
-    
+
     article = test_author.articles.create!(
-      title: "Test Article for Nullify Author", 
-      category: category_for_article, 
-      content: "Some content for nullify test.", 
-      status: :published, 
+      title: "Test Article for Nullify Author",
+      category: category_for_article,
+      content: "Some content for nullify test.",
+      status: :published,
       published_at: Time.current
     )
     assert_not_nil article.author_id, "Article should initially have an author_id"
-    
+
     test_author.destroy
-    article.reload 
-    
+    article.reload
+
     assert_nil article.author_id, "Article's author_id should be nullified after author destruction"
   end
 
@@ -135,23 +135,23 @@ class AuthorTest < ActiveSupport::TestCase
   # Callbacks
   test "should generate slug from full name when first_name or last_name changes" do
     author_for_slug_test = Author.new(first_name: "NewSlug", last_name: "AuthorSlug", email: "new.slug.author.callback.#{Time.now.to_i}@example.com")
-    author_for_slug_test.valid? 
+    author_for_slug_test.valid?
     assert_equal "newslug-authorslug", author_for_slug_test.slug, "Slug was not generated correctly for a new author"
 
     author_for_slug_test.save!
     author_for_slug_test.first_name = "BrandNewSlug"
-    author_for_slug_test.valid? 
+    author_for_slug_test.valid?
     assert_equal "brandnewslug-authorslug", author_for_slug_test.slug, "Slug did not update correctly when first_name changed"
   end
 
   test "should not generate new slug if full name has not changed" do
     author_stable_slug = Author.create!(first_name: "StableSlug", last_name: "NameSlug", email: "stable.slug.name.#{Time.now.to_i}@example.com")
     original_slug = author_stable_slug.slug
-    
-    author_stable_slug.bio = "An updated biography for stable slug." 
-    author_stable_slug.valid? 
+
+    author_stable_slug.bio = "An updated biography for stable slug."
+    author_stable_slug.valid?
     author_stable_slug.save!
-    
+
     assert_equal original_slug, author_stable_slug.slug, "Slug should not change if name attributes haven't changed"
   end
 
@@ -159,11 +159,11 @@ class AuthorTest < ActiveSupport::TestCase
   test "active scope should return only active authors" do
     # Assuming author_jane and author_john are active, and author_inactive is inactive from fixtures
     active_authors_scope = Author.active
-    
+
     assert_includes active_authors_scope, authors(:author_jane)
     assert_includes active_authors_scope, authors(:author_john)
     assert_not_includes active_authors_scope, authors(:author_inactive)
-    
+
     active_authors_scope.each do |a|
       assert_equal "active", a.status, "Active scope should only return active authors"
     end
@@ -220,10 +220,10 @@ class AuthorTest < ActiveSupport::TestCase
   test "soft_delete method should set deleted_at and change status to inactive" do
     author_to_soft_delete = authors(:author_john) # Choose an active, non-deleted author
     author_to_soft_delete.update!(status: :active, deleted_at: nil) # Ensure starting state
-    
+
     author_to_soft_delete.soft_delete
-    author_to_soft_delete.reload 
-    
+    author_to_soft_delete.reload
+
     assert_not_nil author_to_soft_delete.deleted_at, "deleted_at should be set after soft_delete"
     assert author_to_soft_delete.inactive?, "Status should be inactive after soft_delete"
   end
@@ -231,14 +231,14 @@ class AuthorTest < ActiveSupport::TestCase
   test "article_count method should return the count of published articles for the author" do
     author_for_article_count = authors(:author_jane)
     category_for_articles = categories(:category_technology)
-    
+
     # Clear existing articles if any, or ensure predictable state
     author_for_article_count.articles.destroy_all
-    
+
     author_for_article_count.articles.create!(title: "Published Article One by Jane", category: category_for_articles, content: "Content", status: :published, published_at: Time.current)
     author_for_article_count.articles.create!(title: "Published Article Two by Jane", category: category_for_articles, content: "Content", status: :published, published_at: Time.current)
     author_for_article_count.articles.create!(title: "Draft Article by Jane", category: category_for_articles, content: "Content", status: :draft)
-    
+
     assert_equal 2, author_for_article_count.article_count, "article_count did not return correct number of published articles"
   end
 end

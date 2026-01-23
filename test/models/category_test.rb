@@ -7,8 +7,8 @@ class CategoryTest < ActiveSupport::TestCase
 
   setup do
     # Use a descriptive fixture name, e.g., an active, root category.
-    @category = categories(:category_technology) 
-    
+    @category = categories(:category_technology)
+
     # For uniqueness tests or scenarios needing a second distinct category.
     @another_category = categories(:category_lifestyle)
 
@@ -46,7 +46,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   test "should validate uniqueness of slug" do
     duplicate_category = Category.new(
-      name: "Unique Name For Slug Test #{Time.now.to_i}", 
+      name: "Unique Name For Slug Test #{Time.now.to_i}",
       description: "Description for unique slug test.",
       slug: @category.slug # Use existing category's slug
     )
@@ -75,16 +75,16 @@ class CategoryTest < ActiveSupport::TestCase
   # Associations
   test "should belong to a parent category (optional)" do
     # category_technology is a root category from fixtures
-    parent_cat = categories(:category_technology) 
+    parent_cat = categories(:category_technology)
     # category_programming is a child of category_technology from fixtures
-    child_cat = categories(:category_programming) 
-    
+    child_cat = categories(:category_programming)
+
     assert_equal parent_cat, child_cat.parent, "Child category's parent should be the assigned parent category"
   end
 
   test "should have many subcategories" do
     parent_cat_with_subs = categories(:category_technology) # This fixture has category_programming as a subcategory
-    
+
     assert_not_empty parent_cat_with_subs.subcategories, "Parent category should have subcategories"
     assert_includes parent_cat_with_subs.subcategories, categories(:category_programming)
   end
@@ -92,37 +92,37 @@ class CategoryTest < ActiveSupport::TestCase
   test "should have many articles" do
     assert_respond_to @category, :articles, "Category should respond to :articles"
   end
-  
+
   test "should nullify category_id in articles when category is destroyed" do
     category_for_nullify_test = Category.create!(name: "Nullify Test Category #{Time.now.to_i}", description: "Category for testing nullify.")
-    author_for_article = authors(:author_jane) 
-    
+    author_for_article = authors(:author_jane)
+
     article = category_for_nullify_test.articles.create!(
-      title: "Article for Nullify Category Test #{Time.now.to_i}", 
-      author: author_for_article, 
-      content: "Some content for nullify test.", 
-      status: :published, 
+      title: "Article for Nullify Category Test #{Time.now.to_i}",
+      author: author_for_article,
+      content: "Some content for nullify test.",
+      status: :published,
       published_at: Time.current
     )
     assert_not_nil article.category_id, "Article should initially have a category_id"
-    
+
     category_for_nullify_test.destroy
-    article.reload 
-    
+    article.reload
+
     assert_nil article.category_id, "Article's category_id should be nullified after category destruction"
   end
 
   # Callbacks
   test "should generate slug from name when name changes" do
     category_for_slug_test = Category.new(name: "New Category For Slug Test #{Time.now.to_i}", description: "Description for slug test.")
-    category_for_slug_test.valid? 
+    category_for_slug_test.valid?
     expected_slug = "new-category-for-slug-test-#{Time.now.to_i}".parameterize
     assert_equal expected_slug, category_for_slug_test.slug, "Slug was not generated correctly for a new category"
 
     category_for_slug_test.save!
     updated_name = "Updated Category For Slug Test #{Time.now.to_i}"
     category_for_slug_test.name = updated_name
-    category_for_slug_test.valid? 
+    category_for_slug_test.valid?
     expected_updated_slug = updated_name.parameterize
     assert_equal expected_updated_slug, category_for_slug_test.slug, "Slug did not update correctly when name changed"
   end
@@ -130,11 +130,11 @@ class CategoryTest < ActiveSupport::TestCase
   test "should not generate new slug if name has not changed" do
     category_stable_slug = Category.create!(name: "Stable Slug Category #{Time.now.to_i}", description: "Desc for stable slug.")
     original_slug = category_stable_slug.slug
-    
-    category_stable_slug.meta_title = "A new meta title for stable slug category." 
-    category_stable_slug.valid? 
+
+    category_stable_slug.meta_title = "A new meta title for stable slug category."
+    category_stable_slug.valid?
     category_stable_slug.save!
-    
+
     assert_equal original_slug, category_stable_slug.slug, "Slug should not change if name attribute hasn't changed"
   end
 

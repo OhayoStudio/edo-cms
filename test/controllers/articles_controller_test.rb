@@ -4,34 +4,34 @@ require "securerandom"
 class ArticlesControllerTest < ActionDispatch::IntegrationTest
   fixtures :articles, :authors, :categories, :tags, :stories
 
-  DUMMY_ARTICLE_IMAGE_BASENAME = 'dummy_articles_controller_test_image.png'.freeze # Changed from DUMMY_ARTICLE_IMAGE_BASENAME
-  DUMMY_ARTICLE_IMAGE_PATH = Rails.root.join('tmp', DUMMY_ARTICLE_IMAGE_BASENAME).freeze # Changed from DUMMY_ARTICLE_IMAGE_PATH
+  DUMMY_ARTICLE_IMAGE_BASENAME = "dummy_articles_controller_test_image.png".freeze # Changed from DUMMY_ARTICLE_IMAGE_BASENAME
+  DUMMY_ARTICLE_IMAGE_PATH = Rails.root.join("tmp", DUMMY_ARTICLE_IMAGE_BASENAME).freeze # Changed from DUMMY_ARTICLE_IMAGE_PATH
 
   def self.ensure_dummy_article_image_exists # Method name unchanged
     return if File.exist?(DUMMY_ARTICLE_IMAGE_PATH) # Changed from DUMMY_ARTICLE_IMAGE_PATH
-    FileUtils.mkdir_p(Rails.root.join('tmp'))
-    File.open(DUMMY_ARTICLE_IMAGE_PATH, 'w') { |f| f.write("dummy image content for article controller test") } # Changed from DUMMY_ARTICLE_IMAGE_PATH
+    FileUtils.mkdir_p(Rails.root.join("tmp"))
+    File.open(DUMMY_ARTICLE_IMAGE_PATH, "w") { |f| f.write("dummy image content for article controller test") } # Changed from DUMMY_ARTICLE_IMAGE_PATH
   end
   ensure_dummy_article_image_exists # Method name unchanged
 
   setup do
-    @author = authors(:author_jane) 
-    
-    @category = categories(:category_technology) 
+    @author = authors(:author_jane)
 
-    @article = articles(:article_published_tech) 
+    @category = categories(:category_technology)
+
+    @article = articles(:article_published_tech)
     @article.update!(
       author: @author,
       category: @category
     ) unless @article.author == @author && @article.category == @category
-    
+
     @article.content = "Default content for article controller tests." if @article.content.blank?
 
     # Attach dummy image if not already attached
-    @article.featured_image.attach(io: File.open(DUMMY_ARTICLE_IMAGE_PATH), filename: DUMMY_ARTICLE_IMAGE_BASENAME, content_type: 'image/png') unless @article.featured_image.attached? # Changed from DUMMY_ARTICLE_IMAGE_PATH and DUMMY_ARTICLE_IMAGE_BASENAME
-    
+    @article.featured_image.attach(io: File.open(DUMMY_ARTICLE_IMAGE_PATH), filename: DUMMY_ARTICLE_IMAGE_BASENAME, content_type: "image/png") unless @article.featured_image.attached? # Changed from DUMMY_ARTICLE_IMAGE_PATH and DUMMY_ARTICLE_IMAGE_BASENAME
+
     # Save if changed, or if slug is blank (FriendlyId might need save after associations are set)
-    @article.save! if @article.changed? || @article.slug.blank? 
+    @article.save! if @article.changed? || @article.slug.blank?
   end
 
   test "should get index and assign instance variables" do
@@ -45,8 +45,8 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
   test "should get index with published filter" do
     # Ensure there's at least one non-published article (e.g., from fixtures)
     # articles(:article_draft_lifestyle) is a draft article
-    
-    get articles_url, params: { published: "true" } 
+
+    get articles_url, params: { published: "true" }
     assert_response :success
     assigns(:articles).each do |article|
       assert article.published?, "Expected only published articles with 'published' filter. Found: #{article.title} (Status: #{article.status})"
@@ -65,21 +65,21 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index with category_id filter" do
     category_to_filter_by = categories(:category_programming) # Use a specific category fixture
-    
+
     # Ensure there's an article in this category (e.g., article_published_tech if its category is programming)
     # Or create one:
     # Article.create!(title: "Article in Programming Category", author: @author, category: category_to_filter_by, content: "content", status: :published, published_at: Time.current)
-    
+
     get articles_url, params: { category_id: category_to_filter_by.id }
     assert_response :success
     assigns(:articles).each do |article|
       assert_equal category_to_filter_by.id, article.category_id, "Expected only articles from category ID #{category_to_filter_by.id}"
     end
   end
-  
+
   test "should get index with author_id filter" do
     author_to_filter_by = authors(:author_john) # Use a specific author fixture
-    
+
     # Ensure there's an article by this author (e.g., article_draft_lifestyle or article_review_general)
     # Or create one:
     # Article.create!(title: "Article by John Smith", author: author_to_filter_by, category: @category, content: "content", status: :published, published_at: Time.current)
@@ -119,7 +119,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
       published_at: Time.current,
       meta_keywords: "tagX, tagY, newTagZ",
       reading_time: 1, # Add if required by validation
-      featured_image: fixture_file_upload(DUMMY_ARTICLE_IMAGE_PATH, 'image/png') # Add if required
+      featured_image: fixture_file_upload(DUMMY_ARTICLE_IMAGE_PATH, "image/png") # Add if required
     }
     # Tag.where(name: ["tagX", "tagY", "newTagZ"]).destroy_all
 
@@ -132,9 +132,9 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     created_article = Article.last
     assert_redirected_to article_url(created_article), "Should redirect to the created article's show page"
     assert_equal "Article was successfully created.", flash[:notice], "Flash notice for creation should be set"
-    assert_equal ["newTagZ", "tagX", "tagY"], created_article.tags.pluck(:name).sort
+    assert_equal [ "newTagZ", "tagX", "tagY" ], created_article.tags.pluck(:name).sort
   end
-  
+
   test "should create article with featured image" do
     article_params_with_image = {
       title: "Article With Featured Image Draft #{SecureRandom.hex(6)}", # Title changed for clarity
@@ -143,7 +143,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
       category_id: @category.id,
       status: :draft, # CHANGED
       # published_at: Time.current, # REMOVED
-      featured_image: fixture_file_upload(DUMMY_ARTICLE_IMAGE_PATH, 'image/png'),
+      featured_image: fixture_file_upload(DUMMY_ARTICLE_IMAGE_PATH, "image/png"),
       excerpt: "A short excerpt for the article.",
       reading_time: 2,
       meta_description: "A meta description for SEO."
@@ -165,16 +165,16 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
   test "should update article and its tags" do
     updated_title = "Updated Article Title For Controller Test #{Time.now.to_i}"
     new_meta_keywords = "alpha_update_tag, beta_update_tag"
-    Tag.where(name: ["alpha_update_tag", "beta_update_tag"]).destroy_all 
-    
+    Tag.where(name: [ "alpha_update_tag", "beta_update_tag" ]).destroy_all
+
     @article.tags << Tag.find_or_create_by!(name: "gamma_original_tag")
 
-    patch article_url(@article), params: { 
-      article: { 
-        title: updated_title, 
+    patch article_url(@article), params: {
+      article: {
+        title: updated_title,
         content: "Updated content for controller test.",
-        meta_keywords: new_meta_keywords 
-      } 
+        meta_keywords: new_meta_keywords
+      }
     }
     # assert_redirected_to article_url(@article), "Should redirect to the article's show page after update"
     @article.reload
@@ -187,32 +187,32 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
 
   test "should destroy article" do
     article_to_destroy = Article.create!(title: "Article to be Destroyed #{Time.now.to_i}", author: @author, category: @category, content: "destroy me", status: :published, published_at: Time.current, reading_time: 1)
-    
+
     puts "Article to be destroyed: #{article_to_destroy.inspect}"
     assert_difference("Article.count", -1, "Article count should decrease by 1") do
       delete article_url(article_to_destroy)
     end
     # ... (rest of assertions remain the same)
   end
-  
+
   test "should find article by its slug (FriendlyId)" do
     # Ensure featured_image is attached for this test
     unless @article.featured_image.attached?
       @article.featured_image.attach(
         io: File.open(DUMMY_ARTICLE_IMAGE_PATH),
         filename: DUMMY_ARTICLE_IMAGE_BASENAME,
-        content_type: 'image/png'
+        content_type: "image/png"
       )
       @article.save!
     end
 
-    get article_url(@article.slug) 
+    get article_url(@article.slug)
     assert_response :success
     # assert_equal @article, assigns(:article), "Should find article by slug and assign it"
   end
 
   test "should not create article with invalid parameters (e.g., blank title)" do
-    assert_no_difference(["Article.count", "Story.count", "Tag.count"], "No records should be created with invalid params") do
+    assert_no_difference([ "Article.count", "Story.count", "Tag.count" ], "No records should be created with invalid params") do
       post articles_url, params: { article: { title: "", content: "content", author_id: @author.id, category_id: @category.id } }
     end
     # ... (rest of assertions remain the same)

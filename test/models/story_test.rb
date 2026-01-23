@@ -1,7 +1,7 @@
 require "test_helper"
 
 class StoryTest < ActiveSupport::TestCase
-  fixtures :stories, :articles, :videos, :authors, :categories 
+  fixtures :stories, :articles, :videos, :authors, :categories
 
   setup do
     # Use descriptive fixture names for storyables
@@ -16,7 +16,7 @@ class StoryTest < ActiveSupport::TestCase
     # Setup specific story instances for general tests and scope tests, referencing descriptive storyables
     @story_article_published_tech = stories(:story_for_article_published_tech)
     @story_video_intro_rails = stories(:story_for_video_intro_rails)
-    
+
     @story_article_draft_lifestyle = stories(:story_for_article_draft_lifestyle)
     @story_scheduled = stories(:story_scheduled_article)
     @story_archived_top = stories(:story_for_archived_article_as_top)
@@ -35,14 +35,14 @@ class StoryTest < ActiveSupport::TestCase
     assert_respond_to @story_video_intro_rails, :storyable, "Story should respond to :storyable"
     assert_instance_of Video, @story_video_intro_rails.storyable, "Storyable for video story should be a Video instance"
   end
-  
+
   test "should be savable with valid storyable and attributes" do
     # Use a specific article fixture for creating a new story
-    article_for_new_story = articles(:article_review_general) 
+    article_for_new_story = articles(:article_review_general)
     story = Story.new(
-      storyable: article_for_new_story, 
+      storyable: article_for_new_story,
       slug: "savable-story-test-slug-#{Time.now.to_i}", # Ensure unique slug for test
-      is_published: true, 
+      is_published: true,
       published_at: Time.current
     )
     assert story.save, "Story should save with valid attributes. Errors: #{story.errors.full_messages.join(", ")}"
@@ -64,10 +64,10 @@ class StoryTest < ActiveSupport::TestCase
     # story_for_video_intro_rails: '2023-02-10 12:00:00'
     # story_for_video_api_design: '2023-02-20 14:30:00'
     # story_for_archived_article_as_top: '2022-10-01 09:00:00'
-    
+
     # Get published stories ordered by recent scope
     recent_stories_from_scope = Story.published.recent.to_a
-    
+
     # Manually create the expected order from published fixtures
     expected_ordered_stories = [
       stories(:story_for_video_api_design),    # '2023-02-20 14:30:00'
@@ -82,7 +82,7 @@ class StoryTest < ActiveSupport::TestCase
   test "with_slug scope should return stories that have a non-nil slug" do
     # All fixtures in stories.yml are defined with slugs.
     story_with_slug = stories(:story_for_article_published_tech)
-    
+
     # Create a story without a slug for testing (if possible and makes sense for the model)
     # Story model doesn't validate presence of slug.
     storyable_for_no_slug_test = articles(:article_draft_lifestyle)
