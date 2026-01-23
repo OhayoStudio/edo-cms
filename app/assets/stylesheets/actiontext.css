@@ -1,6 +1,6 @@
-/*
+/* 
  * Default Trix editor styles. See Action Text overwrites below.
-*/
+
 
 trix-editor {
   border: 1px solid #bbb;
@@ -359,7 +359,6 @@ trix-editor .attachment__metadata {
   .trix-content * {box-sizing: border-box; margin: 0;}
   .trix-content h1 {
     font-size: 1.4em;
-    /* line-height: 1.2; */
     font-family: "serif";
     font-weight: bold;
    }
@@ -434,7 +433,7 @@ trix-editor .attachment__metadata {
  * We need to override trix.css’s image gallery styles to accommodate the
  * <action-text-attachment> element we wrap around attachments. Otherwise,
  * images in galleries will be squished by the max-width: 33%; rule.
-*/
+
 .trix-content .attachment-gallery > action-text-attachment,
 .trix-content .attachment-gallery > .attachment {
   flex: 1 0 33%;
@@ -460,4 +459,4 @@ trix-editor .attachment__metadata {
     margin: -10px;
     display: block;
   }
-}
+} */

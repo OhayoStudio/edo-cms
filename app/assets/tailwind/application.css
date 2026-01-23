@@ -11,15 +11,89 @@
     }
   }
 
-  .trix-content {
+  .article-content{
+    font-family: "Lora", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    @media screen and (max-width: 640px) {
+      font-weight: 400;
+    }
+    a {
+      text-decoration: underline;
+    }
+    a:hover {
+      color: #294766;
+    }
+    ul {
+      margin-left: 2rem;
+      list-style-position: outside !important;
+      list-style-image: none !important;
+      list-style-type: circle !important;
+    }
+    
+    ol {
+      margin-left: 2rem;
+      list-style-position: outside !important;
+      list-style-image: none !important;
+      list-style-type: decimal !important;
+    }
+    p {
+      /* for small screens only */
+      @media screen and (max-width: 800px) {
+        font-size: 1.125rem;
+        padding: 0 0.5rem;
+      }
+    }
+  }
+
+  .movie-theatre {
+     background-image: url(theatre.jpg); 
+     background-size: cover; 
+     background-position: bottom;
+     height: 1200px;
+     margin-top: -200px;
+
+     /* for mobile screens */
+      @media screen and (max-width: 640px) {
+        height: 800px;
+        background-position: center;
+        margin-top: -100px;
+      }
+
+      .youtube-video {
+        padding-top: 360px; 
+        padding-left:13px; 
+        width:640px; 
+        margin:auto; 
+        text-align: center;
+
+        @media screen and (max-width: 640px) {
+          padding-top: 200px; 
+          width: 100%;
+          padding-left: 0;
+        }
+      }
+  }
+
+  .dark-mode-background {
+    background: linear-gradient(to bottom, 
+                #2a1810 0%, 
+                #4a2f1f 25%, 
+                #5d3a25 100%
+                )
+  }
+
+  /* .trix-content {
     font-family: "Lora", serif;
     font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
     font-size: 1.25rem;
     line-height: 1.6;
-    /* on smartphone makes the font heavier */
-    /* @screen sm { */
+    // on smartphone makes the font heavier
     @media screen and (max-width: 640px) {
       font-weight: 500;
     }
@@ -40,7 +114,7 @@
       list-style-image: none !important;
       list-style-type: decimal !important;
     }
-  }
+  } */
 
   .pagination {
     margin: auto;
