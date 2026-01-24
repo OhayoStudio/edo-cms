@@ -73,5 +73,5 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   # allow access from mobile devices using my ip address
-  config.hosts << "192.168.3.22:3001"
+  config.hosts << "192.168.3.255:3001"
 end

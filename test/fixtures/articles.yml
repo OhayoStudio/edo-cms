@@ -1,31 +1,65 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  title: MyString
-  subtitle: MyString
-  excerpt: MyText
-  meta_description: MyString
-  meta_keywords: MyString
-  featured: false
-  author_id: one
-  category_id: one
-  reading_time: 1
-  view_count: 1
-  status: 1
-  slug: MyString
-  published_at: 2025-02-02 11:38:04
+article_published_tech:
+  title: "Getting Started with Ruby on Rails 7"
+  subtitle: "A beginner's guide to building web applications with the latest Rails."
+  excerpt: "Learn the basics of Ruby on Rails 7, from installation to deploying your first app. This guide covers key concepts and new features."
+  meta_description: "A comprehensive beginner's guide to Ruby on Rails 7. Learn about MVC, Active Record, and more."
+  meta_keywords: "Ruby on Rails, Rails 7, Web Development, Beginner Guide, Programming"
+  featured: true
+  author: author_jane # Assumes author_jane exists in authors.yml
+  category: category_programming # Assumes category_programming exists in categories.yml
+  reading_time: 12 # Estimated minutes
+  view_count: 1520
+  status: :published # Using symbol for enum (maps to 2)
+  slug: getting-started-with-ruby-on-rails-7 # Slugs are auto-generated but can be set for predictability
+  published_at: <%= Time.current - 5.days %>
+  # Content will be provided via action_text/rich_texts.yml (e.g., article_published_tech_content)
 
-two:
-  title: MyString
-  subtitle: MyString
-  excerpt: MyText
-  meta_description: MyString
-  meta_keywords: MyString
+article_draft_lifestyle:
+  title: "Top 10 Travel Destinations for 2025"
+  subtitle: "Explore breathtaking places around the globe for your next adventure."
+  excerpt: "Discover our top picks for travel in 2025, from exotic beaches to historic cities. Start planning your dream vacation now!"
+  meta_description: "Find your next travel inspiration with our list of the top 10 destinations for 2025."
+  meta_keywords: "Travel, Vacation, Destinations, 2025 Travel, Adventure"
   featured: false
-  author_id: two
-  category_id: two
-  reading_time: 1
-  view_count: 1
-  status: 1
-  slug: MyString
-  published_at: 2025-02-02 11:38:04
+  author: author_john # Assumes author_john exists in authors.yml
+  category: category_lifestyle # Assumes category_lifestyle exists in categories.yml
+  reading_time: 8 # Estimated minutes
+  view_count: 0 # Drafts typically have 0 views
+  status: :draft # Using symbol for enum (maps to 0)
+  slug: top-10-travel-destinations-for-2025
+  # published_at: nil # Drafts usually don't have a published_at date
+  # Content will be provided via action_text/rich_texts.yml
+
+article_archived_tech:
+  title: "Understanding Monolithic vs Microservices Architecture"
+  subtitle: "A deep dive into software architecture patterns."
+  excerpt: "Explore the pros and cons of monolithic and microservices architectures to choose the right one for your project."
+  meta_description: "Comparing monolithic and microservices software architectures for scalability and maintainability."
+  meta_keywords: "Software Architecture, Microservices, Monolithic, Development, System Design"
+  featured: false
+  author: author_jane
+  category: category_technology
+  reading_time: 15
+  view_count: 2500
+  status: :archived # Using symbol for enum (maps to 3)
+  slug: understanding-monolithic-vs-microservices-architecture
+  published_at: <%= Time.current - 100.days %> # Archived articles were once published
+  # Content will be provided via action_text/rich_texts.yml
+
+article_review_general:
+  title: "The Future of AI in Content Creation"
+  subtitle: "How artificial intelligence is transforming the way we create and consume content."
+  excerpt: "An analysis of AI tools and their impact on writing, design, and video production. What does the future hold?"
+  meta_description: "Exploring the role of AI in content creation, its benefits, and ethical considerations."
+  meta_keywords: "AI, Artificial Intelligence, Content Creation, Future of Technology, Writing Tools"
+  featured: true
+  author: author_john
+  category: category_technology
+  reading_time: 10
+  view_count: 50 # In review, might have some internal views
+  status: :review # Using symbol for enum (maps to 1)
+  slug: future-of-ai-in-content-creation
+  # published_at: nil # Not yet published
+  # Content will be provided via action_text/rich_texts.yml

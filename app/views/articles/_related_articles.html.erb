@@ -1,0 +1,19 @@
+
+<% if related_articles.any? %>
+  <div class="max-w-6xl mx-auto my-10 p-4 border-b border-gray-300 dark:border-gray-600 lora">
+    <h2 class="text-2xl font-bold mb-4 dark:text-gray-300">More from <%= related_articles.first.category.name %></h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <% related_articles.each do |related_article| %>
+        <div class="overflow-hidden">
+          <%= link_to article_path(related_article.slug) do %>
+            <%= image_tag rails_blob_url(related_article.featured_image), class: "w-full h-40 object-cover" if related_article.featured_image.attached? %>
+            <div class="p-2">
+              <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-300"><%= related_article.title %></h3>
+              <p class="text-gray-600 dark:text-gray-400"><%= truncate(related_article.excerpt, length: 100) %></p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

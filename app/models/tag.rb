@@ -31,6 +31,6 @@ class Tag < ApplicationRecord
   private
 
   def generate_slug
-    self.slug = name.parameterize if name_changed?
+    self.slug = name.parameterize if name.present?
   end
 end

@@ -5,4 +5,8 @@
   <%3 end %>
 
   <%= render "article", article: @article %>
+
+  <%= render "articles/related_articles", related_articles: @article.related_articles %>
+
+  <%= render "articles/tag_related_articles", tag_related_articles: @article.tag_related_articles %>
 </div>

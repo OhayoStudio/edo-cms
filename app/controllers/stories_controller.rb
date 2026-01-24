@@ -5,9 +5,9 @@ class StoriesController < ApplicationController
   def index
     @top_story = Story.published.recent.with_slug.top.first
     @recent_stories = Story.published.recent.with_slug
-    @recent_stories = (@recent_stories - [ @top_story ]).first(4)
+    @recent_stories = (@recent_stories - [ @top_story ]).first(3)
 
-    @videos = Video.all.order(created_at: :desc).limit(4)
+    @videos = Video.all.order(created_at: :desc).limit(3)
 
     categories_with_articles = Category.joins(:articles).distinct
     @latest_stories_by_category = []
