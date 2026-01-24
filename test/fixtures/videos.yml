@@ -1,11 +1,30 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  title: MyString
-  description: MyText
-  url: MyString
+video_intro_rails:
+  title: "Introduction to Rails 7 Development"
+  description: "A comprehensive overview of new features in Rails 7 and how to get started with your first application. Covers Hotwire, Turbo, Stimulus, and more."
+  url: "https://www.youtube.com/watch?v=exampleRails7Intro"
+  slug: introduction-to-rails-7-development # Slugs are auto-generated but can be set for predictability
+  # featured_image would be attached in tests or via Active Storage direct upload fixtures if needed for default setup.
+  # For basic fixture setup, Active Storage attachments are often handled separately or in test setups.
 
-two:
-  title: MyString
-  description: MyText
-  url: MyString
+video_api_design:
+  title: "Best Practices for REST API Design"
+  description: "Learn how to design robust and maintainable RESTful APIs. This video covers versioning, authentication, status codes, and common pitfalls to avoid."
+  url: "https://www.youtube.com/watch?v=exampleAPIDesign"
+  slug: best-practices-for-rest-api-design
+
+video_unlisted_tutorial:
+  title: "Advanced Git Techniques (Unlisted)"
+  description: "An unlisted video tutorial covering advanced Git topics like rebasing, submodules, and Git LFS. For internal team training."
+  url: "https://www.youtube.com/watch?v=exampleGitAdvanced"
+  slug: advanced-git-techniques-unlisted
+  # This video might not be 'published' in the same way, or might not have an associated Story record
+  # depending on application logic for unlisted/private videos.
+
+# Example of a video that might be used to test specific edge cases or states
+video_short_clip:
+  title: "Quick Tip: CSS Flexbox"
+  description: "A 60-second tip on using CSS Flexbox for layout."
+  url: "https://www.youtube.com/watch?v=exampleCSSFlex"
+  slug: quick-tip-css-flexbox

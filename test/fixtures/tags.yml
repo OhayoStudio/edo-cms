@@ -1,19 +1,55 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  slug: MyString
-  description: MyText
-  featured: false
-  meta_title: MyString
-  meta_description: MyText
-  deleted_at: 2025-02-02 11:53:52
+tag_ruby:
+  name: Ruby
+  slug: ruby # Slugs are auto-generated, but can be set for predictability
+  description: "Posts related to the Ruby programming language, including Ruby on Rails, Sinatra, and other Ruby gems and tools."
+  featured: true
+  meta_title: "Ruby Programming Language Articles"
+  meta_description: "Explore articles and tutorials on Ruby, a dynamic, open source programming language with a focus on simplicity and productivity."
+  # deleted_at: nil
 
-two:
-  name: MyString
-  slug: MyString
-  description: MyText
+tag_rails:
+  name: Ruby on Rails
+  slug: ruby-on-rails
+  description: "Tutorials, guides, and news about Ruby on Rails, the popular web application framework."
+  featured: true
+  meta_title: "Ruby on Rails Web Development"
+  meta_description: "Learn about Ruby on Rails development, from beginner guides to advanced techniques."
+  # deleted_at: nil
+
+tag_javascript:
+  name: JavaScript
+  slug: javascript
+  description: "Everything about JavaScript, including ES6+, Node.js, React, Vue, Angular, and modern frontend development."
   featured: false
-  meta_title: MyString
-  meta_description: MyText
-  deleted_at: 2025-02-02 11:53:52
+  meta_title: "JavaScript Development Resources"
+  meta_description: "Your source for JavaScript tutorials, news, and library information."
+  # deleted_at: nil
+
+tag_lifestyle:
+  name: Lifestyle
+  slug: lifestyle-tips # Ensuring slug uniqueness if "lifestyle" is used elsewhere (e.g., category)
+  description: "Tips and articles on improving your daily life, health, and wellness."
+  featured: false
+  # meta_title: nil # Optional
+  # meta_description: nil # Optional
+  # deleted_at: nil
+
+tag_travel:
+  name: Travel
+  slug: travel-guides
+  description: "Travel guides, tips, and stories from around the world."
+  featured: true
+  meta_title: "Travel Guides and Inspiration"
+  meta_description: "Discover amazing destinations and plan your next adventure with our travel guides."
+  # deleted_at: nil
+
+tag_deleted:
+  name: Old Tech
+  slug: old-tech-archive
+  description: "This tag is for archived technology topics that are no longer current but kept for historical reference."
+  featured: false
+  deleted_at: <%= Time.current %>
+  meta_title: "Archived Technology Topics"
+  meta_description: "Historical technology articles."

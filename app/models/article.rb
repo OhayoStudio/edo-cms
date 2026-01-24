@@ -35,9 +35,27 @@ class Article < ApplicationRecord
   after_initialize :set_default_status, if: :new_record?
 
   # Scopes
-  scope :not_deleted, -> { where(deleted_at: nil) }
   scope :published, -> { where.not(published_at: nil).where(status: :published) }
   scope :featured, -> { where(featured: true) }
+
+  def related_articles(limit = 3)
+    Article.published
+           .where(category_id: category_id)
+           .where.not(id: id)
+           .order(published_at: :desc)
+           .limit(limit)
+  end
+
+  def tag_related_articles(limit = 3)
+    Article.published
+           .joins(:tags)
+           .where(tags: { id: tags.pluck(:id) })
+           .where.not(id: id)
+           .distinct
+           .order(published_at: :desc)
+           .limit(limit)
+  end
+  #
 
   private
 
@@ -50,9 +68,13 @@ class Article < ApplicationRecord
   end
 
   def calculate_reading_time
-    return unless content.present?
-    words_per_minute = 200
-    word_count = content.to_plain_text.split.size
-    self.reading_time = (word_count / words_per_minute.to_f).ceil
+    if content.present? && content.body.present? && content.body.to_plain_text.present?
+      words_per_minute = 200
+      word_count = content.to_plain_text.split.size
+      self.reading_time = (word_count.to_f / words_per_minute).ceil
+      self.reading_time = 1 if self.reading_time < 1 # Ensure it's at least 1
+    else
+      self.reading_time = 1 # Default to 1 minute if no content or content is blank
+    end
   end
 end

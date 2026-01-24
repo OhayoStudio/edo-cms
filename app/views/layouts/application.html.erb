@@ -1,28 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="sepiabraun">
   <head>
     <title>
-      <%= content_for(:title) || "Edo" %>
+      <%= content_for(:title) || "Sepia Braun" %>
     </title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
-
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest" , href: pwa_manifest_path(format: :json) %>
-
+    <%= tag.link rel: "manifest" , href: pwa_manifest_path(format: :json) %>
     <link rel="icon" href="/icon.png" type="image/png" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icon.png" />
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "lexxy" %>
     <%= javascript_importmap_tags %>
     <script>
-      // Prevent Flash Of Wrong Theme (FOWT)
-      (function() {
+      // Prevent Flash Of Wrong Theme (FOWT) and ensure correct theme on Turbo navigation
+      function applyTheme() {
         const theme = localStorage.getItem('theme') || 'light';
         if (theme === 'dark') {
           document.documentElement.classList.add('dark');
@@ -31,28 +29,35 @@
           document.documentElement.classList.remove('dark');
           document.documentElement.style.colorScheme = 'light';
         }
-      })();
+      }
+      applyTheme();
+      document.addEventListener('turbo:load', applyTheme);
     </script>
   </head>
 
-  <body class="h-full bg-gray-200 dark:bg-slate-800 transition-colors duration-200" data-controller="dark-mode">
-    <header class="bg-slate-900 shadow dark:bg-slate-900 hidden sm:block sticky top-0 z-50">
+  <body class="sepiabraun h-full bg-gray-200 dark:bg-gray-900 transition-colors duration-200" data-controller="dark-mode">
+    <header
+    class="bg-gray-200 text-amber-900 shadow dark:bg-[linear-gradient(to_bottom,_#2a1810_0%,_#4a2f1f_25%,_#5d3a25_100%)] dark:text-gray-200 hidden sm:block sticky top-0 z-50 lora ">      
       <nav class="container px-16 mx-auto flex items-center justify-between">
-        <a href="/" class="text-white text-lg font-serif">Edo.Tokyo</a>
+        <a href="/" class="text-amber-900 dark:text-gray-200 text-lg font-serif flex items-center">
+          <%= image_tag "sepiabraun.svg", alt: "Sepia Braun", class: "w-20 h-20", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo" %>
+          <%= image_tag "sepia.svg", alt: "Sepia Braun", class: "w-20 h-20", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo-dark" %>
+          <span class="ml-2 ">Sepia Braun</span>
+        </a>
 
         <ul class="flex gap-8">
           <li class="p-6">
-            <%= link_to "Articles", articles_path, class: "text-red-400 hover:text-yellow-300 #{articles_section? ? 'text-red-400' : 'text-white'}" %>
+            <%= link_to "Articles", articles_path, class: "hover:text-amber-300 #{articles_section? ? 'text-amber-600' : 'text-amber-900'}" %>
           </li>
           <!-- <li class="p-6">
-            <%= link_to "Authors", authors_path, class: "hover:text-yellow-300 #{current_page?(authors_path) ? 'text-red-400' : 'text-white'}" %>
+            <%= link_to "Authors", authors_path, class: "hover:text-amber-300 #{current_page?(authors_path) ? 'text-amber-600' : 'text-amber-900'}" %>
           </li> -->
           <li class="p-6">
-            <%= link_to "Videos", videos_path, class: "text-red-400 hover:text-yellow-300 #{current_page?(videos_path) ? 'text-red-400' : 'text-white'}" %>
+            <%= link_to "Videos", videos_path, class: "hover:text-amber-300 #{current_page?(videos_path) ? 'text-amber-600' : 'text-amber-900'}" %>
           </li>
           <li class="p-6">
-            <a href="/about" class="text-white hover:text-yellow-300">About</a>
-            <%#= link_to "About" , authors_path, class: "hover:text-yellow-300  #{current_page?(about_path) ? 'text-red-400' : 'text-white'}" %>
+            <a href="/about" class="text-amber-900 hover:text-amber-300">About</a>
+            <%#= link_to "About" , authors_path, class: "hover:text-amber-300  #{current_page?(about_path) ? 'text-amber-600' : 'text-amber-900'}" %>
           </li>
           <li class="p-4">
             <%= render "common/darkmode_toggle" %>
@@ -61,9 +66,14 @@
       </nav>
     </header>
 
-    <header class="bg-slate-900 dark:bg-slate-900 shadow block sm:hidden sticky top-0 z-50">
+    <header class="bg-slate-900 dark:bg-slate-900 shadow block sm:hidden sticky top-0 z-50 dark-mode-background">
       <div class="flex items-center justify-between p-4">
-        <div><a href="/" class="text-white text-lg font-serif">Le Webogon</a></div>
+        <div>
+          <a href="/" class="text-white text-lg font-serif flex items-center">
+          <%= image_tag "sepia.svg", alt: "SB", class: "w-10 h-10", style: "transform: scale(2);transform-origin: 50% 50%;transition: transform 0.3s ease;" %>
+          <span class="ml-4">Sepia Braun</span>
+          </a>
+        </div>
         <button id="hamburger" class="text-white focus:outline-none">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
@@ -96,16 +106,16 @@
     
     <!-- <div class="py-8 hidden sm:block">
       <h1 class="text-center text-gray-400 font-serif text-6xl">
-        Le Webogon
+        Sepia Braun
       </h1>
     </div> -->
     <!-- class="container md:mx-auto md:mt-2 md:px-5 flex" -->
     <main>
       <%= yield %>
     </main>
-    <footer class="bg-gray-100 dark:bg-gray-700 py-8 mt-24">
+    <footer class="bg-gray-100 dark:bg-gray-700 py-8 mt-24 lora">
       <div class="container mx-auto text-center text-gray-600 dark:text-gray-300">
-        <p>&copy; 2025 Edo. All rights reserved.</p>
+        <p>&copy; 2025 Sepia Braun. All rights reserved.</p>
       </div>
     </footer>
     <script>

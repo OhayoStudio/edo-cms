@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = [ "lightIcon", "darkIcon", "themeToggle" ]
 
   connect() {
-    console.log('DarkMode controller connected');
+    // console.log('DarkMode controller connected');
     this.initializeTheme();
   }
 
@@ -29,43 +29,37 @@ export default class extends Controller {
   toggleTheme() {
     console.log('Theme toggle clicked');
     const isDark = document.documentElement.classList.contains('dark');
-    const newTheme = isDark ? 'light' : 'dark';
-
-    // Simulate prefers-color-scheme override
-    const metaTag = document.querySelector('meta[name="color-scheme"]');
-    if (metaTag) {
-      metaTag.setAttribute('content', newTheme);
-    } else {
-      const newMetaTag = document.createElement('meta');
-      newMetaTag.setAttribute('name', 'color-scheme');
-      newMetaTag.setAttribute('content', newTheme);
-      document.head.appendChild(newMetaTag);
-    }
-
-    this.updateTheme(newTheme);
+    this.updateTheme(isDark ? 'light' : 'dark');
   }
 
   updateTheme(theme) {
     const htmlElement = document.documentElement;
     htmlElement.classList.toggle('dark');
-
-    // const html = document.documentElement;
-    console.log('Updating theme to:', theme);
-    
+    // console.log('Updating theme to:', theme);
     if (theme === 'dark') {
       // html.classList.add('dark');
       htmlElement.style.colorScheme = 'dark';
       localStorage.setItem('theme', 'dark');
       this.lightIconTarget.classList.remove('hidden');
       this.darkIconTarget.classList.add('hidden');
-      console.log('Dark mode enabled, dark class present:', htmlElement.classList.contains('dark'));
+      // console.log('Dark mode enabled, dark class present:', htmlElement.classList.contains('dark'));
+      // replace the logo of sepia.svg to sepiabraun.svg
+      const logo = document.getElementById('logo');
+      const logoDark = document.getElementById('logo-dark');
+      logoDark.style.display = 'block';
+      logo.style.display = 'none';
     } else {
       // htmlElement.classList.remove('dark');
       htmlElement.style.colorScheme = 'light';
       localStorage.setItem('theme', 'light');
       this.lightIconTarget.classList.add('hidden');
       this.darkIconTarget.classList.remove('hidden');
-      console.log('Light mode enabled, dark class absent:', !htmlElement.classList.contains('dark'));
+      // console.log('Light mode enabled, dark class absent:', !htmlElement.classList.contains('dark'));
+      // replace the logo of sepiabraun.svg to sepia.svg
+      const logo = document.getElementById('logo');
+      const logoDark = document.getElementById('logo-dark');
+      logo.style.display = 'block';
+      logoDark.style.display = 'none';
     }
   }
 }
