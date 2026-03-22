@@ -3,6 +3,7 @@ class Video < ApplicationRecord
     friendly_id :title, use: :slugged
 
     has_one_attached :featured_image
+    has_one :story, as: :storyable
 
     validates :title, presence: true
     validates :description, presence: true
