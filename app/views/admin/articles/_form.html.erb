@@ -1,0 +1,122 @@
+<%= form_with model: [:admin, article], class: "space-y-6" do |f| %>
+  <% if article.errors.any? %>
+    <div class="bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4">
+      <p class="text-sm font-medium text-red-800 dark:text-red-300 mb-2">
+        <%= pluralize(article.errors.count, "error") %> prevented this article from being saved:
+      </p>
+      <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-1">
+        <% article.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="md:col-span-2">
+      <%= f.label :title, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.text_field :title,
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100
+                  #{article.errors[:title].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-[#704214]'}" %>
+    </div>
+
+    <div class="md:col-span-2">
+      <%= f.label :subtitle, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.text_field :subtitle,
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+    </div>
+
+    <div>
+      <%= f.label :author_id, "Author", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.collection_select :author_id, Author.not_deleted.order(:first_name), :id, :display_name,
+          { include_blank: "— Select author —" },
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100
+                  #{article.errors[:author_id].any? ? 'border-red-400' : 'border-gray-300 dark:border-gray-600'}" %>
+    </div>
+
+    <div>
+      <%= f.label :category_id, "Category", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.collection_select :category_id, Category.not_deleted.order(:name), :id, :name,
+          { include_blank: "— Select category —" },
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100
+                  #{article.errors[:category_id].any? ? 'border-red-400' : 'border-gray-300 dark:border-gray-600'}" %>
+    </div>
+
+    <div>
+      <%= f.label :status, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.select :status, Article.statuses.keys.map { |s| [s.humanize, s] },
+          { include_blank: false },
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600" %>
+    </div>
+
+    <div>
+      <%= f.label :published_at, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.datetime_local_field :published_at,
+          value: article.published_at&.strftime("%Y-%m-%dT%H:%M"),
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600" %>
+    </div>
+
+    <div class="md:col-span-2">
+      <%= f.label :excerpt, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.text_area :excerpt, rows: 3,
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+      <p class="mt-1 text-xs text-gray-400">Max 150 characters</p>
+    </div>
+
+    <div class="md:col-span-2">
+      <%= f.label :content, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.lexxy_rich_text_area :content %>
+    </div>
+
+    <div class="md:col-span-2">
+      <%= f.label :meta_description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.text_area :meta_description, rows: 2,
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+      <p class="mt-1 text-xs text-gray-400">Max 160 characters</p>
+    </div>
+
+    <div class="md:col-span-2">
+      <%= f.label :meta_keywords, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.text_field :meta_keywords,
+          placeholder: "comma, separated, tags",
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+      <p class="mt-1 text-xs text-gray-400">Comma-separated — will be created as Tags automatically</p>
+    </div>
+
+    <div>
+      <%= f.label :featured_image, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <% if article.featured_image.attached? %>
+        <div class="mb-2">
+          <%= image_tag article.featured_image.variant(resize_to_limit: [200, 120]),
+              class: "rounded border border-gray-200 dark:border-gray-600" %>
+        </div>
+      <% end %>
+      <%= f.file_field :featured_image, accept: "image/*",
+          class: "block w-full text-sm text-gray-500 dark:text-gray-400
+                  file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0
+                  file:text-xs file:bg-[#704214] file:text-white hover:file:bg-[#52300f]" %>
+    </div>
+
+    <div class="flex items-center gap-2 pt-5">
+      <%= f.check_box :featured, class: "rounded border-gray-300 text-[#704214]" %>
+      <%= f.label :featured, "Featured article", class: "text-sm text-gray-700 dark:text-gray-300" %>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-4 pt-2">
+    <%= f.submit article.persisted? ? "Update Article" : "Create Article",
+        class: "px-5 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors cursor-pointer" %>
+    <%= link_to "Cancel", admin_articles_path,
+        class: "px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
+                rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" %>
+  </div>
+<% end %>

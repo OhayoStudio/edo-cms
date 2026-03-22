@@ -3,8 +3,8 @@ class Tag < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: :slugged
 
-  paginates_per 3
-  max_paginates_per 3
+  paginates_per 10
+  max_paginates_per 10
 
   # Relationships
   has_and_belongs_to_many :articles
