@@ -1,0 +1,86 @@
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-serif text-[#704214] dark:text-amber-200">Articles</h1>
+  <%= link_to "New Article", new_admin_article_path,
+      class: "px-4 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors" %>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-[#F9F7F0] dark:bg-gray-700 text-[#704214] dark:text-amber-300">
+      <tr>
+        <th class="text-left px-4 py-3 font-semibold">Title</th>
+        <th class="text-left px-4 py-3 font-semibold">Author</th>
+        <th class="text-left px-4 py-3 font-semibold">Status</th>
+        <th class="text-left px-4 py-3 font-semibold">Created</th>
+        <th class="text-left px-4 py-3 font-semibold">Updated</th>
+        <th class="text-right px-4 py-3 font-semibold">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+      <% @articles.each do |article| %>
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 max-w-xs truncate">
+            <%= article.title %>
+          </td>
+          <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs">
+            <%= article.author&.display_name %>
+          </td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-0.5 rounded text-xs font-medium
+              <%= article.published? ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
+                                     : 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' %>">
+              <%= article.status.humanize %>
+            </span>
+          </td>
+          <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+            <%= article.created_at.strftime("%b %-d, %Y") %>
+          </td>
+          <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+            <%= article.updated_at.strftime("%b %-d, %Y") %>
+          </td>
+          <td class="px-4 py-3 text-right">
+            <div class="flex items-center justify-end gap-2 flex-wrap">
+              <%= link_to "Edit", edit_admin_article_path(article),
+                  class: "px-2 py-1 text-xs border border-[#704214] text-[#704214]
+                          dark:border-amber-400 dark:text-amber-400 rounded hover:bg-amber-50
+                          dark:hover:bg-amber-900/20 transition-colors" %>
+
+              <% if article.published? %>
+                <%= button_to "Unpublish", unpublish_admin_article_path(article), method: :patch,
+                    class: "px-2 py-1 text-xs border border-gray-400 text-gray-600
+                            dark:border-gray-500 dark:text-gray-300 rounded hover:bg-gray-100
+                            dark:hover:bg-gray-700 transition-colors cursor-pointer" %>
+              <% else %>
+                <%= button_to "Publish", publish_admin_article_path(article), method: :patch,
+                    class: "px-2 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded transition-colors cursor-pointer" %>
+              <% end %>
+
+              <button type="button"
+                      class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors cursor-pointer"
+                      data-controller="admin-modal"
+                      data-action="click->admin-modal#open"
+                      data-admin-modal-url-value="<%= admin_article_path(article) %>"
+                      data-admin-modal-title-value="Delete &ldquo;<%= article.title %>&rdquo;?">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+
+      <% if @articles.empty? %>
+        <tr>
+          <td colspan="6" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
+            No articles yet.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-6 flex justify-center">
+  <%= paginate @articles %>
+</div>
+
+<%= render "admin/shared/confirm_modal" %>

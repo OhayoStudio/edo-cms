@@ -1,10 +1,31 @@
 Rails.application.routes.draw do
-  resources :videos
-  resources :stories
-  resources :tags
-  resources :categories
-  resources :authors
-  resources :articles
+  resource :session
+  resources :passwords, param: :token
+
+  namespace :admin do
+    root "articles#index"
+    resources :articles do
+      member do
+        patch :publish
+        patch :unpublish
+      end
+    end
+    resources :videos do
+      member do
+        patch :publish
+        patch :unpublish
+      end
+    end
+    resources :categories
+    resources :tags
+  end
+
+  resources :videos,     only: %i[index show]
+  resources :stories,    only: %i[index show]
+  resources :tags,       only: %i[index show]
+  resources :categories, only: %i[index show]
+  resources :authors,    only: %i[show]
+  resources :articles,   only: %i[index show]
   get "about" => "about#index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

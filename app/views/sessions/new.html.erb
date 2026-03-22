@@ -1,0 +1,48 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-200 dark:bg-gray-900">
+  <div class="w-full max-w-sm">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+      <h1 class="font-serif text-2xl text-[#704214] dark:text-amber-200 mb-6 text-center">
+        Edo CMS — Admin
+      </h1>
+
+      <% if alert = flash[:alert] %>
+        <p class="mb-4 py-2 px-3 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300
+                  text-sm rounded border border-red-200 dark:border-red-700">
+          <%= alert %>
+        </p>
+      <% end %>
+
+      <%= form_with url: session_url, class: "space-y-4" do |form| %>
+        <div>
+          <%= form.label :email_address, "Email", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.email_field :email_address,
+              required: true, autofocus: true,
+              autocomplete: "username",
+              placeholder: "admin@sepia-braun.com",
+              value: params[:email_address],
+              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm
+                      bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
+                      focus:outline-[#704214] dark:focus:outline-amber-400" %>
+        </div>
+
+        <div>
+          <%= form.label :password, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+          <%= form.password_field :password,
+              required: true,
+              autocomplete: "current-password",
+              placeholder: "••••••••",
+              maxlength: 72,
+              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm
+                      bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
+                      focus:outline-[#704214] dark:focus:outline-amber-400" %>
+        </div>
+
+        <div class="pt-2">
+          <%= form.submit "Sign in",
+              class: "w-full rounded px-4 py-2.5 bg-[#704214] hover:bg-[#52300f] text-white
+                      text-sm font-medium cursor-pointer transition-colors" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
