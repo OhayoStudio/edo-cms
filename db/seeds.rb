@@ -7,3 +7,13 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Admin user — single account for site owner
+# Set ADMIN_EMAIL and ADMIN_PASSWORD env vars before running db:seed
+if User.count.zero?
+  email    = ENV.fetch("ADMIN_EMAIL",    "admin@sepia-braun.com")
+  password = ENV.fetch("ADMIN_PASSWORD", SecureRandom.hex(16))
+  User.create!(email_address: email, password: password, password_confirmation: password)
+  puts "Admin user created: #{email}"
+  puts "Password: #{password}" if ENV["ADMIN_PASSWORD"].blank?
+end

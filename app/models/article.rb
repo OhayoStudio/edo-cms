@@ -2,8 +2,8 @@ class Article < ApplicationRecord
   extend FriendlyId
   friendly_id :title, use: :slugged
 
-  paginates_per 3
-  max_paginates_per 3
+  paginates_per 10
+  max_paginates_per 10
 
   # Active Storage and Action Text
   has_rich_text :content
@@ -13,6 +13,7 @@ class Article < ApplicationRecord
   belongs_to :author
   belongs_to :category
   has_and_belongs_to_many :tags
+  has_one :story, as: :storyable
 
   # Enums
   enum :status, %i[draft review published archived]
