@@ -40,7 +40,6 @@
 /config/credentials.yml.enc
 /config/database.yml
 /config/secrets.yml
-/config/pinterest.yml
 
 # vscode
 .vscode

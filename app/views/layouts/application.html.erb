@@ -49,15 +49,11 @@
           <li class="p-6">
             <%= link_to "Articles", articles_path, class: "hover:text-amber-300 #{articles_section? ? 'text-amber-600' : 'text-amber-900'}" %>
           </li>
-          <!-- <li class="p-6">
-            <%= link_to "Authors", authors_path, class: "hover:text-amber-300 #{current_page?(authors_path) ? 'text-amber-600' : 'text-amber-900'}" %>
-          </li> -->
           <li class="p-6">
             <%= link_to "Videos", videos_path, class: "hover:text-amber-300 #{current_page?(videos_path) ? 'text-amber-600' : 'text-amber-900'}" %>
           </li>
           <li class="p-6">
             <a href="/about" class="text-amber-900 hover:text-amber-300">About</a>
-            <%#= link_to "About" , authors_path, class: "hover:text-amber-300  #{current_page?(about_path) ? 'text-amber-600' : 'text-amber-900'}" %>
           </li>
           <li class="p-4">
             <%= render "common/darkmode_toggle" %>
@@ -89,12 +85,8 @@
           <li class="p-6">
             <%= link_to "Videos", videos_path, class: "text-red-400 hover:text-yellow-300 #{current_page?(videos_path) ? 'text-red-400' : 'text-white'}" %>
           </li>
-          <!-- <li class="p-6">
-            <%= link_to "Authors", authors_path, class: "hover:text-yellow-300 #{current_page?(authors_path) ? 'text-red-400' : 'text-white'}" %>
-          </li> -->
           <li class="p-6">
             <a href="/about" class="text-white hover:text-yellow-300">About</a>
-            <%#= link_to "About" , authors_path, class: "hover:text-yellow-300  #{current_page?(about_path) ? 'text-red-400' : 'text-white'}" %>
           </li>
           <li class="p-4">
             <%= render "common/darkmode_toggle" %>
