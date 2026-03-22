@@ -55,6 +55,14 @@
     </div>
 
     <div>
+      <%= f.label :reading_time, "Reading time (min)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.number_field :reading_time, min: 1,
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+      <p class="mt-1 text-xs text-gray-400">Auto-calculated on save</p>
+    </div>
+
+    <div>
       <%= f.label :published_at, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.datetime_local_field :published_at,
           value: article.published_at&.strftime("%Y-%m-%dT%H:%M"),
@@ -94,7 +102,7 @@
 
     <div>
       <%= f.label :featured_image, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-      <% if article.featured_image.attached? %>
+      <% if article.persisted? && article.featured_image.attached? %>
         <div class="mb-2">
           <%= image_tag article.featured_image.variant(resize_to_limit: [200, 120]),
               class: "rounded border border-gray-200 dark:border-gray-600" %>
