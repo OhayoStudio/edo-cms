@@ -40,7 +40,7 @@
 
     <div>
       <%= f.label :featured_image, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-      <% if video.featured_image.attached? %>
+      <% if video.persisted? && video.featured_image.attached? %>
         <div class="mb-2">
           <%= image_tag video.featured_image.variant(resize_to_limit: [200, 120]),
               class: "rounded border border-gray-200 dark:border-gray-600" %>
