@@ -40,26 +40,36 @@ export default class extends Controller {
       // html.classList.add('dark');
       htmlElement.style.colorScheme = 'dark';
       localStorage.setItem('theme', 'dark');
-      this.lightIconTarget.classList.remove('hidden');
-      this.darkIconTarget.classList.add('hidden');
+      this.lightIconTargets.forEach(el => el.classList.remove('hidden'));
+      this.darkIconTargets.forEach(el => el.classList.add('hidden'));
       // console.log('Dark mode enabled, dark class present:', htmlElement.classList.contains('dark'));
       // replace the logo of sepia.svg to sepiabraun.svg
       const logo = document.getElementById('logo');
       const logoDark = document.getElementById('logo-dark');
       logoDark.style.display = 'block';
       logo.style.display = 'none';
+
+      const logoMobile = document.getElementById('logo-mobile');
+      const logoMobileDark = document.getElementById('logo-mobile-dark');
+      logoMobileDark.style.display = 'block';
+      logoMobile.style.display = 'none';
     } else {
       // htmlElement.classList.remove('dark');
       htmlElement.style.colorScheme = 'light';
       localStorage.setItem('theme', 'light');
-      this.lightIconTarget.classList.add('hidden');
-      this.darkIconTarget.classList.remove('hidden');
+      this.lightIconTargets.forEach(el => el.classList.add('hidden'));
+      this.darkIconTargets.forEach(el => el.classList.remove('hidden'));
       // console.log('Light mode enabled, dark class absent:', !htmlElement.classList.contains('dark'));
       // replace the logo of sepiabraun.svg to sepia.svg
       const logo = document.getElementById('logo');
       const logoDark = document.getElementById('logo-dark');
       logo.style.display = 'block';
       logoDark.style.display = 'none';
+
+      const logoMobile = document.getElementById('logo-mobile');
+      const logoMobileDark = document.getElementById('logo-mobile-dark');
+      logoMobile.style.display = 'block';
+      logoMobileDark.style.display = 'none';
     }
   }
 }

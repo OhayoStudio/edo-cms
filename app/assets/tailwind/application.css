@@ -79,11 +79,16 @@
   }
 
   .dark-mode-background {
-    background: linear-gradient(to bottom, 
+    /* background: linear-gradient(to bottom, 
                 #2a1810 0%, 
                 #4a2f1f 25%, 
                 #5d3a25 100%
-                )
+                ) */
+    background: linea-gradient(to bottom, 
+                #262624 0%, 
+                #423525 25%, 
+                #5e4b35 100%
+                );
   }
 
   /* .trix-content {

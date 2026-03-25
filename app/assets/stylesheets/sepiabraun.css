@@ -43,4 +43,17 @@
     --color-gray-100: #70421482;    
 }
 
-/* Add more custom variables for your theme as needed */
+/* Remap lexxy editor/content variables to the sepia theme */
+.sepiabraun {
+  --lexxy-color-ink:           #423525;
+  --lexxy-color-ink-medium:    #7a6a58;
+  --lexxy-color-ink-light:     #b3a290;
+  --lexxy-color-ink-lighter:   #d6c9b8;
+  --lexxy-color-ink-lightest:  #f9f7f0;
+  --lexxy-color-canvas:        #F9F7F0;
+
+  --lexxy-color-accent-dark:    #704214;
+  --lexxy-color-accent-medium:  #A67B5B;
+  --lexxy-color-accent-light:   #D9C4A6;
+  --lexxy-color-accent-lightest: #f5efe6;
+}

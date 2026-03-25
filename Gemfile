@@ -47,7 +47,7 @@ gem "friendly_id"
 gem "httparty"
 gem "kaminari"
 gem "view_component"
-gem "lexxy", "~> 0.7.2.beta"
+gem "lexxy", "~> 0.9.0.beta"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
