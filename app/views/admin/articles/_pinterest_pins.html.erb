@@ -1,0 +1,50 @@
+<% return unless article.published? %>
+
+<% image_blob =
+  if article.featured_image.attached?
+    article.featured_image.blob
+  else
+    article.content.embeds.find { |e| e.blob.image? }&.blob
+  end %>
+<% return unless image_blob %>
+
+<% article_url = url_for(article) %>
+<% image_url   = rails_blob_url(image_blob) %>
+<% category_name = article.category&.name.to_s %>
+<% top_tag       = article.tags.first&.name.to_s %>
+
+<% pins = [
+  {
+    label:       "Pin 1 — Headline",
+    description: [article.title, article.excerpt.presence || article.meta_description].compact.join(" — ")
+  },
+  {
+    label:       "Pin 2 — Context",
+    description: [article.subtitle.presence || article.title, category_name].reject(&:blank?).join(" · ")
+  },
+  {
+    label:       "Pin 3 — Discovery",
+    description: [
+      article.title,
+      top_tag.present? ? "##{top_tag.parameterize(separator: '')}" : nil,
+      "Save for later"
+    ].compact.join(" · ")
+  }
+] %>
+
+<div class="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+  <h2 class="text-base font-semibold text-[#704214] dark:text-amber-200 mb-4">Pinterest Pins</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <% pins.each do |pin| %>
+      <div class="border border-gray-200 dark:border-gray-600 rounded-lg p-4 flex flex-col gap-3 bg-gray-50 dark:bg-gray-800">
+        <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"><%= pin[:label] %></p>
+        <p class="text-sm text-gray-800 dark:text-gray-200 flex-1"><%= pin[:description] %></p>
+        <%= link_to "Save to Pinterest",
+              "https://pinterest.com/pin/create/button/?url=#{CGI.escape(article_url)}&media=#{CGI.escape(image_url)}&description=#{CGI.escape(pin[:description])}",
+              target: "_blank",
+              rel: "noopener noreferrer",
+              class: "inline-block text-center text-xs font-medium text-white bg-[#E60023] hover:bg-[#ad081b] rounded px-3 py-1.5 transition-colors" %>
+      </div>
+    <% end %>
+  </div>
+</div>
