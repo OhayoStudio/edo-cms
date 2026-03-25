@@ -36,12 +36,11 @@
   </head>
 
   <body class="edo-cms h-full bg-gray-200 dark:bg-gray-900 transition-colors duration-200" data-controller="dark-mode">
-    <header
-    class="bg-gray-200 text-amber-900 dark:bg-[linear-gradient(to_bottom,_#2a1810_0%,_#4a2f1f_25%,_#5d3a25_100%)] dark:text-gray-200 hidden sm:block sticky top-0 z-50 lora ">      
+    <header class="bg-gray-200 text-amber-900 dark:bg-slate-800 dark:text-[var(--color-accent)] hidden sm:block sticky top-0 z-50 lora ">      
       <nav class="container px-16 mx-auto flex items-center justify-between">
-        <a href="/" class="text-amber-900 dark:text-gray-200 text-lg font-serif flex items-center">
+        <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center">
           <%= image_tag "edo-cms.svg", alt: "Edo CMS", class: "w-20 h-20", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo" %>
-          <%= image_tag "sepia.svg", alt: "Edo CMS", class: "w-20 h-20", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo-dark" %>
+          <%= image_tag "sepia-clear.svg", alt: "Edo CMS", class: "w-20 h-20", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo-dark" %>
           <span class="ml-2 ">Edo CMS</span>
         </a>
 
@@ -62,52 +61,67 @@
       </nav>
     </header>
 
-    <header class="bg-slate-900 dark:bg-slate-900 shadow block sm:hidden sticky top-0 z-50 dark-mode-background">
+    <!-- Mobile Header -->
+    <header class="bg-gray-200 text-amber-900 dark:bg-slate-800 dark:text-[var(--color-accent)] block sm:hidden sticky top-0 z-50">
       <div class="flex items-center justify-between p-4">
         <div>
-          <a href="/" class="text-white text-lg font-serif flex items-center">
-          <%= image_tag "sepia.svg", alt: "SB", class: "w-10 h-10", style: "transform: scale(2);transform-origin: 50% 50%;transition: transform 0.3s ease;" %>
-          <span class="ml-4">Edo CMS</span>
+          <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center">
+            <%= image_tag "edo-cms.svg", alt: "Edo CMS", class: "w-10 h-10", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo-mobile" %>
+            <%= image_tag "sepia-clear.svg", alt: "Edo CMS", class: "w-10 h-10", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo-mobile-dark" %>
+            <span class="ml-2 ">Edo CMS</span>
           </a>
         </div>
-        <button id="hamburger" class="text-white focus:outline-none">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-          </svg>
-        </button>
+        <div class="flex items-center gap-2">
+          <%= render "common/darkmode_toggle" %>
+          <button id="hamburger" class="text-amber-900 dark:text-[var(--color-accent)] focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+          </button>
+        </div>
       </div>
       <nav id="mobile-menu" class="hidden">
-        <!-- existing code for the list -->
         <ul class="flex gap-8">
           <li class="p-6">
-            <%= link_to "Articles", articles_path, class: "text-red-400 hover:text-yellow-300 #{current_page?(articles_path) ? 'text-red-400' : 'text-white'}" %>
+            <%= link_to "Articles", articles_path, class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(articles_path) ? 'text-amber-900 dark:text-[var(--color-accent)]' : 'text-amber-600'}" %>
           </li>
           <li class="p-6">
-            <%= link_to "Videos", videos_path, class: "text-red-400 hover:text-yellow-300 #{current_page?(videos_path) ? 'text-red-400' : 'text-white'}" %>
+            <%= link_to "Videos", videos_path, class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(videos_path) ? 'text-amber-900 dark:text-[var(--color-accent)]' : 'text-amber-600'}" %>
           </li>
           <li class="p-6">
-            <a href="/about" class="text-white hover:text-yellow-300">About</a>
-          </li>
-          <li class="p-4">
-            <%= render "common/darkmode_toggle" %>
+            <a href="/about" class="text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300">About</a>
           </li>
         </ul>
       </nav>
     </header>
-
-    
-    <!-- <div class="py-8 hidden sm:block">
-      <h1 class="text-center text-gray-400 font-serif text-6xl">
-        Edo CMS
-      </h1>
-    </div> -->
-    <!-- class="container md:mx-auto md:mt-2 md:px-5 flex" -->
     <main>
       <%= yield %>
     </main>
-    <footer class="bg-gray-100 dark:bg-gray-700 py-8 mt-24 lora">
-      <div class="container mx-auto text-center text-gray-600 dark:text-gray-300">
-        <p>&copy; 2025-<%= Time.current.year %> Edo CMS. All rights reserved.</p>
+    <footer class="mt-24 lora border-t border-[#D9C4A6] dark:border-[#52300f]">
+      <div class="container mx-auto px-6 py-12">
+
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
+
+          <!-- Brand + copyright -->
+          <div class="space-y-1">
+            <p class="font-serif text-[#704214] dark:text-amber-200 font-semibold tracking-wide">Edo CMS</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">&copy; 2025&ndash;<%= Time.current.year %></p>
+          </div>
+
+          <!-- Navigation links -->
+          <nav class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-400">
+            <%= link_to "Articles", articles_path,
+                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
+            <%= link_to "Videos", videos_path,
+                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
+            <%= link_to "About", about_path,
+                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
+            <%= link_to "Colophon", colophon_path,
+                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
+          </nav>
+
+        </div>
+
       </div>
     </footer>
     <script>

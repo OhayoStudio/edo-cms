@@ -1,0 +1,25 @@
+<div class="mb-6">
+  <h1 class="text-2xl font-serif text-[#704214] dark:text-amber-200">Colophon</h1>
+  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Displayed at <a href="/colophon" target="_blank" class="underline">/colophon</a></p>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+  <%= form_with model: @colophon, url: admin_colophon_path, method: :patch do |f| %>
+    <% if @colophon.errors.any? %>
+      <div class="bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4 mb-6">
+        <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-1">
+          <% @colophon.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-6">
+      <%= f.lexxy_rich_text_area :content %>
+    </div>
+
+    <%= f.submit "Save",
+        class: "px-5 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors cursor-pointer" %>
+  <% end %>
+</div>

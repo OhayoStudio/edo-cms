@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     end
     resources :categories
     resources :tags
+    resource :colophon, only: %i[edit update]
+    resource :about, only: %i[edit update]
   end
 
   resources :videos,     only: %i[index show]
@@ -26,7 +28,8 @@ Rails.application.routes.draw do
   resources :categories, only: %i[index show]
   resources :authors,    only: %i[show]
   resources :articles,   only: %i[index show]
-  get "about" => "about#index"
+  get "colophon" => "colophons#show"
+  get "about" => "about#index", as: :about
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
