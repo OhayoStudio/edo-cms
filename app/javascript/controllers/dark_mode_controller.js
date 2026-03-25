@@ -46,13 +46,13 @@ export default class extends Controller {
       // replace the logo of sepia.svg to edo-cms.svg
       const logo = document.getElementById('logo');
       const logoDark = document.getElementById('logo-dark');
-      logoDark.style.display = 'block';
-      logo.style.display = 'none';
+      if (logoDark) logoDark.style.display = 'block';
+      if (logo) logo.style.display = 'none';
 
       const logoMobile = document.getElementById('logo-mobile');
       const logoMobileDark = document.getElementById('logo-mobile-dark');
-      logoMobileDark.style.display = 'block';
-      logoMobile.style.display = 'none';
+      if (logoMobileDark) logoMobileDark.style.display = 'block';
+      if (logoMobile) logoMobile.style.display = 'none';
     } else {
       // htmlElement.classList.remove('dark');
       htmlElement.style.colorScheme = 'light';
@@ -63,13 +63,13 @@ export default class extends Controller {
       // replace the logo of edo-cms.svg to sepia.svg
       const logo = document.getElementById('logo');
       const logoDark = document.getElementById('logo-dark');
-      logo.style.display = 'block';
-      logoDark.style.display = 'none';
+      if (logo) logo.style.display = 'block';
+      if (logoDark) logoDark.style.display = 'none';
 
       const logoMobile = document.getElementById('logo-mobile');
       const logoMobileDark = document.getElementById('logo-mobile-dark');
-      logoMobile.style.display = 'block';
-      logoMobileDark.style.display = 'none';
+      if (logoMobile) logoMobile.style.display = 'block';
+      if (logoMobileDark) logoMobileDark.style.display = 'none';
     }
   }
 }
