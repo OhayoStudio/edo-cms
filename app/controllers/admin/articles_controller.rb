@@ -1,5 +1,5 @@
 class Admin::ArticlesController < Admin::BaseController
-  before_action :set_article, only: %i[edit update destroy publish unpublish]
+  before_action :set_article, only: %i[edit update destroy publish unpublish story_card story_video]
 
   def index
     @articles = Article.includes(:author, :category)
@@ -63,6 +63,42 @@ class Admin::ArticlesController < Admin::BaseController
     @article.update!(status: :draft)
     @article.story&.update!(is_published: false)
     redirect_to admin_articles_path, notice: "Article unpublished."
+  end
+
+  def story_video
+    video_data = InstagramStoryVideoService.new(
+      @article,
+      img_x: params[:img_x],
+      img_y: params[:img_y],
+      img_w: params[:img_w],
+      img_h: params[:img_h]
+    ).generate
+    if video_data
+      send_data video_data,
+                type: "video/mp4",
+                filename: "#{@article.slug}-story.mp4",
+                disposition: "attachment"
+    else
+      redirect_to edit_admin_article_path(@article), alert: "No image found to generate story video."
+    end
+  end
+
+  def story_card
+    image_data = InstagramStoryService.new(
+      @article,
+      img_x: params[:img_x],
+      img_y: params[:img_y],
+      img_w: params[:img_w],
+      img_h: params[:img_h]
+    ).generate
+    if image_data
+      send_data image_data,
+                type: "image/png",
+                filename: "#{@article.slug}-story.png",
+                disposition: "attachment"
+    else
+      redirect_to edit_admin_article_path(@article), alert: "No image found to generate story card."
+    end
   end
 
   private
