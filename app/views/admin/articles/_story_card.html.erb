@@ -11,10 +11,11 @@
      data-controller="story-preview"
      data-story-preview-download-url-value="<%= story_card_admin_article_path(article) %>"
      data-story-preview-image-url-value="<%= story_card_admin_article_path(article) %>"
-     data-story-preview-video-url-value="<%= story_video_admin_article_path(article) %>">
+     data-story-preview-video-url-value="<%= story_video_admin_article_path(article) %>"
+     data-story-preview-share-url-value="<%= share_instagram_admin_article_path(article) %>">
 
   <h2 class="text-base font-semibold text-[#704214] dark:text-amber-200 mb-1">Instagram Story</h2>
-  <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Preview and position the image, then download a 1080×1920 story card.</p>
+  <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Preview and position the image, then download or share directly to Instagram.</p>
 
   <button type="button"
           data-action="click->story-preview#open"
@@ -87,6 +88,9 @@
                class="w-full accent-[#704214]">
       </div>
 
+      <%# Share status %>
+      <div data-story-preview-target="shareStatus" class="hidden text-sm rounded-lg px-3 py-2"></div>
+
       <%# Actions %>
       <div class="flex gap-3 justify-end flex-wrap">
         <button type="button" data-action="click->story-preview#close"
@@ -107,6 +111,20 @@
                 class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
                 style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
           MP4 (animated)
+        </button>
+        <button type="button"
+                data-action="click->story-preview#shareImage"
+                data-story-preview-target="shareImageBtn"
+                class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
+                style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
+          Share PNG
+        </button>
+        <button type="button"
+                data-action="click->story-preview#shareVideo"
+                data-story-preview-target="shareVideoBtn"
+                class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
+                style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
+          Share MP4
         </button>
       </div>
 

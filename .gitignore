@@ -69,3 +69,5 @@ yarn-error.log**
 /coverage
 
 
+public/instagram_exports/*
+!public/instagram_exports/.gitkeep
