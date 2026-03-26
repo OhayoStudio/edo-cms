@@ -71,3 +71,6 @@ yarn-error.log**
 
 public/instagram_exports/*
 !public/instagram_exports/.gitkeep
+.env
+.env.*
+!.env.example
