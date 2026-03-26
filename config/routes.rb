@@ -8,6 +8,8 @@ Rails.application.routes.draw do
       member do
         patch :publish
         patch :unpublish
+        get   :story_card
+        get   :story_video
       end
     end
     resources :videos do
