@@ -112,20 +112,26 @@
                 style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
           MP4 (animated)
         </button>
-        <button type="button"
-                data-action="click->story-preview#shareImage"
-                data-story-preview-target="shareImageBtn"
-                class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
-                style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
-          Share PNG
-        </button>
-        <button type="button"
-                data-action="click->story-preview#shareVideo"
-                data-story-preview-target="shareVideoBtn"
-                class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
-                style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
-          Share MP4
-        </button>
+        <% if InstagramService.new.configured? %>
+          <button type="button"
+                  data-action="click->story-preview#shareImage"
+                  data-story-preview-target="shareImageBtn"
+                  class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
+                  style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
+            Share PNG
+          </button>
+          <button type="button"
+                  data-action="click->story-preview#shareVideo"
+                  data-story-preview-target="shareVideoBtn"
+                  class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
+                  style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
+            Share MP4
+          </button>
+        <% else %>
+          <span class="px-3 py-2 text-xs text-gray-400 dark:text-gray-500 self-center">
+            Set INSTAGRAM_ACCESS_TOKEN + INSTAGRAM_USER_ID to enable sharing
+          </span>
+        <% end %>
       </div>
 
     </div>

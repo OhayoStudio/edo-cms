@@ -4,8 +4,12 @@ class InstagramService
   GRAPH_BASE = "https://graph.facebook.com/v21.0"
 
   def initialize
-    @access_token = ENV.fetch("INSTAGRAM_ACCESS_TOKEN", "")
-    @user_id      = ENV.fetch("INSTAGRAM_USER_ID",       "")
+    @access_token = ENV["INSTAGRAM_ACCESS_TOKEN"].presence
+    @user_id      = ENV["INSTAGRAM_USER_ID"].presence
+  end
+
+  def configured?
+    @access_token.present? && @user_id.present?
   end
 
   # ── Reading ────────────────────────────────────────────────────────────────
@@ -28,6 +32,7 @@ class InstagramService
   # media_url must be a publicly accessible HTTPS URL (no localhost).
   # Returns the published media ID string.
   def publish_image_story(media_url:)
+    assert_configured!
     creation_id = create_container(image_url: media_url)
     publish_container(creation_id)
   end
@@ -36,12 +41,18 @@ class InstagramService
   # Polls for container readiness (Instagram processes video server-side).
   # Returns the published media ID string.
   def publish_video_story(media_url:)
+    assert_configured!
     creation_id = create_container(video_url: media_url)
     wait_for_container(creation_id)
     publish_container(creation_id)
   end
 
   private
+
+  def assert_configured!
+    return if configured?
+    raise "Instagram is not configured. Set INSTAGRAM_ACCESS_TOKEN and INSTAGRAM_USER_ID environment variables."
+  end
 
   def create_container(image_url: nil, video_url: nil)
     params = { media_type: "STORIES", access_token: @access_token }
