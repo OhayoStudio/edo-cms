@@ -85,10 +85,13 @@ class InstagramStoryVideoService
       FFMPEG, "-y",
       "-loop", "1", "-framerate", FPS.to_s, "-i", still_file.path,
       "-loop", "1", "-framerate", FPS.to_s, "-i", gradient_file.path,
+      "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",
       "-filter_complex", filters,
       "-map", "[out]",
+      "-map", "2:a",
       "-t", DURATION.to_s,
       "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+      "-c:a", "aac", "-b:a", "128k",
       "-pix_fmt", "yuv420p",
       "-movflags", "+faststart",
       out_file.path

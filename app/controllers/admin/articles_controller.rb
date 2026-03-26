@@ -84,6 +84,11 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def share_instagram
+    unless ENV["APPLICATION_HOST"].present?
+      render json: { error: "Set APPLICATION_HOST in your .env to a publicly reachable hostname (e.g. via ngrok). Instagram must be able to download the exported file." }, status: :unprocessable_entity
+      return
+    end
+
     media_type = params[:media_type].to_s  # "image" or "video"
     service_params = {
       img_x: params[:img_x], img_y: params[:img_y],
