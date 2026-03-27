@@ -1,6 +1,7 @@
-SitemapGenerator::Sitemap.default_host = "https://example.com"
-SitemapGenerator::Sitemap.public_path  = "public/"
+SitemapGenerator::Sitemap.default_host  = "https://example.com"
+SitemapGenerator::Sitemap.public_path   = "public/"
 SitemapGenerator::Sitemap.sitemaps_path = "sitemaps/"
+SitemapGenerator::Sitemap.ping_search_engines = false  # ping deprecated by Google in 2023
 
 SitemapGenerator::Sitemap.create do
   add "/",        changefreq: "daily",   priority: 1.0
