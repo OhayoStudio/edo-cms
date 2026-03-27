@@ -1,4 +1,21 @@
-<% content_for :title, "Showing tag" %>
+<% content_for :head do %>
+  <% page_title = @tag.meta_title.presence || @tag.name %>
+  <% page_desc  = @tag.meta_description.presence || "Articles tagged #{@tag.name} on Edo CMS." %>
+  <% set_meta_tags(
+       title:       page_title,
+       description: page_desc,
+       canonical:   tag_url(@tag),
+       og: { title: page_title, url: tag_url(@tag), description: page_desc }
+     ) %>
+  <%= render "shared/json_ld", schema: {
+        "@context"    => "https://schema.org",
+        "@type"       => "CollectionPage",
+        "name"        => page_title,
+        "description" => page_desc,
+        "url"         => tag_url(@tag),
+        "isPartOf"    => { "@id" => "#{MetaTagsHelper::SITE_URL}/#website" }
+      } %>
+<% end %>
 
 <div class="md:w-2/3 w-full">
   <% if notice.present? %>

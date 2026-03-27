@@ -1,3 +1,26 @@
+<% content_for :head do %>
+  <% set_meta_tags(
+       description: MetaTagsHelper::DEFAULT_DESC,
+       canonical:   root_url,
+       og: { title: MetaTagsHelper::SITE_NAME, url: root_url,
+             description: MetaTagsHelper::DEFAULT_DESC,
+             image: MetaTagsHelper::SITE_URL + MetaTagsHelper::DEFAULT_OG_IMAGE }
+     ) %>
+  <%= render "shared/json_ld", schema: {
+        "@context" => "https://schema.org",
+        "@graph"   => [
+          { "@type" => "WebSite", "@id" => "#{MetaTagsHelper::SITE_URL}/#website",
+            "url" => MetaTagsHelper::SITE_URL, "name" => MetaTagsHelper::SITE_NAME,
+            "description" => MetaTagsHelper::DEFAULT_DESC,
+            "potentialAction" => {
+              "@type" => "SearchAction",
+              "target" => "#{MetaTagsHelper::SITE_URL}/articles?search={search_term_string}",
+              "query-input" => "required name=search_term_string"
+            } },
+          schema_publisher
+        ] } %>
+<% end %>
+
 <div>
   <div class="w-full">
     <div id="stories" class="min-w-full dark:text-gray-300 mb-16">
