@@ -10,6 +10,7 @@ Rails.application.routes.draw do
         patch :unpublish
         get   :story_card
         get   :story_video
+        post  :share_instagram
       end
     end
     resources :videos do
