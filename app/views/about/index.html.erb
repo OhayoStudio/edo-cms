@@ -1,3 +1,19 @@
+<% content_for :head do %>
+  <% set_meta_tags(
+       title:     "About",
+       canonical: about_url,
+       og: { title: "About | Sepia Braun", url: about_url }
+     ) %>
+  <%= render "shared/json_ld", schema: {
+        "@context"  => "https://schema.org",
+        "@type"     => "WebPage",
+        "name"      => "About Sepia Braun",
+        "url"       => about_url,
+        "isPartOf"  => { "@id" => "#{MetaTagsHelper::SITE_URL}/#website" },
+        "publisher" => schema_publisher
+      } %>
+<% end %>
+
 <div class="container mx-auto px-4 md:px-8 max-w-screen-md py-12 lora">
   <h1 class="text-4xl font-serif font-bold text-[#704214] dark:text-amber-200 mb-10">About</h1>
   <div class="lexxy-content">

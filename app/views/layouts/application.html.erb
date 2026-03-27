@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" class="sepiabraun">
   <head>
-    <title>
-      <%= content_for(:title) || "Sepia Braun" %>
-    </title>
+    <%= display_meta_tags(
+          site:        "Sepia Braun",
+          separator:   "|",
+          description: MetaTagsHelper::DEFAULT_DESC,
+          og:      { site_name: "Sepia Braun", type: "website" },
+          twitter: { site: "@sepiabraun", card: "summary_large_image" }
+        ) %>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>
+    <link rel="sitemap" type="application/xml" href="/sitemaps/sitemap.xml.gz" />
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%= tag.link rel: "manifest" , href: pwa_manifest_path(format: :json) %>
     <link rel="icon" href="/icon.png" type="image/png" />

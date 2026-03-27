@@ -1,4 +1,18 @@
-<% content_for :title, "Showing author" %>
+<% content_for :head do %>
+  <% page_desc = @author.bio.presence || "Articles by #{@author.full_name} on Sepia Braun." %>
+  <% set_meta_tags(
+       title:       @author.full_name,
+       description: page_desc,
+       canonical:   author_url(@author),
+       og: { title: @author.full_name, type: "profile", url: author_url(@author),
+             description: page_desc, image: og_image_url_for(@author) }
+     ) %>
+  <%= render "shared/json_ld", schema: schema_author_for(@author).merge(
+        "@context"         => "https://schema.org",
+        "description"      => page_desc,
+        "mainEntityOfPage" => { "@type" => "WebPage", "@id" => author_url(@author) }
+      ) %>
+<% end %>
 
 <div class="md:w-2/3 w-full">
   <% if notice.present? %>

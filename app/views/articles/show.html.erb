@@ -1,4 +1,37 @@
-<% content_for :title,  @article.title %>
+<% content_for :head do %>
+  <% set_meta_tags(
+       title:       @article.title,
+       description: meta_description_for(@article),
+       keywords:    @article.tags.map(&:name),
+       canonical:   article_url(@article),
+       og: { title: @article.title, type: "article", url: article_url(@article),
+             description: meta_description_for(@article), image: og_image_url_for(@article) },
+       article: { published_time: @article.published_at&.iso8601,
+                  modified_time:  @article.updated_at.iso8601,
+                  author:         author_url(@article.author),
+                  section:        @article.category.name,
+                  tag:            @article.tags.map(&:name) },
+       twitter: { card: "summary_large_image", title: :title,
+                  description: :description, image: { _: og_image_url_for(@article) } }
+     ) %>
+  <%= render "shared/json_ld", schema: {
+        "@context"         => "https://schema.org",
+        "@type"            => "NewsArticle",
+        "headline"         => @article.title,
+        "description"      => meta_description_for(@article),
+        "url"              => article_url(@article),
+        "datePublished"    => @article.published_at&.iso8601,
+        "dateModified"     => @article.updated_at.iso8601,
+        "inLanguage"       => "en",
+        "author"           => schema_author_for(@article.author),
+        "publisher"        => schema_publisher,
+        "image"            => { "@type" => "ImageObject", "url" => og_image_url_for(@article) },
+        "mainEntityOfPage" => { "@type" => "WebPage", "@id" => article_url(@article) },
+        "keywords"         => @article.tags.map(&:name).join(", "),
+        "articleSection"   => @article.category.name,
+        "timeRequired"     => "PT#{@article.reading_time}M"
+      } %>
+<% end %>
 <div class="w-full">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
