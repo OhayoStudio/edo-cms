@@ -1,4 +1,21 @@
-<% content_for :title, "Showing category" %>
+<% content_for :head do %>
+  <% page_title = @category.meta_title.presence || @category.name %>
+  <% page_desc  = @category.meta_description.presence || @category.description.presence || MetaTagsHelper::DEFAULT_DESC %>
+  <% set_meta_tags(
+       title:       page_title,
+       description: page_desc,
+       canonical:   category_url(@category),
+       og: { title: page_title, url: category_url(@category), description: page_desc }
+     ) %>
+  <%= render "shared/json_ld", schema: {
+        "@context"    => "https://schema.org",
+        "@type"       => "CollectionPage",
+        "name"        => page_title,
+        "description" => page_desc,
+        "url"         => category_url(@category),
+        "isPartOf"    => { "@id" => "#{MetaTagsHelper::SITE_URL}/#website" }
+      } %>
+<% end %>
 
 <div class="md:w-2/3 w-full">
   <% if notice.present? %>

@@ -1,3 +1,19 @@
+<% content_for :head do %>
+  <% set_meta_tags(
+       title:     "Colophon",
+       canonical: colophon_url,
+       og: { title: "Colophon | Edo CMS", url: colophon_url }
+     ) %>
+  <%= render "shared/json_ld", schema: {
+        "@context"  => "https://schema.org",
+        "@type"     => "WebPage",
+        "name"      => "Colophon",
+        "url"       => colophon_url,
+        "isPartOf"  => { "@id" => "#{MetaTagsHelper::SITE_URL}/#website" },
+        "publisher" => schema_publisher
+      } %>
+<% end %>
+
 <div class="container mx-auto px-4 md:px-8 max-w-screen-md py-12 lora">
   <h1 class="text-4xl font-serif font-bold text-[#704214] dark:text-amber-200 mb-10">Colophon</h1>
   <div class="lexxy-content">

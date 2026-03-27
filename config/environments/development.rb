@@ -74,4 +74,5 @@ Rails.application.configure do
 
   # allow access from mobile devices using my ip address
   config.hosts << "192.168.3.255:3001"
+  config.hosts << ENV["APPLICATION_HOST"]
 end

@@ -1,4 +1,24 @@
-<% content_for :title, @video.title %>
+<% content_for :head do %>
+  <% set_meta_tags(
+       title:       @video.title,
+       description: meta_description_for(@video),
+       canonical:   video_url(@video),
+       og: { title: @video.title, type: "video.other", url: video_url(@video),
+             description: meta_description_for(@video), image: og_image_url_for(@video) },
+       twitter: { card: "summary_large_image", title: :title,
+                  description: :description, image: { _: og_image_url_for(@video) } }
+     ) %>
+  <%= render "shared/json_ld", schema: {
+        "@context"     => "https://schema.org",
+        "@type"        => "VideoObject",
+        "name"         => @video.title,
+        "description"  => meta_description_for(@video),
+        "thumbnailUrl" => og_image_url_for(@video),
+        "contentUrl"   => @video.url,
+        "uploadDate"   => @video.created_at.iso8601,
+        "publisher"    => schema_publisher
+      } %>
+<% end %>
 <div class="w-full movie-theatre">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
