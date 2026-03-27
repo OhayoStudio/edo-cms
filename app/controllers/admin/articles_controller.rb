@@ -1,5 +1,5 @@
 class Admin::ArticlesController < Admin::BaseController
-  before_action :set_article, only: %i[edit update destroy publish unpublish story_card story_video]
+  before_action :set_article, only: %i[edit update destroy publish unpublish story_card story_video share_instagram]
 
   def index
     @articles = Article.includes(:author, :category)
@@ -83,6 +83,50 @@ class Admin::ArticlesController < Admin::BaseController
     end
   end
 
+  def share_instagram
+    unless ENV["APPLICATION_HOST"].present?
+      render json: { error: "Set APPLICATION_HOST in your .env to a publicly reachable hostname (e.g. via ngrok). Instagram must be able to download the exported file." }, status: :unprocessable_entity
+      return
+    end
+
+    media_type = params[:media_type].to_s  # "image" or "video"
+    service_params = {
+      img_x: params[:img_x], img_y: params[:img_y],
+      img_w: params[:img_w], img_h: params[:img_h]
+    }
+
+    export_path, content_type, ext =
+      if media_type == "video"
+        data = InstagramStoryVideoService.new(@article, **service_params).generate
+        [ write_instagram_export(data, "mp4"), "video/mp4", "mp4" ]
+      else
+        data = InstagramStoryService.new(@article, **service_params).generate
+        [ write_instagram_export(data, "png"), "image/png", "png" ]
+      end
+
+    unless export_path
+      render json: { error: "No image found for this article." }, status: :unprocessable_entity
+      return
+    end
+
+    public_url = instagram_export_url(export_path)
+    ig = InstagramService.new
+
+    media_id =
+      if media_type == "video"
+        ig.publish_video_story(media_url: public_url)
+      else
+        ig.publish_image_story(media_url: public_url)
+      end
+
+    render json: { success: true, media_id: media_id }
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  ensure
+    File.delete(export_path) if export_path && File.exist?(export_path)
+    purge_old_instagram_exports
+  end
+
   def story_card
     image_data = InstagramStoryService.new(
       @article,
@@ -115,6 +159,31 @@ class Admin::ArticlesController < Admin::BaseController
       :author_id, :category_id,
       :reading_time, :status, :slug, :published_at
     )
+  end
+
+  INSTAGRAM_EXPORT_DIR = Rails.root.join("public", "instagram_exports")
+  INSTAGRAM_EXPORT_TTL = 3600  # seconds — files older than this are purged
+
+  def write_instagram_export(data, ext)
+    return nil unless data
+    FileUtils.mkdir_p(INSTAGRAM_EXPORT_DIR)
+    path = INSTAGRAM_EXPORT_DIR.join("#{SecureRandom.uuid}.#{ext}")
+    File.binwrite(path, data)
+    path
+  end
+
+  def instagram_export_url(path)
+    filename = File.basename(path)
+    host = ENV.fetch("APPLICATION_HOST", "sepiabraun.com")
+    scheme = Rails.env.production? ? "https" : request.protocol.delete_suffix("://")
+    "#{scheme}://#{host}/instagram_exports/#{filename}"
+  end
+
+  def purge_old_instagram_exports
+    return unless Dir.exist?(INSTAGRAM_EXPORT_DIR)
+    Dir.glob(INSTAGRAM_EXPORT_DIR.join("*")).each do |f|
+      File.delete(f) if File.mtime(f) < Time.current - INSTAGRAM_EXPORT_TTL
+    end
   end
 
   def generate_tags(article)

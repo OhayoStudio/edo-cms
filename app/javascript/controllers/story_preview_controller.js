@@ -5,8 +5,8 @@ const FRAME_W = 360
 const FRAME_H = 640
 
 export default class extends Controller {
-  static targets = ["modal", "frame", "image", "zoom"]
-  static values  = { downloadUrl: String, imageUrl: String, videoUrl: String }
+  static targets = ["modal", "frame", "image", "zoom", "shareStatus", "shareImageBtn", "shareVideoBtn"]
+  static values  = { downloadUrl: String, imageUrl: String, videoUrl: String, shareUrl: String }
 
   connect() {
     this.dragging    = false
@@ -20,6 +20,7 @@ export default class extends Controller {
   open() {
     this.modalTarget.style.display = "flex"
     document.body.style.overflow   = "hidden"
+    this._clearShareStatus()
     // Defer so the browser has rendered the modal before we read image dims
     requestAnimationFrame(() => this.initImage())
   }
@@ -137,9 +138,9 @@ export default class extends Controller {
     }
   }
 
-  buildUrl(base) {
+  buildUrl(base, extra = {}) {
     const url = new URL(base, window.location.origin)
-    Object.entries(this.positionParams()).forEach(([ k, v ]) => url.searchParams.set(k, v))
+    Object.entries({ ...this.positionParams(), ...extra }).forEach(([ k, v ]) => url.searchParams.set(k, v))
     return url.toString()
   }
 
@@ -149,5 +150,67 @@ export default class extends Controller {
 
   downloadVideo() {
     window.location.href = this.buildUrl(this.videoUrlValue)
+  }
+
+  // ── Share to Instagram ────────────────────────────────────────────────────
+
+  shareImage() {
+    this._share("image")
+  }
+
+  shareVideo() {
+    this._share("video")
+  }
+
+  async _share(mediaType) {
+    const btn = mediaType === "video" ? this.shareVideoBtnTarget : this.shareImageBtnTarget
+    const originalText = btn.textContent
+
+    this._setShareStatus("loading", mediaType === "video"
+      ? "Generating & uploading MP4… this may take up to a minute."
+      : "Generating & sharing PNG…")
+    btn.disabled = true
+
+    try {
+      const url  = this.buildUrl(this.shareUrlValue, { media_type: mediaType })
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: { "X-CSRF-Token": this._csrfToken() }
+      })
+      const data = await resp.json()
+
+      if (data.success) {
+        this._setShareStatus("success", "Shared to Instagram!")
+      } else {
+        this._setShareStatus("error", data.error || "Something went wrong.")
+      }
+    } catch (e) {
+      this._setShareStatus("error", `Network error: ${e.message}`)
+    } finally {
+      btn.disabled    = false
+      btn.textContent = originalText
+    }
+  }
+
+  _setShareStatus(type, message) {
+    const el = this.shareStatusTarget
+    el.textContent = message
+    el.className   = "text-sm rounded-lg px-3 py-2 " + {
+      loading: "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300",
+      success: "bg-green-50 dark:bg-green-900/40 text-green-700 dark:text-green-300",
+      error:   "bg-red-50 dark:bg-red-900/40 text-red-700 dark:text-red-300"
+    }[type]
+    el.classList.remove("hidden")
+  }
+
+  _clearShareStatus() {
+    if (this.hasShareStatusTarget) {
+      this.shareStatusTarget.classList.add("hidden")
+      this.shareStatusTarget.textContent = ""
+    }
+  }
+
+  _csrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.content ?? ""
   }
 }
