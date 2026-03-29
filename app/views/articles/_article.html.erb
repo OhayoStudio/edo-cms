@@ -11,7 +11,7 @@
   </div>  
   <!-- add featured_image here : on desktop it should-->
   <div class="">
-    <%= image_tag rails_blob_url(article.featured_image), class: "w-full h-100 object-cover" if article.featured_image.attached? %>
+    <%= image_tag article.featured_image, alt: article.title, fetchpriority: "high", decoding: "async", class: "w-full h-100 object-cover" if article.featured_image.attached? %>
   </div>
 
   <div class="dark:text-gray-300 dark:bg-gray-800">

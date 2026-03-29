@@ -3,7 +3,7 @@
         <!-- List all the Videos -->
         <div class="">
             <%= link_to video_path(video) do %>
-            <%= image_tag rails_blob_url(video.featured_image), class: "w-full h-56 object-cover" if video.featured_image.attached? %>
+            <%= image_tag video.featured_image.variant(:thumb), alt: video.title, loading: "lazy", decoding: "async", class: "w-full h-56 object-cover" if video.featured_image.attached? %>
             <% end %>
         </div>
     </div>
