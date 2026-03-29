@@ -19,11 +19,11 @@ module MetaTagsHelper
   def og_image_url_for(record)
     if record.try(:featured_image)&.attached?
       rails_representation_url(
-        record.featured_image.variant(resize_to_limit: [ 1200, 630 ]),
+        record.featured_image.variant(:og),
         host: SITE_URL
       )
     elsif record.try(:avatar)&.attached?
-      rails_blob_url(record.avatar, host: SITE_URL)
+      rails_representation_url(record.avatar.variant(:thumb), host: SITE_URL)
     else
       "#{SITE_URL}#{DEFAULT_OG_IMAGE}"
     end
@@ -55,7 +55,7 @@ module MetaTagsHelper
       "name"  => author.full_name,
       "url"   => "#{SITE_URL}#{author_path(author)}"
     }
-    h["image"]  = rails_blob_url(author.avatar, host: SITE_URL) if author.avatar.attached?
+    h["image"]  = rails_representation_url(author.avatar.variant(:thumb), host: SITE_URL) if author.avatar.attached?
     h["sameAs"] = [ "https://twitter.com/#{author.twitter_handle}" ] if author.twitter_handle.present?
     h
   end

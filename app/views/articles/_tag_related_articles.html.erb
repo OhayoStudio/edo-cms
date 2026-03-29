@@ -7,7 +7,7 @@
         <div class="overflow-hidden">
           <%= link_to article_path(related_article.slug) do %>
             <h2 class="text-2xl font-bold mb-4 dark:text-gray-300"><%= related_article.tags.map(&:name).join(", ") %></h2>
-            <%= image_tag rails_blob_url(related_article.featured_image), class: "w-full h-40 object-cover" if related_article.featured_image.attached? %>
+            <%= image_tag related_article.featured_image.variant(:thumb), alt: related_article.title, loading: "lazy", decoding: "async", class: "w-full h-40 object-cover" if related_article.featured_image.attached? %>
             <div class="p-2">
               <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-300"><%= related_article.title %></h3>
               <p class="text-gray-600 dark:text-gray-400"><%= truncate(related_article.excerpt, length: 100) %></p>

@@ -7,7 +7,11 @@ class Article < ApplicationRecord
 
   # Active Storage and Action Text
   has_rich_text :content
-  has_one_attached :featured_image
+  has_one_attached :featured_image do |attachable|
+    attachable.variant :hero,  resize_to_limit: [ 1600, 900 ], colourspace: "srgb", saver: { quality: 95 }
+    attachable.variant :thumb, resize_to_limit: [ 600, 400 ],  format: :webp, saver: { quality: 85 }
+    attachable.variant :og,    resize_to_limit: [ 1200, 630 ], format: :webp, saver: { quality: 85 }
+  end
 
   # Relationships
   belongs_to :author

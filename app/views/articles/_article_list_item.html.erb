@@ -3,7 +3,7 @@
     <!-- the feature image of the article linked to the article -->
     <div class="">
       <%= link_to article_path(article.slug) do %>
-      <%= image_tag rails_blob_url(article.featured_image), class: "w-full h-56 object-cover" if article.featured_image.attached? %>
+      <%= image_tag article.featured_image.variant(:thumb), alt: article.title, loading: "lazy", decoding: "async", class: "w-full h-56 object-cover" if article.featured_image.attached? %>
       <% end %>
     </div>
   </div>

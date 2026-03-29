@@ -2,7 +2,11 @@ class Video < ApplicationRecord
     extend FriendlyId
     friendly_id :title, use: :slugged
 
-    has_one_attached :featured_image
+    has_one_attached :featured_image do |attachable|
+      attachable.variant :hero,  resize_to_limit: [ 1600, 900 ], colourspace: "srgb", saver: { quality: 95 }
+      attachable.variant :thumb, resize_to_limit: [ 600, 400 ],  format: :webp, saver: { quality: 85 }
+      attachable.variant :og,    resize_to_limit: [ 1200, 630 ], format: :webp, saver: { quality: 85 }
+    end
     has_one :story, as: :storyable
 
     validates :title, presence: true
@@ -23,7 +27,7 @@ class Video < ApplicationRecord
     end
 
     def thumbnail
-        featured_image.variant(resize: "300x300!").processed
+        featured_image.variant(:thumb)
     end
 
     def thumbnail_url
