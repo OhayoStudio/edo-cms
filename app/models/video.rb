@@ -4,7 +4,7 @@ class Video < ApplicationRecord
 
     has_one_attached :featured_image do |attachable|
       attachable.variant :hero,  resize_to_limit: [ 1600, 900 ], colourspace: "srgb", saver: { quality: 95 }
-      attachable.variant :thumb, resize_to_limit: [ 600, 400 ],  format: :webp, saver: { quality: 85 }
+      attachable.variant :thumb, resize_to_limit: [ 600, 400 ], colourspace: "srgb", saver: { quality: 90 }
       attachable.variant :og,    resize_to_limit: [ 1200, 630 ], format: :webp, saver: { quality: 85 }
     end
     has_one :story, as: :storyable

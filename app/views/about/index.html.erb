@@ -18,5 +18,148 @@
   <h1 class="text-4xl font-serif font-bold text-[#704214] dark:text-amber-200 mb-10">About</h1>
   <div class="lexxy-content">
     <%= @about.content %>
+    <div class="newsletter">
+      <p class="newsletter-label">One email when something new goes up. A story about a watch, a road in Kyushu, an aluminium bicycle frame — never more than once a week.</p>
+      <form action="https://buttondown.com/api/emails/embed-subscribe/sepiabraun" method="post" class="embeddable-buttondown-form newsletter-form">
+        <label for="bd-email" class="sr-only">Enter your email</label>
+        <input type="email" name="email" id="bd-email" class="newsletter-input" placeholder="your@email.com" required="">
+        <input type="submit" value="Notify me" class="newsletter-btn">
+      </form>
+      <p class="powered-by">
+        <a href="https://buttondown.com/refer/sepiabraun" target="_blank">Powered by Buttondown.</a>
+      </p>
+    </div>
   </div>
 </div>
+<style>
+   :root {
+      --primary: #704214;
+      --primary-darker: #52300f;
+      --primary-darkest: #281506;
+      --secondary: #A67B5B;
+      --accent: #D9C4A6;
+      --background: #F9F7F0;
+      --text: #423525;
+      --text-muted: #8a7561;
+      --divider: #d4c4ae;
+    }
+  /* --- Newsletter form --- */
+    .newsletter {
+      text-align: center;
+    }
+
+    .newsletter-label {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 1.2rem;
+      line-height: 1.65;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .powered-by {
+      margin-top: 0.6rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .powered-by a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .powered-by a:hover {
+      text-decoration: underline;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border: 1px solid var(--divider);
+      border-right: none;
+      background: transparent;
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .newsletter-input::placeholder {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--secondary);
+    }
+
+    .newsletter-btn {
+      padding: 0.65rem 1.4rem;
+      background: var(--primary);
+      color: var(--background);
+      border: 1px solid var(--primary);
+      font-family: 'Lora', Georgia, serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .newsletter-btn:hover {
+      background: var(--primary-darker);
+    }
+/* --- Responsive --- */
+    @media (max-width: 640px) {
+      .brand {
+        font-size: 2rem;
+      }
+
+      .statement {
+        font-size: 1.05rem;
+        line-height: 1.7;
+      }
+
+      .corner { display: none; }
+
+      .newsletter-form {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .newsletter-input {
+        border-right: 1px solid var(--divider);
+        border-bottom: none;
+      }
+
+      .newsletter-input:focus {
+        border-color: var(--secondary);
+      }
+
+      .newsletter-btn {
+        border-top: none;
+      }
+    }
+</style>
