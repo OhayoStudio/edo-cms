@@ -1,0 +1,73 @@
+name: "📝 Article"
+description: "Track a EdoCms article from idea to publication"
+title: "[Article] "
+labels: ["article"]
+assignees:
+  - ohayostudio
+body:
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which EdoCms category does this article belong to?
+      options:
+        - Sartorial
+        - Technology
+        - Mobility
+        - Watches
+        - Audiophile
+        - Music
+        - Arranged Sounds
+        - Beverages
+        - Furnitures
+        - Books
+        - Health / Wellness
+        - Cities / Travel
+    validations:
+      required: true
+
+  - type: dropdown
+    id: japan-related
+    attributes:
+      label: Japan-related?
+      description: Is this article part of the Japan lens?
+      options:
+        - "Yes 🇯🇵"
+        - "No"
+    validations:
+      required: true
+
+  - type: input
+    id: month
+    attributes:
+      label: Scheduled Month
+      description: "Which month is this scheduled for? (e.g., Month 1, Month 5)"
+      placeholder: "Month X"
+    validations:
+      required: false
+
+  - type: textarea
+    id: brief
+    attributes:
+      label: Article Brief
+      description: "Key angle, sources, tone, or notes for this piece"
+      placeholder: |
+        - Main angle:
+        - Key sources/references:
+        - Tone/approach:
+        - Notes:
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Progress Checklist
+      description: Track article progress
+      options:
+        - label: Research completed
+        - label: Images sourced
+        - label: First draft written
+        - label: Draft reviewed/edited
+        - label: Final HTML ready for CMS
+        - label: Published
