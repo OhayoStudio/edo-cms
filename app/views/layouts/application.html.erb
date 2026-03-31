@@ -40,7 +40,7 @@
     </script>
   </head>
 
-  <body class="edo-cms h-full bg-gray-200 dark:bg-gray-900 transition-colors duration-200" data-controller="dark-mode">
+  <body class="edo-cms h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200" data-controller="dark-mode">
     <header class="bg-gray-200 text-amber-900 dark:bg-slate-800 dark:text-[var(--color-accent)] hidden sm:block sticky top-0 z-50 lora ">      
       <nav aria-label="Main navigation" class="container px-16 mx-auto flex items-center justify-between">
         <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center">
@@ -51,13 +51,13 @@
 
         <ul class="flex gap-8">
           <li class="p-6">
-            <%= link_to "Articles", articles_path, class: "hover:text-amber-300 #{articles_section? ? 'text-amber-600' : 'text-amber-900'}" %>
+            <%= link_to "Articles", articles_path, class: "hover:text-amber-300 #{articles_section? ? 'text-amber-600' : ''}" %>
           </li>
           <li class="p-6">
-            <%= link_to "Videos", videos_path, class: "hover:text-amber-300 #{current_page?(videos_path) ? 'text-amber-600' : 'text-amber-900'}" %>
+            <%= link_to "Videos", videos_path, class: "hover:text-amber-300 #{current_page?(videos_path) ? 'text-amber-600' : ''}" %>
           </li>
           <li class="p-6">
-            <a href="/about" class="text-amber-900 hover:text-amber-300">About</a>
+            <a href="/about" class="hover:text-amber-300">About</a>
           </li>
           <li class="p-4">
             <%= render "common/darkmode_toggle" %>
@@ -99,22 +99,22 @@
         </ul>
       </nav>
     </div>
-    <main>
+    <main class="dark:bg-gray-800">
       <%= yield %>
     </main>
-    <footer class="mt-24 lora border-t border-[#D9C4A6] dark:border-[#52300f]">
+    <footer class="mt-24 lora border-t border-[#D9C4A6] dark:border-[#52300f] dark:bg-slate-800">
       <div class="container mx-auto px-6 py-12">
 
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
 
           <!-- Brand + copyright -->
           <div class="space-y-1">
-            <p class="font-serif text-[#704214] dark:text-amber-200 font-semibold tracking-wide">Edo CMS</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">&copy; 2025&ndash;<%= Time.current.year %></p>
+            <p class="font-serif text-[#704214] dark:text-gray-300 tracking-wide">Edo CMS</p>
+            <p class="text-sm text-gray-500 dark:text-gray-300">&copy; 2025&ndash;<%= Time.current.year %></p>
           </div>
 
           <!-- Navigation links -->
-          <nav aria-label="Footer navigation" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-400">
+          <nav aria-label="Footer navigation" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-300">
             <%= link_to "Articles", articles_path,
                 class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
             <%= link_to "Videos", videos_path,
