@@ -3,7 +3,7 @@
   --color-slate-800: #5e4b35;
 }
 
-.oldsepiabraun {
+/* .oldsepiabraun {
     --color-slate-900: #5e4b35;
     --color-slate-800: #423525;
     --color-gray-900: #2c221a;
@@ -15,13 +15,13 @@
     --color-gray-300: #e8e1d7;
     --color-gray-200: #f9f7f0;
     --color-gray-100: #fcfbf7;
-}
+} */
 
 .sepiabraun {
     --color-primary: #704214;
     --color-primary-header: #703914;
-    --color-primary-darker: #52300f;
-    --color-primary-darkest: #281506;
+    --color-primary-darker: #643916; /* #52300f */
+    --color-primary-darkest: #392718;
 
     --color-secondary: #A67B5B;
     --color-accent: #D9C4A6;
@@ -32,7 +32,7 @@
 
     --color-slate-900: var(--color-primary-header);
     --color-slate-800: var(--color-primary-darkest);
-    --color-gray-900: var(--color-primary-darkest);
+    --color-gray-900: var(--color-primary-darker);
     --color-gray-800: var(--color-text);
     --color-gray-700: var(--color-acccent);
     --color-gray-600: var(--color-text);
@@ -56,6 +56,31 @@
   --lexxy-color-accent-medium:  #A67B5B;
   --lexxy-color-accent-light:   #D9C4A6;
   --lexxy-color-accent-lightest: #f5efe6;
+}
+
+/* Lexxy dark mode */
+.dark .lexxy-content,
+.dark .lexxy-content p,
+.dark .lexxy-content h1,
+.dark .lexxy-content h2,
+.dark .lexxy-content h3,
+.dark .lexxy-content h4 {
+  color: var(--color-accent);
+}
+
+.dark .lexxy-content a {
+  color: #e8b96a;
+}
+
+.dark .lexxy-content blockquote {
+  color: #b3a290;
+  border-color: #3d2d1f;
+}
+
+.dark .lexxy-content code,
+.dark .lexxy-content pre {
+  background: #241810;
+  color: #e8ddd0;
 }
 
 /* YouTube embed — responsive 16:9 */
