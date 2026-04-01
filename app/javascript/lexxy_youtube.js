@@ -67,17 +67,26 @@ class YoutubeExtension extends Extension {
     content.querySelector("form").addEventListener("submit", (e) => {
       e.preventDefault()
       const url = content.querySelector("input").value.trim()
-      if (!videoId(url)) return
-
-      // Focus the contenteditable and simulate a URL paste so the
-      // lexxy:insert-link listener above handles the embed insertion.
-      const ce = this.editorElement.querySelector("[contenteditable]")
-      if (ce) {
-        ce.focus()
-        const dt = new DataTransfer()
-        dt.setData("text/plain", url)
-        ce.dispatchEvent(new ClipboardEvent("paste", { clipboardData: dt, bubbles: true, cancelable: true }))
+      const id = videoId(url)
+      if (!id) {
+        content.querySelector("input").style.outline = "2px solid red"
+        setTimeout(() => { content.querySelector("input").style.outline = "" }, 1500)
+        return
       }
+
+      // Refocus editor so Lexical restores its selection, then insert
+      // the embed via the contents API (paste simulation doesn't trigger
+      // Lexical's PASTE_COMMAND reliably).
+      const ce = this.editorElement.querySelector("[contenteditable]")
+      if (ce) ce.focus()
+
+      const contents = this.editorElement.contents
+      requestAnimationFrame(() => {
+        const nodeKey = contents.createLink(url)
+        if (nodeKey) {
+          contents.replaceNodeWithHTML(nodeKey, embedHtml(id), { attachment: true })
+        }
+      })
 
       content.querySelector("input").value = ""
       details.removeAttribute("open")
