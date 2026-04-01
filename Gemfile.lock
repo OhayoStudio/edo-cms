@@ -439,7 +439,7 @@ DEPENDENCIES
   friendly_id
   httparty
   image_processing (~> 1.2)
-  importmap-rails
+  importmap-rails (~> 2.2)
   jbuilder
   kamal
   kaminari

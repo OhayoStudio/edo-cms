@@ -96,7 +96,7 @@ class ArticlesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def article_params
-      params.require(:article).permit(:title, :subtitle, :content, :excerpt, :meta_description, :meta_keywords, :featured, :featured_image, :author_id, :category_id, :reading_time, :view_count, :status, :slug, :published_at)
+      params.require(:article).permit(:title, :subtitle, :content, :excerpt, :meta_description, :meta_keywords, :featured, :featured_image, :author_id, :category_id, :reading_time, :view_count, :status, :slug, :published_at, photo_candidates: [])
     end
 
     def generate_tags(article)
