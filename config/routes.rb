@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         get   :story_card
         get   :story_video
         post  :share_instagram
+        post  :direct_upload_photo_candidate
       end
     end
     resources :videos do
