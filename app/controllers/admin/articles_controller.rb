@@ -1,5 +1,5 @@
 class Admin::ArticlesController < Admin::BaseController
-  before_action :set_article, only: %i[edit update destroy publish unpublish story_card story_video share_instagram]
+  before_action :set_article, only: %i[edit update destroy publish unpublish story_card story_video share_instagram direct_upload_photo_candidate]
 
   def index
     @articles = Article.includes(:author, :category)
@@ -142,6 +142,21 @@ class Admin::ArticlesController < Admin::BaseController
                 disposition: "attachment"
     else
       redirect_to edit_admin_article_path(@article), alert: "No image found to generate story card."
+    end
+  end
+
+  # POST /admin/articles/:id/direct_upload_photo_candidate
+  def direct_upload_photo_candidate
+    if params[:photo_candidate].present?
+      @article.photo_candidates.attach(params[:photo_candidate])
+      photo = @article.photo_candidates.last
+      render json: {
+        id:           photo.id,
+        url:          url_for(photo.variant(resize_to_limit: [ 96, 96 ])),
+        original_url: url_for(photo)
+      }, status: :ok
+    else
+      render json: { error: "No file uploaded" }, status: :unprocessable_entity
     end
   end
 
