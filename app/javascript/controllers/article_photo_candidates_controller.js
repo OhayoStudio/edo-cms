@@ -41,15 +41,19 @@ export default class extends Controller {
       .then(response => response.json())
       .then(data => {
         if (data.url) {
-          this.addThumbnail(data.url, data.original_url)
+          this.addThumbnail(data.url, data.original_url, data.id)
         }
       })
   }
 
-  addThumbnail(thumbUrl, originalUrl) {
+  addThumbnail(thumbUrl, originalUrl, attachmentId) {
+    const wrapper = document.createElement("div")
+    wrapper.className = "relative m-1 group"
+    if (attachmentId) wrapper.dataset.attachmentId = attachmentId
+
     const img = document.createElement("img")
     img.src = thumbUrl
-    img.className = "object-cover w-24 h-24 rounded border bg-white m-1 cursor-pointer hover:ring-2 hover:ring-[#704214]"
+    img.className = "object-cover w-24 h-24 rounded border bg-white cursor-pointer hover:ring-2 hover:ring-[#704214]"
     img.title = "Click to insert at cursor · Drag to position"
     if (originalUrl) {
       img.dataset.originalUrl = originalUrl
@@ -57,18 +61,30 @@ export default class extends Controller {
       img.addEventListener("dragstart", this._onImgDragStart)
       img.addEventListener("click", (e) => this.onThumbnailClick(e))
     }
-    this.previewsTarget.appendChild(img)
+    wrapper.appendChild(img)
+
+    if (attachmentId) {
+      const btn = document.createElement("button")
+      btn.type = "button"
+      btn.title = "Delete photo"
+      btn.className = "absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
+      btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
+      btn.addEventListener("click", (e) => this.deletePhoto(e))
+      wrapper.appendChild(btn)
+    }
+
+    this.previewsTarget.appendChild(wrapper)
   }
 
   onThumbnailDragStart(event) {
-    const originalUrl = event.target.dataset.originalUrl
+    const originalUrl = event.target.closest("img")?.dataset.originalUrl
     if (!originalUrl) return
     event.dataTransfer.setData(DRAG_TYPE, originalUrl)
     event.dataTransfer.effectAllowed = "copy"
   }
 
   async onThumbnailClick(event) {
-    const originalUrl = event.currentTarget.dataset.originalUrl
+    const originalUrl = event.target.closest("img")?.dataset.originalUrl
     if (!originalUrl || !this._editorEl) return
 
     // Focus editor to restore last cursor position
@@ -86,6 +102,22 @@ export default class extends Controller {
     } catch (err) {
       console.error("Photo candidate click insert failed:", err)
     }
+  }
+
+  async deletePhoto(event) {
+    const wrapper = event.currentTarget.closest("[data-attachment-id]")
+    if (!wrapper) return
+    const attachmentId = wrapper.dataset.attachmentId
+    const articleId = this.element.dataset.articleId
+
+    const resp = await fetch(
+      `/admin/articles/${articleId}/destroy_photo_candidate?attachment_id=${attachmentId}`,
+      {
+        method: "DELETE",
+        headers: { "X-CSRF-Token": document.querySelector("meta[name=csrf-token]").content }
+      }
+    )
+    if (resp.ok) wrapper.remove()
   }
 
   _onImgDragStart = (event) => {
