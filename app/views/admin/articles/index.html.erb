@@ -10,6 +10,17 @@
       <tr>
         <th class="text-left px-4 py-3 font-semibold">Title</th>
         <th class="text-left px-4 py-3 font-semibold">Author</th>
+        <th class="text-left px-4 py-3 font-semibold">
+          <%= select_tag :category_id,
+                options_from_collection_for_select(
+                  [Struct.new(:id, :name).new("", "All categories")] + @categories.to_a,
+                  :id, :name,
+                  params[:category_id].presence || ""
+                ),
+                onchange: "window.location = '#{admin_articles_path}?category_id=' + this.value",
+                class: "text-xs font-semibold bg-transparent border-0 text-[#704214] dark:text-amber-300
+                        cursor-pointer focus:outline-none pr-1 -ml-1" %>
+        </th>
         <th class="text-left px-4 py-3 font-semibold">Status</th>
         <th class="text-left px-4 py-3 font-semibold">Created</th>
         <th class="text-left px-4 py-3 font-semibold">Updated</th>
@@ -18,12 +29,32 @@
     </thead>
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
       <% @articles.each do |article| %>
-        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+        <tr id="article-row-<%= article.id %>" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
           <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 max-w-xs truncate">
             <%= article.title %>
           </td>
           <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs">
             <%= article.author&.display_name %>
+          </td>
+          <td class="px-4 py-3 text-xs whitespace-nowrap"
+              data-controller="inline-field"
+              data-inline-field-url-value="<%= patch_field_admin_article_path(article) %>"
+              data-inline-field-field-value="category_id">
+            <span data-inline-field-target="label"
+                  data-action="click->inline-field#show"
+                  class="text-gray-500 dark:text-gray-400 cursor-pointer hover:text-[#704214] dark:hover:text-amber-300 hover:underline">
+              <%= article.category&.name || "—" %>
+            </span>
+            <select data-inline-field-target="select"
+                    data-action="change->inline-field#change keydown->inline-field#keydown blur->inline-field#hide"
+                    class="hidden text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600
+                           text-gray-900 dark:text-gray-100 rounded px-1 py-0.5 focus:outline-[#704214]">
+              <% @categories.each do |cat| %>
+                <option value="<%= cat.id %>" <%= "selected" if article.category_id == cat.id %>>
+                  <%= cat.name %>
+                </option>
+              <% end %>
+            </select>
           </td>
           <td class="px-4 py-3">
             <span class="px-2 py-0.5 rounded text-xs font-medium
@@ -60,6 +91,7 @@
                       data-controller="admin-modal"
                       data-action="click->admin-modal#open"
                       data-admin-modal-url-value="<%= admin_article_path(article) %>"
+                      data-admin-modal-row-value="article-row-<%= article.id %>"
                       data-admin-modal-title-value="Delete &ldquo;<%= article.title %>&rdquo;?">
                 Delete
               </button>
@@ -70,7 +102,7 @@
 
       <% if @articles.empty? %>
         <tr>
-          <td colspan="6" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
+          <td colspan="7" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
             No articles yet.
           </td>
         </tr>
@@ -80,7 +112,15 @@
 </div>
 
 <div class="mt-6 flex justify-center">
-  <%= paginate @articles %>
+  <%= paginate @articles, params: { category_id: params[:category_id] } %>
 </div>
+
+<script>
+  document.addEventListener("keydown", function(e) {
+    if (e.target.matches("input, textarea, [contenteditable]")) return
+    if (e.key === "ArrowLeft")  document.querySelector("a[rel=prev]")?.click()
+    if (e.key === "ArrowRight") document.querySelector("a[rel=next]")?.click()
+  })
+</script>
 
 <%= render "admin/shared/confirm_modal" %>
