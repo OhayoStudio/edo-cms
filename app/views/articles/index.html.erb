@@ -17,7 +17,7 @@
     <div data-dropdown-target="menu" class="hidden absolute mt-1 w-full rounded-md shadow-lg bg-white ">
       <div class="py-1" role="menu" aria-orientation="vertical">
         <% @categories.each do |category| %>
-          <a href="<%= category_path(category.slug) %>" data-action="click->dropdown#navigate" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"><%= category.name %> (<%= category.articles.count %>)</a>
+          <a href="<%= category_path(category.slug) %>" data-action="click->dropdown#navigate" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem"><%= category.name %> (<%= category.articles.published.count %>)</a>
         <% end %>
       </div>
     </div>
@@ -62,7 +62,7 @@
           <div>
           <%= link_to category_path(category.slug), class: "px-3 text-sm font-medium dark:text-gray-300 flex items-center justify-between" do %>
             <p><%= category.name %></p>
-            <p class="text-gray-500 dark:text-gray-300">(<%= category.articles.count %>)</p>            
+            <p class="text-gray-500 dark:text-gray-300">(<%= category.articles.published.count %>)</p>            
           </div>
           <% end %>
           <div class="w-full border-b border-gray-500 dark:border-gray-700 dark:text-gray-300 p-2 mb-2"></div>

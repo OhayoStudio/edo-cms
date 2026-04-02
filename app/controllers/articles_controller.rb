@@ -3,7 +3,7 @@ class ArticlesController < ApplicationController
 
   # GET /articles or /articles.json
   def index
-    @articles = Article.all
+    @articles = Article.published
     @articles = @articles.published if params[:published].present?
     @articles = @articles.featured if params[:featured].present?
     @articles = @articles.where(category_id: params[:category_id]) if params[:category_id].present?
@@ -91,7 +91,7 @@ class ArticlesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_article
-      @article = Article.friendly.find(params[:id])
+      @article = Article.published.friendly.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
