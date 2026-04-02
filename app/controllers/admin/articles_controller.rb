@@ -1,9 +1,11 @@
 class Admin::ArticlesController < Admin::BaseController
-  before_action :set_article, only: %i[edit update destroy publish unpublish story_card story_video share_instagram direct_upload_photo_candidate]
+  before_action :set_article, only: %i[edit update destroy publish unpublish story_card story_video share_instagram direct_upload_photo_candidate destroy_photo_candidate patch_field]
 
   def index
+    @categories = Category.not_deleted.order(:name)
     @articles = Article.includes(:author, :category)
                        .order(created_at: :desc)
+                       .then { |q| params[:category_id].present? ? q.where(category_id: params[:category_id]) : q }
                        .page(params[:page]).per(10)
   end
 
@@ -45,7 +47,10 @@ class Admin::ArticlesController < Admin::BaseController
 
   def destroy
     @article.destroy!
-    redirect_to admin_articles_path, status: :see_other, notice: "Article deleted."
+    respond_to do |format|
+      format.json { head :no_content }
+      format.any  { redirect_to admin_articles_path, status: :see_other, notice: "Article deleted." }
+    end
   end
 
   def publish
@@ -145,6 +150,18 @@ class Admin::ArticlesController < Admin::BaseController
     end
   end
 
+  # PATCH /admin/articles/:id/patch_field — lightweight single-field inline update
+  def patch_field
+    allowed = %w[category_id status featured]
+    field   = params[:field].to_s
+    return head :bad_request unless allowed.include?(field)
+
+    @article.update_column(field, params[:value])
+    render json: { ok: true }
+  rescue ArgumentError, ActiveRecord::StatementInvalid => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
   # POST /admin/articles/:id/direct_upload_photo_candidate
   def direct_upload_photo_candidate
     if params[:photo_candidate].present?
@@ -158,6 +175,15 @@ class Admin::ArticlesController < Admin::BaseController
     else
       render json: { error: "No file uploaded" }, status: :unprocessable_entity
     end
+  end
+
+  # DELETE /admin/articles/:id/destroy_photo_candidate?attachment_id=X
+  def destroy_photo_candidate
+    attachment = @article.photo_candidates.find(params[:attachment_id])
+    attachment.purge
+    head :no_content
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
   end
 
   private

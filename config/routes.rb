@@ -11,7 +11,9 @@ Rails.application.routes.draw do
         get   :story_card
         get   :story_video
         post  :share_instagram
-        post  :direct_upload_photo_candidate
+        patch  :patch_field
+        post   :direct_upload_photo_candidate
+        delete :destroy_photo_candidate
       end
     end
     resources :videos do
