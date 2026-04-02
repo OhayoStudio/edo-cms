@@ -24,11 +24,11 @@ IMAGE_GLOB      = "*.{jpg,jpeg,png,webp,gif,JPG,JPEG,PNG}"
 def parse_frontmatter(raw)
   parts = raw.split(/^---\s*$/, 3)
   # parts[0] is empty (text before first ---), parts[1] is YAML, parts[2] is body
-  return [{}, raw] unless parts.length == 3
+  return [ {}, raw ] unless parts.length == 3
 
   fm   = YAML.safe_load(parts[1]) || {}
   body = parts[2]
-  [fm, body]
+  [ fm, body ]
 end
 
 def write_frontmatter(fm, body)
