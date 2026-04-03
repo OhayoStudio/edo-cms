@@ -1,34 +1,91 @@
 class Admin::GooglePhotosController < Admin::BaseController
-  # POST /admin/google_photos/import
-  # Body: { article_id:, access_token:, photos: [ { file_id:, filename:, mime_type: }, ... ] }
-  def import
-    article      = Article.find(params[:article_id])
+  PHOTOS_PICKER_BASE = "https://photospicker.googleapis.com/v1"
+
+  # POST /admin/google_photos/open
+  # Body: { access_token: }
+  def open
     access_token = params[:access_token].to_s
     return render json: { error: "missing access_token" }, status: :bad_request if access_token.blank?
 
+    resp = HTTParty.post(
+      "#{PHOTOS_PICKER_BASE}/sessions",
+      headers: { "Authorization" => "Bearer #{access_token}", "Content-Type" => "application/json" },
+      body: "{}"
+    )
+
+    unless resp.success?
+      Rails.logger.warn "Google Photos session creation failed: #{resp.code} #{resp.body}"
+      return render json: { error: resp.parsed_response }, status: resp.code
+    end
+
+    render json: { session_id: resp["id"], picker_uri: resp["pickerUri"] }
+  end
+
+  # POST /admin/google_photos/import
+  # Body: { article_id:, access_token:, session_id: }
+  def import
+    article      = Article.find(params[:article_id])
+    access_token = params[:access_token].to_s
+    session_id   = params[:session_id].to_s
+    return render json: { error: "missing params" }, status: :bad_request if access_token.blank? || session_id.blank?
+
+    # Check session is complete
+    session = HTTParty.get(
+      "#{PHOTOS_PICKER_BASE}/sessions/#{session_id}",
+      headers: { "Authorization" => "Bearer #{access_token}" }
+    )
+    Rails.logger.warn "Google Photos session status: #{session.code} mediaItemsSet=#{session["mediaItemsSet"].inspect}"
+    unless session.success? && session["mediaItemsSet"]
+      return render json: { imported: 0, thumbnails: [] }
+    end
+
+    # List all media items (paginated)
+    items      = []
+    page_token = nil
+    loop do
+      query = { sessionId: session_id, pageSize: 100 }
+      query[:pageToken] = page_token if page_token
+      resp = HTTParty.get(
+        "#{PHOTOS_PICKER_BASE}/mediaItems",
+        query:   query,
+        headers: { "Authorization" => "Bearer #{access_token}" }
+      )
+      Rails.logger.warn "Google Photos mediaItems: #{resp.code} body=#{resp.body.truncate(500)}"
+      break unless resp.success?
+      items.concat(Array(resp["mediaItems"]))
+      page_token = resp["nextPageToken"]
+      break if page_token.nil?
+    end
+    Rails.logger.warn "Google Photos items count: #{items.length}, types: #{items.map { |i| i["mimeType"] }.inspect}"
+
+    # Download and attach images
     imported = 0
-
-    Array(params[:photos]).each do |photo|
-      url  = "https://www.googleapis.com/drive/v3/files/#{photo[:file_id]}?alt=media"
-      data = HTTParty.get(url, headers: { "Authorization" => "Bearer #{access_token}" })
-
-      unless data.success?
-        Rails.logger.warn "Google Picker download failed for #{photo[:filename]}: HTTP #{data.code}"
-        next
-      end
-
-      content_type = data.headers["content-type"]&.split(";")&.first || "image/jpeg"
+    items.each do |item|
+      media_file = item["mediaFile"]
+      next unless media_file
+      next unless media_file["mimeType"]&.start_with?("image/")
+      data = HTTParty.get(
+        "#{media_file["baseUrl"]}=w2048-h2048",
+        headers: { "Authorization" => "Bearer #{access_token}" }
+      )
+      next unless data.success?
       article.photo_candidates.attach(
         io:           StringIO.new(data.body),
-        filename:     photo[:filename].presence || "photo.jpg",
-        content_type: content_type
+        filename:     "#{item["id"]}.jpg",
+        content_type: media_file["mimeType"]
       )
       imported += 1
     rescue => e
-      Rails.logger.warn "Google Picker import error for #{photo[:filename]}: #{e.message}"
+      Rails.logger.warn "Google Photos import error: #{e.message}"
     end
 
     article.save(validate: false) if imported > 0
+
+    # Cleanup session
+    HTTParty.delete(
+      "#{PHOTOS_PICKER_BASE}/sessions/#{session_id}",
+      headers: { "Authorization" => "Bearer #{access_token}" }
+    )
 
     thumbnails = article.photo_candidates.last(imported).map do |blob|
       {
