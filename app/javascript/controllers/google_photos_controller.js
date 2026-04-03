@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.readonly"
+const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file"
 
 // Connects to data-controller="google-photos"
 export default class extends Controller {
