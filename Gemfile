@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.1"
+gem "rails", "~> 8.1.3"
 gem "dotenv-rails", groups: %i[development test]
 gem "meta-tags", "~> 2.22"
 gem "sitemap_generator"
