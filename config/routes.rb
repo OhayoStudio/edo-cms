@@ -26,6 +26,14 @@ Rails.application.routes.draw do
     resources :tags
     resource :colophon, only: %i[edit update]
     resource :about, only: %i[edit update]
+    scope "google_photos", controller: "google_photos" do
+      post "open",   as: :google_photos_open
+      post "import", as: :google_photos_import
+    end
+    scope "flickr", controller: "flickr" do
+      get  "albums", as: :flickr_albums
+      post "import", as: :flickr_import
+    end
   end
 
   resources :videos,     only: %i[index show]

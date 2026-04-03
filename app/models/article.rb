@@ -28,7 +28,7 @@ class Article < ApplicationRecord
   validates :title, presence: true, length: { minimum: 5, maximum: 200 }
   validates :slug, presence: true, uniqueness: true
   validates :meta_description, length: { maximum: 160 }
-  validates :excerpt, length: { maximum: 150 }
+  validates :excerpt, length: { maximum: 200 }
   validates :content, presence: true
   validates :reading_time, numericality: { only_integer: true, greater_than: 0 }
   # validates :view_count, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
