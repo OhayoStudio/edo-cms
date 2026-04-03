@@ -1,12 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
-const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file"
+const PHOTOS_SCOPE = "https://www.googleapis.com/auth/photospicker.mediaitems.readonly"
 
 // Connects to data-controller="google-photos"
 export default class extends Controller {
   static values = {
-    clientId: String,
-    apiKey:   String,
+    clientId:  String,
+    openUrl:   String,
     importUrl: String,
     articleId: String
   }
@@ -14,28 +14,16 @@ export default class extends Controller {
   connect() {
     this._accessToken = null
     this._tokenClient = null
-    this._pickerReady = false
   }
 
   async open() {
-    await this._loadLibraries()
+    if (!window.google?.accounts?.oauth2) {
+      await this._loadScript("https://accounts.google.com/gsi/client")
+    }
     this._requestToken()
   }
 
   // ── private ───────────────────────────────────────────────────────────────
-
-  async _loadLibraries() {
-    if (!window.gapi) {
-      await this._loadScript("https://apis.google.com/js/api.js")
-    }
-    if (!window.google?.accounts?.oauth2) {
-      await this._loadScript("https://accounts.google.com/gsi/client")
-    }
-    if (!this._pickerReady) {
-      await new Promise(resolve => gapi.load("picker", resolve))
-      this._pickerReady = true
-    }
-  }
 
   _loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -51,45 +39,80 @@ export default class extends Controller {
     if (!this._tokenClient) {
       this._tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: this.clientIdValue,
-        scope: DRIVE_SCOPE,
-        callback: resp => {
+        scope:     PHOTOS_SCOPE,
+        prompt:    "select_account",
+        callback:  resp => {
           if (resp.error) return
           this._accessToken = resp.access_token
-          this._showPicker()
+          this._openPicker()
         }
       })
     }
     if (this._accessToken) {
-      this._showPicker()
+      this._openPicker()
     } else {
       this._tokenClient.requestAccessToken()
     }
   }
 
-  _showPicker() {
-    const picker = new google.picker.PickerBuilder()
-      .addView(new google.picker.PhotosView())
-      .addView(new google.picker.PhotosView().setType(google.picker.PhotosView.Type.ALBUMS))
-      .addView(new google.picker.DocsView(google.picker.ViewId.DOCS_IMAGES))
-      .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-      .setOAuthToken(this._accessToken)
-      .setDeveloperKey(this.apiKeyValue)
-      .setCallback(data => this._onPick(data))
-      .build()
-    picker.setVisible(true)
+  async _openPicker() {
+    const resp = await fetch(this.openUrlValue, {
+      method:  "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector("meta[name=csrf-token]").content
+      },
+      body: JSON.stringify({ access_token: this._accessToken })
+    })
+
+    const { session_id, picker_uri, error } = await resp.json()
+    if (!resp.ok) {
+      console.error("Google Photos session error:", error)
+      return
+    }
+
+    const popup = window.open(picker_uri + "/autoclose", "_blank", "width=900,height=700")
+    this._pollSession(popup, session_id)
   }
 
-  async _onPick(data) {
-    if (data[google.picker.Response.ACTION] !== google.picker.Action.PICKED) return
+  _pollSession(popup, sessionId) {
+    let attempts = 0
+    let popupClosedAttempt = null
+    const GRACE_ATTEMPTS = 6 // 30s grace period after popup closes
 
-    const photos = data[google.picker.Response.DOCUMENTS].map(doc => ({
-      file_id:   doc[google.picker.Document.ID],
-      filename:  doc[google.picker.Document.NAME],
-      mime_type: doc[google.picker.Document.MIME_TYPE]
-    }))
+    const interval = setInterval(async () => {
+      attempts++
+      if (attempts > 60) { clearInterval(interval); return } // 5-minute hard timeout
 
+      if (popup.closed && popupClosedAttempt === null) popupClosedAttempt = attempts
+
+      // Give up if popup closed and grace period exhausted
+      if (popupClosedAttempt !== null && (attempts - popupClosedAttempt) >= GRACE_ATTEMPTS) {
+        clearInterval(interval)
+        return
+      }
+
+      try {
+        const resp = await fetch(
+          `https://photospicker.googleapis.com/v1/sessions/${sessionId}`,
+          { headers: { "Authorization": `Bearer ${this._accessToken}` } }
+        )
+        if (!resp.ok) { clearInterval(interval); return }
+        const data = await resp.json()
+        console.log("[google-photos] session poll:", data.mediaItemsSet, "attempt", attempts)
+        if (data.mediaItemsSet) {
+          clearInterval(interval)
+          await this._import(sessionId)
+        }
+      } catch (e) {
+        clearInterval(interval)
+      }
+    }, 5000)
+  }
+
+  async _import(sessionId) {
     const resp = await fetch(this.importUrlValue, {
-      method: "POST",
+      method:  "POST",
       headers: {
         "Content-Type": "application/json",
         "X-CSRF-Token": document.querySelector("meta[name=csrf-token]").content
@@ -97,11 +120,12 @@ export default class extends Controller {
       body: JSON.stringify({
         article_id:   this.articleIdValue,
         access_token: this._accessToken,
-        photos
+        session_id:   sessionId
       })
     })
 
     const result = await resp.json()
+    console.log("[google-photos] import result:", result)
     if (!resp.ok) {
       console.error("Google Photos import failed:", result.error)
       return

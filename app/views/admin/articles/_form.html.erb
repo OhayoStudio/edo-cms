@@ -79,12 +79,15 @@
     </div>
 
     <div class="md:col-span-2 sticky top-4 z-10 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 shadow-sm"
-         data-controller="article-photo-candidates google-photos"
+         data-controller="article-photo-candidates google-photos flickr"
          data-article-id="<%= @article.id %>"
          data-google-photos-client-id-value="<%= ENV.fetch('GOOGLE_CLIENT_ID') %>"
-         data-google-photos-api-key-value="<%= ENV.fetch('GOOGLE_API_KEY') %>"
+         data-google-photos-open-url-value="<%= admin_google_photos_open_path %>"
          data-google-photos-import-url-value="<%= admin_google_photos_import_path %>"
-         data-google-photos-article-id-value="<%= @article.id %>">
+         data-google-photos-article-id-value="<%= @article.id %>"
+         data-flickr-albums-url-value="<%= admin_flickr_albums_path %>"
+         data-flickr-import-url-value="<%= admin_flickr_import_path %>"
+         data-flickr-article-id-value="<%= @article.id %>">
       <div class="flex items-center justify-between mb-2">
         <%= f.label :photo_candidates, "Photos — drag into content or click to insert at cursor", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
         <button type="button"
@@ -92,6 +95,12 @@
                 class="flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
           Google Photos
+        </button>
+        <button type="button"
+                data-action="click->flickr#open"
+                class="flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+          Flickr
         </button>
       </div>
       <div data-article-photo-candidates-target="previews" class="flex flex-wrap gap-2 mb-2">
@@ -139,15 +148,23 @@
       <p class="mt-1 text-xs text-gray-400">Comma-separated — will be created as Tags automatically</p>
     </div>
 
-    <div>
-      <%= f.label :featured_image, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+    <div data-controller="featured-image-drop"
+         data-action="dragover->featured-image-drop#dragover dragleave->featured-image-drop#dragleave drop->featured-image-drop#drop"
+         class="rounded border-2 border-dashed border-gray-200 dark:border-gray-600 p-3 transition-colors">
+      <%= f.label :featured_image, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
       <% if article.persisted? && article.featured_image.attached? %>
-        <div class="mb-2">
-          <%= image_tag article.featured_image.variant(resize_to_limit: [200, 120]),
-              class: "rounded border border-gray-200 dark:border-gray-600" %>
-        </div>
+        <img src="<%= url_for(article.featured_image.variant(resize_to_limit: [200, 120])) %>"
+             data-featured-image-drop-target="preview"
+             class="rounded border border-gray-200 dark:border-gray-600 mb-2" />
+      <% else %>
+        <img data-featured-image-drop-target="preview" class="rounded border border-gray-200 dark:border-gray-600 mb-2 hidden" src="" alt="" />
       <% end %>
+      <p data-featured-image-drop-target="hint"
+         class="text-xs text-gray-400 mb-2 <%= article.persisted? && article.featured_image.attached? ? 'hidden' : '' %>">
+        Drop a photo candidate here or use the file picker below
+      </p>
       <%= f.file_field :featured_image, accept: "image/*",
+          data: { featured_image_drop_target: "input" },
           class: "block w-full text-sm text-gray-500 dark:text-gray-400
                   file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0
                   file:text-xs file:bg-[#704214] file:text-white hover:file:bg-[#52300f]" %>
