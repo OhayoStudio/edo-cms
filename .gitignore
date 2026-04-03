@@ -75,3 +75,4 @@ public/sitemaps/*
 .env
 .env.*
 !.env.example
+config/client_secret_*.json
