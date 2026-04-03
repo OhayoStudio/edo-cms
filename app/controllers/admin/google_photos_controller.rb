@@ -34,7 +34,6 @@ class Admin::GooglePhotosController < Admin::BaseController
       "#{PHOTOS_PICKER_BASE}/sessions/#{session_id}",
       headers: { "Authorization" => "Bearer #{access_token}" }
     )
-    Rails.logger.warn "Google Photos session status: #{session.code} mediaItemsSet=#{session["mediaItemsSet"].inspect}"
     unless session.success? && session["mediaItemsSet"]
       return render json: { imported: 0, thumbnails: [] }
     end
@@ -50,14 +49,11 @@ class Admin::GooglePhotosController < Admin::BaseController
         query:   query,
         headers: { "Authorization" => "Bearer #{access_token}" }
       )
-      Rails.logger.warn "Google Photos mediaItems: #{resp.code} body=#{resp.body.truncate(500)}"
       break unless resp.success?
       items.concat(Array(resp["mediaItems"]))
       page_token = resp["nextPageToken"]
       break if page_token.nil?
     end
-    Rails.logger.warn "Google Photos items count: #{items.length}, types: #{items.map { |i| i["mimeType"] }.inspect}"
-
     # Download and attach images
     imported = 0
     items.each do |item|

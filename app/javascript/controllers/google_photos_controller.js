@@ -99,7 +99,6 @@ export default class extends Controller {
         )
         if (!resp.ok) { clearInterval(interval); return }
         const data = await resp.json()
-        console.log("[google-photos] session poll:", data.mediaItemsSet, "attempt", attempts)
         if (data.mediaItemsSet) {
           clearInterval(interval)
           await this._import(sessionId)
@@ -125,7 +124,6 @@ export default class extends Controller {
     })
 
     const result = await resp.json()
-    console.log("[google-photos] import result:", result)
     if (!resp.ok) {
       console.error("Google Photos import failed:", result.error)
       return
