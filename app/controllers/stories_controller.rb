@@ -5,7 +5,7 @@ class StoriesController < ApplicationController
   def index
     @top_story = Story.published.recent.with_slug.top.first
     @recent_stories = Story.published.recent.with_slug
-    @recent_stories = (@recent_stories - [ @top_story ]).first(3)
+    @recent_stories = (@recent_stories - [ @top_story ]).first(6) if @top_story.present?
 
     @videos = Video.all.order(created_at: :desc).limit(3)
 
@@ -23,19 +23,6 @@ class StoriesController < ApplicationController
 
       @latest_stories_by_category << latest_story if latest_story
     end
-
-    # get 10 last videos from the youtube channel of OhayoStudio
-    # youtube_channel_id = "UC9Z1XWw1kmnvOOFsj6Bzy2g"
-    # youtube_api_key = Rails.application.credentials.dig(:youtube, :api_key)
-    # youtube_url = "https://www.googleapis.com/youtube/v3/search?key=#{youtube_api_key}&channelId=#{youtube_channel_id}&part=snippet,id&order=date&maxResults=10"
-    # youtube_response = HTTParty.get(youtube_url)
-    # youtube_videos = youtube_response["items"]
-    # @youtube_videos = youtube_videos
-
-    # respond_to do |format|
-    #   format.html
-    #   format.json { render json: @stories }
-    # end
   end
 
   # GET /stories/1 or /stories/1.json
