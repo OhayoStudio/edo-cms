@@ -100,3 +100,43 @@
   height: 100%;
   border: 0;
 }
+
+[data-controller~="photo-zoom"] img {
+  cursor: zoom-in;
+}
+
+/* Photo zoom badge ─────────────────────────────────────────────── */
+.photo-zoom-host {
+  position: relative;
+  display: inline-block; /* shrink-wrap the image */
+}
+
+.photo-zoom-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.18s ease, background 0.18s ease;
+  pointer-events: none; /* badge itself is visual-only; click bubbles to host */
+  cursor: zoom-in;
+}
+
+/* Always show at low opacity so mobile users see it */
+.photo-zoom-host:hover .photo-zoom-badge,
+.photo-zoom-badge {
+  opacity: 0.55;
+  pointer-events: auto;
+}
+
+.photo-zoom-host:hover .photo-zoom-badge {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.65);
+}
