@@ -10,7 +10,7 @@ class Article < ApplicationRecord
   has_one_attached :featured_image do |attachable|
     attachable.variant :hero,  resize_to_limit: [ 1600, 900 ]
     attachable.variant :thumb, resize_to_limit: [ 600, 400 ]
-    attachable.variant :og,    resize_to_limit: [ 1200, 630 ], format: :webp, saver: { quality: 85 }
+    attachable.variant :og,    resize_to_limit: [ 1200, 630 ], format: :webp
   end
 
   has_many_attached :photo_candidates
