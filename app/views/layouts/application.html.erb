@@ -51,10 +51,10 @@
 
         <ul class="flex gap-8">
           <li class="p-6">
-            <%= link_to "Articles", articles_path, class: "hover:text-amber-300 #{articles_section? ? 'text-amber-600' : ''}" %>
+            <%= link_to "Stories", articles_path, class: "hover:text-amber-300 #{articles_section? ? 'text-amber-600' : ''}" %>
           </li>
           <li class="p-6">
-            <%= link_to "Videos", videos_path, class: "hover:text-amber-300 #{current_page?(videos_path) ? 'text-amber-600' : ''}" %>
+            <%= link_to "Motion Pictures", videos_path, class: "hover:text-amber-300 #{current_page?(videos_path) ? 'text-amber-600' : ''}" %>
           </li>
           <li class="p-6">
             <a href="/about" class="hover:text-amber-300">About</a>
@@ -88,10 +88,10 @@
       <nav id="mobile-menu" aria-label="Mobile navigation" class="hidden">
         <ul class="flex gap-8">
           <li class="p-6">
-            <%= link_to "Articles", articles_path, class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(articles_path) ? 'text-amber-900 dark:text-[var(--color-accent)]' : 'text-amber-600'}" %>
+            <%= link_to "Stories", articles_path, class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(articles_path) ? 'text-amber-900 dark:text-[var(--color-accent)]' : 'text-amber-600'}" %>
           </li>
           <li class="p-6">
-            <%= link_to "Videos", videos_path, class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(videos_path) ? 'text-amber-900 dark:text-[var(--color-accent)]' : 'text-amber-600'}" %>
+            <%= link_to "Motion Pictures", videos_path, class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(videos_path) ? 'text-amber-900 dark:text-[var(--color-accent)]' : 'text-amber-600'}" %>
           </li>
           <li class="p-6">
             <a href="/about" class="text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300">About</a>
@@ -115,9 +115,9 @@
 
           <!-- Navigation links -->
           <nav aria-label="Footer navigation" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-300">
-            <%= link_to "Articles", articles_path,
+            <%= link_to "Stories", articles_path,
                 class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
-            <%= link_to "Videos", videos_path,
+            <%= link_to "Motion Pictures", videos_path,
                 class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
             <%= link_to "About", about_path,
                 class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>

@@ -22,6 +22,7 @@
                         cursor-pointer focus:outline-none pr-1 -ml-1" %>
         </th>
         <th class="text-left px-4 py-3 font-semibold">Status</th>
+        <th class="text-center px-4 py-3 font-semibold">Priority</th>
         <th class="text-left px-4 py-3 font-semibold">Created</th>
         <th class="text-left px-4 py-3 font-semibold">Updated</th>
         <th class="text-right px-4 py-3 font-semibold">Actions</th>
@@ -63,6 +64,25 @@
               <%= article.status.humanize %>
             </span>
           </td>
+          <td class="px-4 py-3 text-center"
+              data-controller="inline-number"
+              data-inline-number-url-value="<%= patch_field_admin_article_path(article) %>"
+              data-inline-number-field-value="priority">
+            <span data-inline-number-target="label"
+                  data-action="click->inline-number#show"
+                  class="cursor-pointer font-mono text-sm font-semibold
+                         <%= article.priority > 0 ? 'text-[#704214] dark:text-amber-300' : 'text-gray-400 dark:text-gray-600' %>
+                         hover:text-[#704214] dark:hover:text-amber-300">
+              <%= article.priority %>
+            </span>
+            <input type="number" min="0"
+                   data-inline-number-target="input"
+                   data-action="blur->inline-number#save keydown->inline-number#keydown"
+                   value="<%= article.priority %>"
+                   class="hidden w-14 text-center text-sm font-mono rounded border border-[#704214]
+                          dark:border-amber-400 bg-white dark:bg-gray-700
+                          text-gray-900 dark:text-gray-100 px-1 py-0.5 focus:outline-[#704214]">
+          </td>
           <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
             <%= article.created_at.strftime("%b %-d, %Y") %>
           </td>
@@ -102,7 +122,7 @@
 
       <% if @articles.empty? %>
         <tr>
-          <td colspan="7" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
+          <td colspan="8" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
             No articles yet.
           </td>
         </tr>
