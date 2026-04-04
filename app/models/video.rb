@@ -3,16 +3,18 @@ class Video < ApplicationRecord
     friendly_id :title, use: :slugged
 
     has_one_attached :featured_image do |attachable|
-      attachable.variant :hero,  resize_to_limit: [ 1600, 900 ], saver: { quality: 95 }
-      attachable.variant :thumb, resize_to_limit: [ 600, 400 ], saver: { quality: 90 }
-      attachable.variant :og,    resize_to_limit: [ 1200, 630 ], format: :webp, saver: { quality: 85 }
+      attachable.variant :hero,  resize_to_limit: [ 1600, 900 ]
+      attachable.variant :thumb, resize_to_limit: [ 600, 400 ]
+      attachable.variant :og,    resize_to_limit: [ 1200, 630 ], format: :webp
     end
     has_one :story, as: :storyable
+
+    attr_accessor :use_youtube_thumbnail
 
     validates :title, presence: true
     validates :description, presence: true
     validates :url, presence: true
-    validates :featured_image, presence: true
+    validates :featured_image, presence: true, unless: -> { use_youtube_thumbnail == "1" }
 
     def should_generate_new_friendly_id?
         title_changed?
