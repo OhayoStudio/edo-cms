@@ -138,5 +138,54 @@
 
 .photo-zoom-host:hover .photo-zoom-badge {
   opacity: 1;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0, 0, 0, 0.85);
+}
+
+/* Video page — unified sepia filter on all thumbnails ──────────── */
+#videos img,
+#videos-archive img {
+  filter: sepia(0.5) saturate(0.55);
+  transition: filter 0.3s ease;
+}
+
+#videos img:hover,
+#videos-archive img:hover {
+  filter: sepia(0.1) saturate(1);
+}
+
+/* Description expand modal ─────────────────────────────────────── */
+.description-modal-card {
+  background: #F9F7F0;
+  color: #423525;
+  border-radius: 0.5rem;
+  max-width: 36rem;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+}
+
+.dark .description-modal-card {
+  background: #423525;
+  color: #d1d5db;
+}
+
+.description-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  opacity: 0.5;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+  transition: opacity 0.15s;
+}
+
+.description-modal-close:hover {
+  opacity: 1;
 }
