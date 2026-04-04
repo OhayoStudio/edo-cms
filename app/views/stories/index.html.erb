@@ -34,7 +34,7 @@
         class="container dark:text-gray-300 mx-auto pt-4 md:mx-auto md:mt-2 md:px-5"
       >
         <h2 class="md:mt-2 text-4xl font-bold font-serif mb-8 pl-4">
-          Recent Stories
+          Recently published
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 m-4">
           <% @recent_stories.each do |story| %> <%= render story %> <% end %>
@@ -49,7 +49,10 @@
       class="min-w-full dark:text-gray-300 dark:bg-slate-800 text-gray-300 bg-gray-800 p-4 lora"
     >
       <div class="container mx-auto md:mx-auto md:mt-2 md:px-5">
-        <h2 class="text-4xl font-serif font-bold mb-8 pl-2 pt-4">Videos <span class="text-sm">we liked</span></h2>
+        <div class="flex items-center justify-between">
+          <h2 class="text-4xl font-serif font-bold mb-8 pl-2 pt-4">Videos <span class="text-sm">we liked</span></h2>
+          <p><%= link_to "See all videos", videos_path %></p>
+        </div>
         <div class="flex flex-col md:flex-row gap-4">
           <!-- render Videos Component here under -->
           <%= render VideosComponent.new(videos: @videos)%>
@@ -64,7 +67,7 @@
     >
       <!-- Display all other stories -->
       <div class="container mx-auto md:mx-auto md:mt-2 md:px-5">
-        <h2 class="text-4xl font-bold font-serif m-4">Categories</h2>
+        <!-- <h2 class="text-4xl font-bold font-serif m-4">Categories</h2> -->
         <div class="pb-4 m-4">
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <% @latest_stories_by_category.each do |story| %>

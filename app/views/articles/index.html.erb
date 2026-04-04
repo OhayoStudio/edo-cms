@@ -30,10 +30,7 @@
       <% if @category %>
         <h1 class="text-4xl font-serif font-bold mb-4 mt-4 pl-2 dark:text-gray-300"><%= @category.name %></h1>
       <% end %>
-
-
-      
-
+    
       <div id="articles" class="min-w-full">
         <% if @articles.any? %>
           <% @articles.each do |article| %>
@@ -56,7 +53,7 @@
         </div>
       <% end %>
 
-      <h2 class="font-bold mt-8 dark:text-gray-300 px-3">CATEGORIES</h2>
+      <!-- <h2 class="font-bold mt-8 dark:text-gray-300 px-3">CATEGORIES</h2> -->
       <div class="mt-5">
         <% @categories.each do |category| %>
           <div>
