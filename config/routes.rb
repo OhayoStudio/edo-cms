@@ -21,6 +21,9 @@ Rails.application.routes.draw do
         patch :publish
         patch :unpublish
       end
+      collection do
+        get :metadata
+      end
     end
     resources :categories
     resources :tags

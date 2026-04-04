@@ -1,14 +1,26 @@
-<% content_for :title, "Videos" %>
+<% content_for :title, "Videos we liked" %>
 <% if @videos.any? %>
 <div id="videos" class="min-w-full bg-gray-800 text-gray-300 p-4 lora">
   <div class="container mx-auto md:mx-auto md:mt-2 md:px-5">
-    <h2 class="text-4xl font-serif font-bold mb-8 pl-2 pt-4">Videos</h2>
+    <h2 class="text-4xl font-serif font-bold mb-8 pl-2 pt-4">Videos <span class="text-sm">we liked</span></h2>
     <div class="flex flex-col md:flex-row gap-4">
       <%= render VideosComponent.new(videos: @videos) %>
     </div>
   </div>
 </div>
+<% if @archive_videos.any? %>
+  <turbo-frame id="videos-archive" data-turbo-action="advance">
+    <div class="container mx-auto pt-4">
+      <h3 class="text-2xl font-serif font-semibold mb-6 pl-4">Previous videos</h3>
+      <div>
+        <%= render partial: "videos/archive_item", collection: @archive_videos, as: :video %>
+      </div>
+      <div class="flex justify-center mt-6 mb-8 pagination">
+        <%= paginate @archive_videos, param_name: :archive_page %>
+      </div>
+    </div>
+  </turbo-frame>
+<% end %>
 <% else %>
   <p class="text-center my-10">No videos found.</p>
 <% end %>
-
