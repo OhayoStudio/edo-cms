@@ -3,12 +3,9 @@ class VideosController < ApplicationController
 
   # GET /videos or /videos.json
   def index
-    # @videos = Video.all.limit(4) # Main video + 4 thumbnails
-    @videos = Video.all.order(created_at: :desc).limit(3)
-
-    # Rails 8 way to render component
-    # render component: "videos", locals: { videos: @videos }
-    # render VideosComponent.new(videos: @videos)
+    all_videos      = Video.order(created_at: :desc)
+    @videos         = all_videos.limit(3)
+    @archive_videos = all_videos.offset(3).page(params[:archive_page]).per(5)
   end
 
 
