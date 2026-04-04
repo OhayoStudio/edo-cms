@@ -71,18 +71,18 @@ export default class extends Controller {
       return
     }
 
-    const popup = window.open(picker_uri + "/autoclose", "_blank", "width=900,height=700")
+    const popup = window.open(picker_uri, "_blank", "width=900,height=700")
     this._pollSession(popup, session_id)
   }
 
   _pollSession(popup, sessionId) {
     let attempts = 0
     let popupClosedAttempt = null
-    const GRACE_ATTEMPTS = 6 // 30s grace period after popup closes
+    const GRACE_ATTEMPTS = 12 // 60s grace period after popup closes
 
     const interval = setInterval(async () => {
       attempts++
-      if (attempts > 60) { clearInterval(interval); return } // 5-minute hard timeout
+      if (attempts > 120) { clearInterval(interval); return } // 10-minute hard timeout
 
       if (popup.closed && popupClosedAttempt === null) popupClosedAttempt = attempts
 
@@ -101,6 +101,7 @@ export default class extends Controller {
         const data = await resp.json()
         if (data.mediaItemsSet) {
           clearInterval(interval)
+          if (popup && !popup.closed) popup.close()
           await this._import(sessionId)
         }
       } catch (e) {
