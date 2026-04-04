@@ -1,6 +1,6 @@
 <!-- Article Show View Preview -->
 <article
-  class="mx-auto shadow-lg overflow-hidden bg-gray-200 dark:bg-gray-600"
+  class="mx-auto overflow-hidden bg-gray-200 dark:bg-gray-600"
 >
   <div class="mb-4 w-full p-8">
     <div id="title" class="w-full">
@@ -37,9 +37,9 @@
         <%= article.content %>
       </div>
     </div>
-    <!-- <div class="flex items-center gap-6 m-4">
+    <div class="flex items-center gap-6 m-4">
       <div class="flex items-center gap-3">
-        <%#= image_tag rails_blob_url(article.author.avatar), class: "w-12 h-12
+        <%= image_tag rails_blob_url(article.author.avatar), class: "w-12 h-12
         rounded-full object-cover" %>
         <div>
           <p class="font-medium text-gray-900">
@@ -64,7 +64,7 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
   </div>
 
   <div class="p-4 max-w-screen-lg mx-auto dark:bg-gray-800 dark:text-gray-300">
