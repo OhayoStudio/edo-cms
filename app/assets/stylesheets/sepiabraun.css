@@ -68,8 +68,33 @@
   color: var(--color-accent);
 }
 
+.lexxy-content a {
+  color: #5c3410;
+  text-decoration: none;
+  border-bottom: 1px solid #c4a882;
+  padding-bottom: 1px;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.lexxy-content a:hover {
+  color: #704214;
+  border-bottom-color: #704214;
+  background-color: #f5efe6;
+  border-radius: 2px;
+}
+
 .dark .lexxy-content a {
+  color: #d4a55a;
+  border-bottom: 1px solid #7a5c30;
+  padding-bottom: 1px;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.dark .lexxy-content a:hover {
   color: #e8b96a;
+  border-bottom-color: #e8b96a;
+  background-color: rgba(232, 185, 106, 0.08);
+  border-radius: 2px;
 }
 
 .dark .lexxy-content blockquote {
