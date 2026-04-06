@@ -169,13 +169,13 @@ class InstagramStoryVideoService
     end
 
     # Excerpt
-    unless excerpt.empty?
-      wrap(excerpt, 36).split("\n").each_with_index do |line, i|
-        layers << {
-          filter: drawtext(FONT_SANS, line, 46, "0xFFFFFF@0.85", 90, 1560 + i * 56, fade_start: 1.5)
-        }
-      end
-    end
+    # unless excerpt.empty?
+    #   wrap(excerpt, 36).split("\n").each_with_index do |line, i|
+    #     layers << {
+    #       filter: drawtext(FONT_SANS, line, 46, "0xFFFFFF@0.85", 90, 1560 + i * 56, fade_start: 1.5)
+    #     }
+    #   end
+    # end
 
     layers
   end
@@ -220,7 +220,7 @@ class InstagramStoryVideoService
   end
 
   def title          = @article.title.to_s
-  def excerpt        = (@article.excerpt.presence || @article.subtitle.presence).to_s
+  # def excerpt        = (@article.excerpt.presence || @article.subtitle.presence).to_s
   def category_label = @article.category&.name.to_s.upcase
 
   def wrap(text, max_chars)

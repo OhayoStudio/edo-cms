@@ -80,6 +80,7 @@
 
     <div class="md:col-span-2 sticky top-4 z-10 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 shadow-sm"
          data-controller="article-photo-candidates google-photos flickr"
+         data-action="dragover->article-photo-candidates#zoneDragover dragleave->article-photo-candidates#zoneDragleave drop->article-photo-candidates#zoneDrop"
          data-article-id="<%= @article.id %>"
          data-google-photos-client-id-value="<%= ENV.fetch('GOOGLE_CLIENT_ID') %>"
          data-google-photos-open-url-value="<%= admin_google_photos_open_path %>"

@@ -167,11 +167,17 @@ class Admin::ArticlesController < Admin::BaseController
     if params[:photo_candidate].present?
       @article.photo_candidates.attach(params[:photo_candidate])
       photo = @article.photo_candidates.last
-      render json: {
-        id:           photo.id,
-        url:          url_for(photo.variant(resize_to_limit: [ 96, 96 ])),
-        original_url: url_for(photo)
-      }, status: :ok
+      if photo&.persisted?
+        render json: {
+          id:           photo.id,
+          url:          url_for(photo.variant(resize_to_limit: [ 96, 96 ])),
+          original_url: url_for(photo)
+        }, status: :ok
+      else
+        error_messages = photo&.errors&.full_messages&.join(", ") || "Unknown error"
+        Rails.logger.error("Photo candidate attachment failed for article ##{@article.id}: #{error_messages}")
+        render json: { error: "Photo upload failed: #{error_messages}" }, status: :unprocessable_entity
+      end
     else
       render json: { error: "No file uploaded" }, status: :unprocessable_entity
     end

@@ -67,12 +67,12 @@
              style="font-size:24px;color:white;font-family:Georgia,serif;font-weight:bold;">
             <%= article.title %>
           </p>
-          <% blurb = article.excerpt.presence || article.subtitle.presence %>
-          <% if blurb %>
+          <!-- <%# blurb = article.excerpt.presence || article.subtitle.presence %>
+          <%# if blurb %>
             <p style="font-size:13px;color:rgba(255,255,255,0.8);font-family:sans-serif;line-height:1.4;">
-              <%= truncate(blurb, length: 90) %>
+              <%#= truncate(blurb, length: 90) %>
             </p>
-          <% end %>
+          <%# end %> -->
           <p class="mt-3" style="font-size:11px;color:rgba(255,255,255,0.45);font-family:sans-serif;">
             example.com
           </p>

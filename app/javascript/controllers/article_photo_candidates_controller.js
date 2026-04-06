@@ -42,6 +42,8 @@ export default class extends Controller {
       .then(data => {
         if (data.url) {
           this.addThumbnail(data.url, data.original_url, data.id)
+        } else if (data.error) {
+          alert(data.error)
         }
       })
   }
@@ -81,6 +83,25 @@ export default class extends Controller {
     if (!originalUrl) return
     event.dataTransfer.setData(DRAG_TYPE, originalUrl)
     event.dataTransfer.effectAllowed = "copy"
+  }
+
+  // Zone-level drag-over: accept filesystem files dropped directly onto the candidates panel
+  zoneDragover(event) {
+    if (!event.dataTransfer.types.includes("Files")) return
+    event.preventDefault()
+    event.dataTransfer.dropEffect = "copy"
+    this.element.classList.add("ring-2", "ring-[#704214]")
+  }
+
+  zoneDragleave() {
+    this.element.classList.remove("ring-2", "ring-[#704214]")
+  }
+
+  zoneDrop(event) {
+    if (!event.dataTransfer.types.includes("Files")) return
+    event.preventDefault()
+    this.element.classList.remove("ring-2", "ring-[#704214]")
+    Array.from(event.dataTransfer.files).forEach(file => this.uploadFile(file))
   }
 
   async onThumbnailClick(event) {
