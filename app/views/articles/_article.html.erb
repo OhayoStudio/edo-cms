@@ -36,34 +36,20 @@
       <div class="lexxy-content lora mt-2 md:mt-8" data-controller="photo-zoom">
         <%= article.content %>
       </div>
-    </div>
-    <div class="flex items-center gap-6 m-4">
+      <div class="flex items-center gap-6 m-4">
       <div class="flex items-center gap-3">
         <%= image_tag rails_blob_url(article.author.avatar), class: "w-12 h-12
         rounded-full object-cover" %>
         <div>
           <p class="font-medium text-gray-900">
-            <%= article.author.full_name %>
+            Written by Jérôme, Typed by
+            <a href="/colophon" target="_blank" class="text-gray-600 dark:text-gray-300">
+              <%= image_tag "claude.svg", class: "w-5 h-5 inline-block ml-1", style: "vertical-align: middle;width:75px;" %>
+            </a>
           </p>
-          <div class="flex items-center gap-2 text-gray-500 text-sm">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-            <%#= article.published_at.strftime("%B %d, %Y") %>
-          </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 

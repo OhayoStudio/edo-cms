@@ -4,7 +4,7 @@ class Admin::ArticlesController < Admin::BaseController
   def index
     @categories = Category.not_deleted.order(:name)
     @articles = Article.includes(:author, :category)
-                       .order(created_at: :desc)
+                       .order(priority: :desc, created_at: :desc)
                        .then { |q| params[:category_id].present? ? q.where(category_id: params[:category_id]) : q }
                        .page(params[:page]).per(10)
   end
@@ -152,7 +152,7 @@ class Admin::ArticlesController < Admin::BaseController
 
   # PATCH /admin/articles/:id/patch_field — lightweight single-field inline update
   def patch_field
-    allowed = %w[category_id status featured]
+    allowed = %w[category_id status featured priority]
     field   = params[:field].to_s
     return head :bad_request unless allowed.include?(field)
 
