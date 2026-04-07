@@ -108,6 +108,43 @@
   color: #e8ddd0;
 }
 
+/* Responsive tables — stack columns on small screens */
+@media (max-width: 640px) {
+  .lexxy-content .lexxy-content__table-wrapper {
+    overflow-x: unset;
+  }
+
+  .lexxy-content table,
+  .lexxy-content tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .lexxy-content thead {
+    display: none;
+  }
+
+  .lexxy-content tr {
+    display: block;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--lexxy-color-ink-lighter);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .lexxy-content td {
+    display: block;
+    max-width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--lexxy-color-ink-lighter);
+    padding: 0.6rem 0.75rem;
+  }
+
+  .lexxy-content td:last-child {
+    border-bottom: none;
+  }
+}
+
 /* YouTube embed — responsive 16:9 */
 .lexxy-youtube-embed {
   position: relative;

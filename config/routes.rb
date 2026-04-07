@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         get :metadata
       end
     end
+    resources :authors
     resources :categories
     resources :tags
     resource :colophon, only: %i[edit update]
