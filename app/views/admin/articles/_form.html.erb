@@ -130,7 +130,8 @@
     <%# ── Claude Writing Assistant ──────────────────────────────────────────── %>
     <div class="md:col-span-2"
          data-controller="claude-assistant"
-         data-claude-assistant-draft-url-value="<%= admin_claude_draft_path %>">
+         data-claude-assistant-draft-url-value="<%= admin_claude_draft_path %>"
+         data-claude-assistant-patch-url-value="<%= article.persisted? ? patch_field_admin_article_path(article) : '' %>">
 
       <button type="button"
               data-action="click->claude-assistant#toggle"
@@ -145,12 +146,13 @@
       <div data-claude-assistant-target="panel"
            class="hidden space-y-3 bg-[#fdf8f2] dark:bg-gray-900 border border-[#d4b896] dark:border-gray-600 rounded-lg p-4">
 
-        <textarea data-claude-assistant-target="prompt"
-                  rows="4"
-                  placeholder="Topic, URLs, rough notes — or a mix. e.g. 'Leica M3 — the film camera that refuses to age. https://...' "
-                  class="block w-full rounded border border-[#d4b896] dark:border-gray-600 px-3 py-2 text-sm
-                         bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
-                         focus:outline-[#704214] resize-y"></textarea>
+        <%= f.text_area :claude_prompt,
+              data: { claude_assistant_target: "prompt" },
+              rows: 4,
+              placeholder: "Topic, URLs, rough notes — or a mix. e.g. 'Leica M3 — the film camera that refuses to age. https://...' ",
+              class: "block w-full rounded border border-[#d4b896] dark:border-gray-600 px-3 py-2 text-sm
+                      bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                      focus:outline-[#704214] resize-y" %>
 
         <div class="flex flex-wrap items-center gap-3">
           <button type="button"
@@ -173,13 +175,17 @@
                          text-sm rounded hover:bg-[#faeee0] dark:hover:bg-gray-800 transition-colors cursor-pointer">
             Insert into editor
           </button>
-          <span data-claude-assistant-target="status" class="text-xs text-gray-400 italic"></span>
+          <span data-claude-assistant-target="status"
+                class="text-xs text-gray-500 dark:text-gray-400 italic"></span>
         </div>
 
         <div data-claude-assistant-target="output"
              class="hidden font-mono text-xs bg-white dark:bg-gray-800 rounded border
                     border-gray-200 dark:border-gray-700 p-3 max-h-96 overflow-y-auto
                     whitespace-pre-wrap text-gray-700 dark:text-gray-300"></div>
+
+        <div data-claude-assistant-target="usage"
+             class="hidden text-xs text-gray-400 dark:text-gray-500 font-mono"></div>
       </div>
     </div>
     <%# ── /Claude Writing Assistant ─────────────────────────────────────────── %>
@@ -210,7 +216,7 @@
          data-action="dragover->featured-image-drop#dragover dragleave->featured-image-drop#dragleave drop->featured-image-drop#drop"
          class="rounded border-2 border-dashed border-gray-200 dark:border-gray-600 p-3 transition-colors">
       <%= f.label :featured_image, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
-      <% if article.persisted? && article.featured_image.attached? %>
+      <% if article.persisted? && article.featured_image.attached? && article.featured_image.blob.persisted? %>
         <img src="<%= url_for(article.featured_image.variant(resize_to_limit: [200, 120])) %>"
              data-featured-image-drop-target="preview"
              class="rounded border border-gray-200 dark:border-gray-600 mb-2" />

@@ -33,6 +33,7 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def update
+    Rails.logger.debug "[Articles#update] claude_prompt param: #{params.dig(:article, :claude_prompt).inspect}"
     if @article.update(article_params)
       @article.story&.update(
         slug:   @article.slug,
@@ -152,7 +153,7 @@ class Admin::ArticlesController < Admin::BaseController
 
   # PATCH /admin/articles/:id/patch_field — lightweight single-field inline update
   def patch_field
-    allowed = %w[category_id status featured priority]
+    allowed = %w[category_id status featured priority claude_prompt]
     field   = params[:field].to_s
     return head :bad_request unless allowed.include?(field)
 
@@ -204,7 +205,8 @@ class Admin::ArticlesController < Admin::BaseController
       :meta_description, :meta_keywords,
       :featured, :featured_image,
       :author_id, :category_id,
-      :reading_time, :status, :slug, :published_at
+      :reading_time, :status, :slug, :published_at,
+      :claude_prompt
     )
   end
 
@@ -234,11 +236,19 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def generate_tags(article)
-    return if article.meta_keywords.blank?
-    meta_keywords = article.meta_keywords.split(",").map(&:strip).uniq
-    meta_keywords.each do |name|
-      tag = Tag.find_or_create_by(name: name)
-      ArticlesTag.find_or_create_by(article_id: article.id, tag_id: tag.id)
+    desired_names = article.meta_keywords.to_s.split(",").map(&:strip).reject(&:blank?).uniq
+
+    desired_tags = desired_names.map { |name| Tag.find_or_create_by(name: name) }
+    desired_ids  = desired_tags.map(&:id)
+
+    # Remove tags no longer in meta_keywords
+    ArticlesTag.where(article_id: article.id)
+               .where.not(tag_id: desired_ids)
+               .delete_all
+
+    # Add new ones
+    desired_ids.each do |tag_id|
+      ArticlesTag.find_or_create_by(article_id: article.id, tag_id: tag_id)
     end
   end
 end
