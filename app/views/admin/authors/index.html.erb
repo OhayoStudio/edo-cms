@@ -1,0 +1,88 @@
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-serif text-[#704214] dark:text-amber-200">Authors</h1>
+  <%= link_to "New Author", new_admin_author_path,
+      class: "px-4 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors" %>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-[#F9F7F0] dark:bg-gray-700 text-[#704214] dark:text-amber-300">
+      <tr>
+        <th class="text-left px-4 py-3 font-semibold">Author</th>
+        <th class="text-left px-4 py-3 font-semibold">Email</th>
+        <th class="text-left px-4 py-3 font-semibold">Role</th>
+        <th class="text-left px-4 py-3 font-semibold">Status</th>
+        <th class="text-center px-4 py-3 font-semibold">Articles</th>
+        <th class="text-right px-4 py-3 font-semibold">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+      <% @authors.each do |author| %>
+        <tr id="author-row-<%= author.id %>" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <td class="px-4 py-3">
+            <div class="flex items-center gap-3">
+              <% if author.avatar.attached? %>
+                <img src="<%= url_for(author.avatar.variant(:thumb)) %>"
+                     class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-600" />
+              <% else %>
+                <div class="w-8 h-8 rounded-full bg-[#D9C4A6] dark:bg-gray-600 flex items-center justify-center text-xs font-semibold text-[#704214] dark:text-amber-300">
+                  <%= author.first_name[0] %><%= author.last_name[0] %>
+                </div>
+              <% end %>
+              <span class="font-medium text-gray-900 dark:text-gray-100"><%= author.display_name %></span>
+            </div>
+          </td>
+          <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs">
+            <%= author.email %>
+          </td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-0.5 rounded text-xs font-medium bg-[#f5efe6] text-[#704214] dark:bg-amber-900/30 dark:text-amber-300">
+              <%= author.role.humanize %>
+            </span>
+          </td>
+          <td class="px-4 py-3">
+            <span class="px-2 py-0.5 rounded text-xs font-medium
+              <%= author.active? ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
+                                 : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400' %>">
+              <%= author.status.humanize %>
+            </span>
+          </td>
+          <td class="px-4 py-3 text-center text-gray-500 dark:text-gray-400 text-xs">
+            <%= author.articles.count %>
+          </td>
+          <td class="px-4 py-3 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <%= link_to "Edit", edit_admin_author_path(author),
+                  class: "px-2 py-1 text-xs border border-[#704214] text-[#704214]
+                          dark:border-amber-400 dark:text-amber-400 rounded hover:bg-amber-50
+                          dark:hover:bg-amber-900/20 transition-colors" %>
+              <button type="button"
+                      class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors cursor-pointer"
+                      data-controller="admin-modal"
+                      data-action="click->admin-modal#open"
+                      data-admin-modal-url-value="<%= admin_author_path(author) %>"
+                      data-admin-modal-row-value="author-row-<%= author.id %>"
+                      data-admin-modal-title-value="Delete &ldquo;<%= author.display_name %>&rdquo;?">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+
+      <% if @authors.empty? %>
+        <tr>
+          <td colspan="6" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
+            No authors yet.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-6 flex justify-center">
+  <%= paginate @authors %>
+</div>
+
+<%= render "admin/shared/confirm_modal" %>

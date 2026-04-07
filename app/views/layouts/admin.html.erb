@@ -60,6 +60,10 @@
                 class: "px-3 py-2 rounded transition-colors #{controller_name == 'videos' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
           </li>
           <li>
+            <%= link_to "Authors", admin_authors_path,
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'authors' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+          </li>
+          <li>
             <%= link_to "Categories", admin_categories_path,
                 class: "px-3 py-2 rounded transition-colors #{controller_name == 'categories' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
           </li>
