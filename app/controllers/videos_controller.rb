@@ -1,77 +1,13 @@
 class VideosController < ApplicationController
-  before_action :set_video, only: %i[ show edit update destroy ]
-
-  # GET /videos or /videos.json
+  # GET /videos
   def index
     all_videos      = Video.order(created_at: :desc)
     @videos         = all_videos.limit(3)
     @archive_videos = all_videos.offset(3).page(params[:archive_page]).per(5)
   end
 
-
-  # GET /videos/1 or /videos/1.json
+  # GET /videos/:id
   def show
+    @video = Video.friendly.find(params[:id])
   end
-
-  # GET /videos/new
-  def new
-    @video = Video.new
-  end
-
-  # GET /videos/1/edit
-  def edit
-  end
-
-  # POST /videos or /videos.json
-  def create
-    @video = Video.new(video_params)
-
-    respond_to do |format|
-      if @video.save
-        # Create a story associated with the video
-        Story.create(storyable: @video, slug: @video.slug, published_at: Time.now, is_published: true)
-
-        format.html { redirect_to @video, notice: "Video was successfully created." }
-        format.json { render :show, status: :created, location: @video }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @video.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /videos/1 or /videos/1.json
-  def update
-    respond_to do |format|
-      if @video.update(video_params)
-        format.html { redirect_to @video, notice: "Video was successfully updated." }
-        format.json { render :show, status: :ok, location: @video }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @video.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /videos/1 or /videos/1.json
-  def destroy
-    @video.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to videos_path, status: :see_other, notice: "Video was successfully destroyed." }
-      format.json { head :no_content }
-    end
-  end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_video
-      # @video = Video.find(params.expect(:id))
-      @video = Video.friendly.find(params.expect(:id))
-    end
-
-    # Only allow a list of trusted parameters through.
-    def video_params
-      params.expect(video: [ :title, :description, :url, :featured_image ])
-    end
 end
