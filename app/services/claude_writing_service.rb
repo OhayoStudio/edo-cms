@@ -35,12 +35,12 @@ class ClaudeWritingService
   def stream(prompt, &block)
     client   = Anthropic::Client.new(api_key: ENV.fetch("ANTHROPIC_API_KEY"))
     msg_stream = client.messages.stream(
-      model:    :"claude-opus-4-6",
+      model:      :"claude-opus-4-6",
       max_tokens: 16_000,
-      thinking: { type: "adaptive" },
-      system_:  [ { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } } ],
-      messages: [ { role: "user", content: prompt } ]
+      system_:    [ { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } } ],
+      messages:   [ { role: "user", content: prompt } ]
     )
     msg_stream.text.each { |chunk| block.call(chunk) }
+    msg_stream.accumulated_message.usage
   end
 end
