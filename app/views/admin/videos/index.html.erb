@@ -9,7 +9,16 @@
     <thead class="bg-[#F9F7F0] dark:bg-gray-700 text-[#704214] dark:text-amber-300">
       <tr>
         <th class="text-left px-4 py-3 font-semibold">Title</th>
-        <th class="text-left px-4 py-3 font-semibold">Published</th>
+        <th class="text-left px-4 py-3 font-semibold">
+          <%= select_tag :status,
+                options_for_select(
+                  [["All statuses", ""], ["Published", "published"], ["Unpublished", "unpublished"]],
+                  params[:status].presence || ""
+                ),
+                onchange: "window.location = '#{admin_videos_path}?status=' + this.value",
+                class: "text-xs font-semibold bg-transparent border-0 text-[#704214] dark:text-amber-300
+                        cursor-pointer focus:outline-none pr-1 -ml-1" %>
+        </th>
         <th class="text-left px-4 py-3 font-semibold">Created</th>
         <th class="text-left px-4 py-3 font-semibold">Updated</th>
         <th class="text-right px-4 py-3 font-semibold">Actions</th>
@@ -17,7 +26,7 @@
     </thead>
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
       <% @videos.each do |video| %>
-        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+        <tr id="video-row-<%= video.id %>" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
           <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 max-w-xs truncate">
             <%= video.title %>
           </td>
@@ -77,7 +86,7 @@
 </div>
 
 <div class="mt-6 flex justify-center">
-  <%= paginate @videos %>
+  <%= paginate @videos, params: { status: params[:status] } %>
 </div>
 
 <%= render "admin/shared/confirm_modal" %>

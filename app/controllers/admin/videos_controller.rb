@@ -2,7 +2,15 @@ class Admin::VideosController < Admin::BaseController
   before_action :set_video, only: %i[edit update destroy publish unpublish]
 
   def index
-    @videos = Video.order(created_at: :desc).page(params[:page]).per(10)
+    @videos = Video.includes(:story)
+                   .then { |q|
+                     case params[:status]
+                     when "published"   then q.joins(:story).where(stories: { is_published: true }).order("stories.published_at desc")
+                     when "unpublished" then q.joins(:story).where(stories: { is_published: false }).order(created_at: :desc)
+                     else                    q.order(created_at: :desc)
+                     end
+                   }
+                   .page(params[:page]).per(10)
   end
 
   def metadata
@@ -65,17 +73,23 @@ class Admin::VideosController < Admin::BaseController
   end
 
   def publish
-    Story.find_or_create_by(storyable: @video).update!(
+    Story.find_or_create_by(storyable: @video).update_columns(
       slug:         @video.slug,
       is_published: true,
       published_at: Time.current
     )
-    redirect_to admin_videos_path, notice: "Video published."
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("video-row-#{@video.id}") }
+      format.html         { redirect_to admin_videos_path, notice: "Video published." }
+    end
   end
 
   def unpublish
-    @video.story&.update!(is_published: false)
-    redirect_to admin_videos_path, notice: "Video unpublished."
+    @video.story&.update_column(:is_published, false)
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("video-row-#{@video.id}") }
+      format.html         { redirect_to admin_videos_path, notice: "Video unpublished." }
+    end
   end
 
   private
