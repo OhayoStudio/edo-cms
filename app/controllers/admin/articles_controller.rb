@@ -4,8 +4,9 @@ class Admin::ArticlesController < Admin::BaseController
   def index
     @categories = Category.not_deleted.order(:name)
     @articles = Article.includes(:author, :category)
-                       .order(priority: :desc, created_at: :desc)
                        .then { |q| params[:category_id].present? ? q.where(category_id: params[:category_id]) : q }
+                       .then { |q| params[:status].present? ? q.where(status: params[:status]) : q }
+                       .then { |q| params[:status] == "published" ? q.order(published_at: :desc) : q.order(priority: :desc, created_at: :desc) }
                        .page(params[:page]).per(10)
   end
 
@@ -55,20 +56,26 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def publish
-    @article.update!(status: :published, published_at: Time.current)
-    Story.find_or_create_by(storyable: @article).update!(
+    @article.update_columns(status: Article.statuses[:published], published_at: Time.current)
+    Story.find_or_create_by(storyable: @article).update_columns(
       slug:         @article.slug,
       is_published: true,
-      published_at: @article.published_at,
+      published_at: @article.reload.published_at,
       is_top:       @article.featured? || false
     )
-    redirect_to admin_articles_path, notice: "Article published."
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("article-row-#{@article.id}") }
+      format.html         { redirect_to admin_articles_path, notice: "Article published." }
+    end
   end
 
   def unpublish
-    @article.update!(status: :draft)
-    @article.story&.update!(is_published: false)
-    redirect_to admin_articles_path, notice: "Article unpublished."
+    @article.update_column(:status, Article.statuses[:draft])
+    @article.story&.update_column(:is_published, false)
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("article-row-#{@article.id}") }
+      format.html         { redirect_to admin_articles_path, notice: "Article unpublished." }
+    end
   end
 
   def story_video

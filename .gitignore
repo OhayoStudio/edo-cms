@@ -78,3 +78,4 @@ public/sitemaps/*
 config/client_secret_*.json
 
 .basecamp/*
+.claude/*
