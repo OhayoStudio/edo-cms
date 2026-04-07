@@ -21,7 +21,16 @@
                 class: "text-xs font-semibold bg-transparent border-0 text-[#704214] dark:text-amber-300
                         cursor-pointer focus:outline-none pr-1 -ml-1" %>
         </th>
-        <th class="text-left px-4 py-3 font-semibold">Status</th>
+        <th class="text-left px-4 py-3 font-semibold">
+          <%= select_tag :status,
+                options_for_select(
+                  [["All statuses", ""], *Article.statuses.keys.map { |s| [s.humanize, s] }],
+                  params[:status].presence || ""
+                ),
+                onchange: "window.location = '#{admin_articles_path}?category_id=#{params[:category_id]}&status=' + this.value",
+                class: "text-xs font-semibold bg-transparent border-0 text-[#704214] dark:text-amber-300
+                        cursor-pointer focus:outline-none pr-1 -ml-1" %>
+        </th>
         <th class="text-center px-4 py-3 font-semibold">Priority</th>
         <th class="text-left px-4 py-3 font-semibold">Created</th>
         <th class="text-left px-4 py-3 font-semibold">Updated</th>
@@ -132,7 +141,7 @@
 </div>
 
 <div class="mt-6 flex justify-center">
-  <%= paginate @articles, params: { category_id: params[:category_id] } %>
+  <%= paginate @articles, params: { category_id: params[:category_id], status: params[:status] } %>
 </div>
 
 <script>
