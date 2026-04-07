@@ -16,6 +16,7 @@ class Admin::AuthorsController < Admin::BaseController
 
   def create
     @author = Author.new(author_params)
+    assign_enum_fields(@author)
     if @author.save
       redirect_to admin_authors_path, notice: "Author created."
     else
@@ -24,6 +25,7 @@ class Admin::AuthorsController < Admin::BaseController
   end
 
   def update
+    assign_enum_fields(@author)
     if @author.update(author_params)
       redirect_to admin_authors_path, notice: "Author updated."
     else
@@ -49,7 +51,14 @@ class Admin::AuthorsController < Admin::BaseController
     params.require(:author).permit(
       :first_name, :last_name, :email, :bio,
       :website, :twitter_handle, :github_username, :linkedin_url,
-      :role, :status, :avatar
+      :avatar
     )
+  end
+
+  def assign_enum_fields(author)
+    role   = params.dig(:author, :role).to_s
+    status = params.dig(:author, :status).to_s
+    author.role   = role   if Author.roles.key?(role)
+    author.status = status if Author.statuses.key?(status)
   end
 end
