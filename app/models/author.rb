@@ -1,7 +1,7 @@
 class Author < ApplicationRecord
   # Active Storage
   has_one_attached :avatar do |attachable|
-    attachable.variant :thumb, resize_to_limit: [ 128, 128 ], format: :webp, saver: { quality: 80 }
+    attachable.variant :thumb, resize_to_limit: [ 128, 128 ], format: :webp
   end
 
   # Relationships

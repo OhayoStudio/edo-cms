@@ -76,3 +76,5 @@ public/sitemaps/*
 .env.*
 !.env.example
 config/client_secret_*.json
+
+.basecamp/*
