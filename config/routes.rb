@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       end
     end
     resources :authors
+    post "claude/draft", to: "claude#draft", as: :claude_draft
     resources :categories
     resources :tags
     resource :colophon, only: %i[edit update]

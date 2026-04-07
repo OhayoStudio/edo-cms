@@ -127,6 +127,63 @@
       <%= f.file_field :photo_candidates, multiple: true, class: "block w-full border-2 border-dashed border-gray-300 rounded-md p-3 text-center cursor-pointer bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm", accept: "image/*", data: { action: "change->article-photo-candidates#uploadFiles", article_photo_candidates_target: "input" } %>
     </div>
 
+    <%# ── Claude Writing Assistant ──────────────────────────────────────────── %>
+    <div class="md:col-span-2"
+         data-controller="claude-assistant"
+         data-claude-assistant-draft-url-value="<%= admin_claude_draft_path %>">
+
+      <button type="button"
+              data-action="click->claude-assistant#toggle"
+              class="flex items-center gap-2 text-sm font-medium text-[#704214] dark:text-amber-300 mb-2 hover:opacity-70 transition-opacity">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        Writing Assistant
+        <span data-claude-assistant-target="chevron" class="text-xs">▸</span>
+      </button>
+
+      <div data-claude-assistant-target="panel"
+           class="hidden space-y-3 bg-[#fdf8f2] dark:bg-gray-900 border border-[#d4b896] dark:border-gray-600 rounded-lg p-4">
+
+        <textarea data-claude-assistant-target="prompt"
+                  rows="4"
+                  placeholder="Topic, URLs, rough notes — or a mix. e.g. 'Leica M3 — the film camera that refuses to age. https://...' "
+                  class="block w-full rounded border border-[#d4b896] dark:border-gray-600 px-3 py-2 text-sm
+                         bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                         focus:outline-[#704214] resize-y"></textarea>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <button type="button"
+                  data-action="click->claude-assistant#generate"
+                  data-claude-assistant-target="generateBtn"
+                  class="px-4 py-2 bg-[#704214] hover:bg-[#52300f] text-white text-sm rounded transition-colors cursor-pointer">
+            Generate draft
+          </button>
+          <button type="button"
+                  data-action="click->claude-assistant#applyFields"
+                  data-claude-assistant-target="applyBtn"
+                  class="hidden px-4 py-2 border border-[#704214] dark:border-amber-400 text-[#704214] dark:text-amber-300
+                         text-sm rounded hover:bg-[#faeee0] dark:hover:bg-gray-800 transition-colors cursor-pointer">
+            Apply CMS fields
+          </button>
+          <button type="button"
+                  data-action="click->claude-assistant#insertBody"
+                  data-claude-assistant-target="insertBtn"
+                  class="hidden px-4 py-2 border border-[#704214] dark:border-amber-400 text-[#704214] dark:text-amber-300
+                         text-sm rounded hover:bg-[#faeee0] dark:hover:bg-gray-800 transition-colors cursor-pointer">
+            Insert into editor
+          </button>
+          <span data-claude-assistant-target="status" class="text-xs text-gray-400 italic"></span>
+        </div>
+
+        <div data-claude-assistant-target="output"
+             class="hidden font-mono text-xs bg-white dark:bg-gray-800 rounded border
+                    border-gray-200 dark:border-gray-700 p-3 max-h-96 overflow-y-auto
+                    whitespace-pre-wrap text-gray-700 dark:text-gray-300"></div>
+      </div>
+    </div>
+    <%# ── /Claude Writing Assistant ─────────────────────────────────────────── %>
+
     <div class="md:col-span-2">
       <%= f.label :content, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.lexxy_rich_text_area :content %>
