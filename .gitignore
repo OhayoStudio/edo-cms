@@ -37,7 +37,6 @@
 !/app/assets/builds/.keep
 
 # ignore configs
-/config/database.yml
 /config/secrets.yml
 
 # vscode
