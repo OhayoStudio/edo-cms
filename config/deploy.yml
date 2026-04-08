@@ -29,6 +29,7 @@ env:
     APPLICATION_HOST: stg.sepiabraun.com
   secret:
     - RAILS_MASTER_KEY
+    - SECRET_KEY_BASE
     - EDO_DATABASE_PASSWORD
     - ANTHROPIC_API_KEY
     - INSTAGRAM_ACCESS_TOKEN
