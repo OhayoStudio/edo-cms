@@ -11,8 +11,6 @@ servers:
 proxy:
   ssl: true
   host: stg.example.com
-  deploy_timeout: 120
-  drain_timeout: 30
 
 registry:
   server: ghcr.io
