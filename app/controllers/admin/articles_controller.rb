@@ -20,7 +20,7 @@ class Admin::ArticlesController < Admin::BaseController
   def create
     @article = Article.new(article_params)
     if @article.save
-      Story.find_or_create_by(storyable: @article).update!(
+      Story.find_or_create_by(storyable: @article).update_columns(
         slug:         @article.slug,
         is_published: @article.published?,
         published_at: @article.published_at,
@@ -34,7 +34,6 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def update
-    Rails.logger.debug "[Articles#update] claude_prompt param: #{params.dig(:article, :claude_prompt).inspect}"
     if @article.update(article_params)
       @article.story&.update(
         slug:   @article.slug,
@@ -245,8 +244,7 @@ class Admin::ArticlesController < Admin::BaseController
   def generate_tags(article)
     desired_names = article.meta_keywords.to_s.split(",").map(&:strip).reject(&:blank?).uniq
 
-    desired_tags = desired_names.map { |name| Tag.find_or_create_by(name: name) }
-    desired_ids  = desired_tags.map(&:id)
+    desired_ids = desired_names.filter_map { |name| Tag.find_or_create_by(name: name).id }
 
     # Remove tags no longer in meta_keywords
     ArticlesTag.where(article_id: article.id)

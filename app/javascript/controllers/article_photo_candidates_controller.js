@@ -21,16 +21,38 @@ export default class extends Controller {
     }
   }
 
+  get _articleId() {
+    return this.element.dataset.articleId || null
+  }
+
+  _requireSaved() {
+    if (this._articleId) return true
+    this._showError("Save the article first before adding photos.")
+    return false
+  }
+
+  _showError(msg) {
+    const existing = this.element.querySelector(".photo-candidate-error")
+    if (existing) { existing.textContent = msg; return }
+    const el = document.createElement("p")
+    el.className = "photo-candidate-error text-xs text-red-500 dark:text-red-400 mt-1"
+    el.textContent = msg
+    this.inputTarget.insertAdjacentElement("afterend", el)
+    setTimeout(() => el.remove(), 4000)
+  }
+
   uploadFiles(event) {
     const files = event.target.files
     if (!files.length) return
+    if (!this._requireSaved()) { event.target.value = ""; return }
     Array.from(files).forEach(file => this.uploadFile(file))
     // Clear input so same file can be re-uploaded
     event.target.value = ""
   }
 
   uploadFile(file) {
-    const articleId = this.element.dataset.articleId
+    const articleId = this._articleId
+    if (!articleId) { this._showError("Save the article first before adding photos."); return }
     const formData = new FormData()
     formData.append("photo_candidate", file)
     fetch(`/admin/articles/${articleId}/direct_upload_photo_candidate`, {
@@ -101,6 +123,7 @@ export default class extends Controller {
     if (!event.dataTransfer.types.includes("Files")) return
     event.preventDefault()
     this.element.classList.remove("ring-2", "ring-[#704214]")
+    if (!this._requireSaved()) return
     Array.from(event.dataTransfer.files).forEach(file => this.uploadFile(file))
   }
 
@@ -129,7 +152,7 @@ export default class extends Controller {
     const wrapper = event.currentTarget.closest("[data-attachment-id]")
     if (!wrapper) return
     const attachmentId = wrapper.dataset.attachmentId
-    const articleId = this.element.dataset.articleId
+    const articleId = this._articleId
 
     const resp = await fetch(
       `/admin/articles/${articleId}/destroy_photo_candidate?attachment_id=${attachmentId}`,
