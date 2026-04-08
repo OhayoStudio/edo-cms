@@ -9,6 +9,14 @@ export default class extends Controller {
   }
 
   async open() {
+    if (!this.articleIdValue) {
+      const panel = document.querySelector("[data-controller~='article-photo-candidates']")
+      if (panel) {
+        const ctrl = this.application.getControllerForElementAndIdentifier(panel, "article-photo-candidates")
+        ctrl?._showError("Save the article first before adding photos.")
+      }
+      return
+    }
     this._showModal("<p class='text-sm text-gray-500'>Loading albums…</p>")
 
     const resp = await fetch(this.albumsUrlValue)

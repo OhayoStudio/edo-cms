@@ -17,10 +17,21 @@ export default class extends Controller {
   }
 
   async open() {
+    if (!this.articleIdValue) {
+      this._showCandidatesError("Save the article first before adding photos.")
+      return
+    }
     if (!window.google?.accounts?.oauth2) {
       await this._loadScript("https://accounts.google.com/gsi/client")
     }
     this._requestToken()
+  }
+
+  _showCandidatesError(msg) {
+    const panel = document.querySelector("[data-controller~='article-photo-candidates']")
+    if (!panel) return
+    const ctrl = this.application.getControllerForElementAndIdentifier(panel, "article-photo-candidates")
+    ctrl?._showError(msg)
   }
 
   // ── private ───────────────────────────────────────────────────────────────

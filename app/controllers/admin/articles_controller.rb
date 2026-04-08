@@ -34,7 +34,6 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   def update
-    Rails.logger.debug "[Articles#update] claude_prompt param: #{params.dig(:article, :claude_prompt).inspect}"
     if @article.update(article_params)
       @article.story&.update(
         slug:   @article.slug,
