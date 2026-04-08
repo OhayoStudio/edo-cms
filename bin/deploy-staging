@@ -1,0 +1,20 @@
+#!/bin/bash
+set -e
+
+set -a && source .env.staging && set +a
+
+SHA=$(git rev-parse HEAD)
+
+echo "==> Freeing space on staging server..."
+ssh deploy@152.42.197.168 "docker system prune -af"
+
+echo "==> Building image on staging server ($SHA)..."
+bin/kamal build push -d staging
+
+echo "==> Deploying to staging..."
+bin/kamal deploy --skip-push -d staging
+
+echo "==> Running migrations..."
+bin/kamal app exec -d staging --reuse "bin/rails db:migrate"
+
+echo "==> Done. https://stg.example.com"
