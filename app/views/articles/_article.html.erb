@@ -1,32 +1,46 @@
 <!-- Article Show View Preview -->
-<article
-  class="mx-auto overflow-hidden bg-gray-200 dark:bg-gray-600"
->
+<article class="mx-auto overflow-hidden bg-gray-200 dark:bg-gray-600">
   <div class="mb-4 w-full p-8">
     <div id="title" class="w-full">
-      <h1 class="text-4xl font-bold text-gray-900 lora dark:text-gray-300 mt-4 text-center">
+      <h1
+        class="text-4xl font-bold text-gray-900 lora dark:text-gray-300 mt-4 text-center"
+      >
         <%= article.title %>
       </h1>
     </div>
-  </div>  
+  </div>
   <!-- add featured_image here : on desktop it should-->
   <div>
-    <%= image_tag article.featured_image, alt: article.title, fetchpriority: "high", decoding: "async", class: "w-full h-100 object-cover" if article.featured_image.attached? %>
+    <%= image_tag article.featured_image, alt: article.title, fetchpriority:
+    "high", decoding: "async", class: "w-full h-100 object-cover" if
+    article.featured_image.attached? %>
   </div>
 
   <div class="dark:text-gray-300 dark:bg-gray-800">
-    <div class="px-2 md:p-8 md:pt-0 padding-action-text lora max-w-screen-lg md:mx-auto">
+    <div
+      class="px-2 md:p-8 md:pt-0 padding-action-text lora max-w-screen-lg md:mx-auto"
+    >
       <div class="p-8 flex flex-col justify-center items-center">
-        <div class="flex flex-col md:flex-row md:justify-between items-center gap-4 mb-4 w-full">
+        <div
+          class="flex flex-col md:flex-row md:justify-between items-center gap-4 mb-4 w-full"
+        >
           <div id="title" class="w-full">
-            <span class="py-1 text-sm font-medium text-gray-600 bg-gray-100 dark:bg-slate-800 dark:text-gray-300 rounded-full">
-              <%= link_to article.category.name, category_path(article.category.slug), class: "px-3 py-1 text-sm" %>
+            <span
+              class="py-1 text-sm font-medium text-gray-600 bg-gray-100 dark:bg-slate-800 dark:text-gray-300 rounded-full"
+            >
+              <%= link_to article.category.name,
+              category_path(article.category.slug), class: "px-3 py-1 text-sm"
+              %>
             </span>
-            <h1 class="text-4xl font-bold text-gray-900 lora dark:text-gray-300 mt-8">
+            <h1
+              class="text-4xl font-bold text-gray-900 lora dark:text-gray-300 mt-8"
+            >
               <%= article.title %>
             </h1>
-      
-            <p class="text-xl text-gray-600 mb-2 dark:text-gray-200 lora"><%= article.subtitle %></p>
+
+            <p class="text-xl text-gray-600 mb-2 dark:text-gray-200 lora">
+              <%= article.subtitle %>
+            </p>
           </div>
           <div id="search" class="mt-4 md:mt-10">
             <%= render "articles/search" %>
@@ -36,20 +50,14 @@
       <div class="lexxy-content lora mt-2 md:mt-8" data-controller="photo-zoom">
         <%= article.content %>
       </div>
-      <div class="flex items-center gap-6 m-4">
-      <div class="flex items-center gap-3">
-        <%#= image_tag rails_blob_url(article.author.avatar), class: "w-12 h-12
-        rounded-full object-cover" %>
-        <div>
-          <p class="font-medium text-gray-900 dark:text-gray-200">
-            Written by Jérôme, with the little help of my friend Claude
-            <!-- <a href="/colophon" target="_blank" class="text-gray-600 dark:text-gray-300">
-              <%= image_tag "claude.svg", class: "w-5 h-5 inline-block ml-1", style: "vertical-align: middle;width:75px;" %>
-            </a> -->
-          </p>
-        </div>
+      <div class="flex">
+        <p class="font-medium text-gray-900 dark:text-gray-200 border-t border-gray-300 dark:border-gray-700 pt-4">
+          Written by Jérôme, with the little help of Claude
+          <!-- <a href="/colophon" target="_blank" class="text-gray-600 dark:text-gray-300">
+            <%= image_tag "claude.svg", class: "w-5 h-5 inline-block ml-1", style: "vertical-align: middle;width:75px;" %>
+          </a> -->
+        </p>
       </div>
-    </div>
     </div>
   </div>
 
@@ -73,8 +81,11 @@
       <% end %>
       <div class="flex flex-wrap gap-2">
         <% article.tags.each do |tag| %>
-        <span class="px-3 py-1 text-sm text-gray-600 bg-gray-100 dark:text-gray-300 dark:bg-slate-800 rounded-full">
-          <%= link_to tag.name, tag_path(tag.slug), class: "text-gray-600 dark:text-gray-300" %>
+        <span
+          class="px-3 py-1 text-sm text-gray-600 bg-gray-100 dark:text-gray-300 dark:bg-slate-800 rounded-full"
+        >
+          <%= link_to tag.name, tag_path(tag.slug), class: "text-gray-600
+          dark:text-gray-300" %>
         </span>
         <% end %>
       </div>
