@@ -1,5 +1,5 @@
 service: edo
-image: ghcr.io/ohayostudio/edo
+image: ohayostudio/edo
 
 servers:
   web:
