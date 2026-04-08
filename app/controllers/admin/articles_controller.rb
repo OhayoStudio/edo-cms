@@ -244,8 +244,7 @@ class Admin::ArticlesController < Admin::BaseController
   def generate_tags(article)
     desired_names = article.meta_keywords.to_s.split(",").map(&:strip).reject(&:blank?).uniq
 
-    desired_tags = desired_names.map { |name| Tag.find_or_create_by(name: name) }
-    desired_ids  = desired_tags.map(&:id)
+    desired_ids = desired_names.filter_map { |name| Tag.find_or_create_by(name: name).id }
 
     # Remove tags no longer in meta_keywords
     ArticlesTag.where(article_id: article.id)
