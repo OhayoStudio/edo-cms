@@ -22,7 +22,7 @@ export default class extends Controller {
   }
 
   get _articleId() {
-    return this.element.dataset.articleId
+    return this.element.dataset.articleId || null
   }
 
   _requireSaved() {
@@ -52,6 +52,7 @@ export default class extends Controller {
 
   uploadFile(file) {
     const articleId = this._articleId
+    if (!articleId) { this._showError("Save the article first before adding photos."); return }
     const formData = new FormData()
     formData.append("photo_candidate", file)
     fetch(`/admin/articles/${articleId}/direct_upload_photo_candidate`, {
