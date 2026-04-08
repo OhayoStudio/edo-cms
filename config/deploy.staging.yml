@@ -11,6 +11,8 @@ servers:
 proxy:
   ssl: true
   host: stg.sepiabraun.com
+  deploy_timeout: 120
+  drain_timeout: 30
 
 registry:
   server: ghcr.io
@@ -52,6 +54,8 @@ asset_path: /rails/public/assets
 
 ssh:
   user: deploy
+  keepalive: true
+  keepalive_interval: 30
 
 aliases:
   console: app exec --interactive --reuse "bin/rails console"
