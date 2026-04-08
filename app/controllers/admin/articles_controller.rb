@@ -20,7 +20,7 @@ class Admin::ArticlesController < Admin::BaseController
   def create
     @article = Article.new(article_params)
     if @article.save
-      Story.find_or_create_by(storyable: @article).update!(
+      Story.find_or_create_by(storyable: @article).update_columns(
         slug:         @article.slug,
         is_published: @article.published?,
         published_at: @article.published_at,
