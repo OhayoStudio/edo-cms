@@ -9,7 +9,7 @@ class GoogleSearchConsoleService
   def submit_sitemap
     service               = Google::Apis::WebmastersV3::WebmastersService.new
     service.authorization = credentials
-    service.add_sitemap(SITE_URL, SITEMAP_URL)
+    service.submit_sitemap(SITE_URL, SITEMAP_URL)
     Rails.logger.info "[SearchConsole] Sitemap submitted: #{SITEMAP_URL}"
   end
 
