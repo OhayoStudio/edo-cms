@@ -37,8 +37,6 @@
 !/app/assets/builds/.keep
 
 # ignore configs
-/config/credentials.yml.enc
-/config/database.yml
 /config/secrets.yml
 
 # vscode
@@ -79,3 +77,4 @@ config/client_secret_*.json
 
 .basecamp/*
 .claude/*
+script/setup_droplet.sh

@@ -35,10 +35,13 @@ class Admin::ArticlesController < Admin::BaseController
 
   def update
     if @article.update(article_params)
-      @article.story&.update(
-        slug:   @article.slug,
-        is_top: @article.featured? || false
-      )
+      if @article.story
+        @article.story.update(
+          slug:         @article.slug,
+          is_published: @article.published?,
+          is_top:       @article.featured? || false
+        )
+      end
       generate_tags(@article)
       redirect_to admin_articles_path, notice: "Article updated."
     else
@@ -164,6 +167,21 @@ class Admin::ArticlesController < Admin::BaseController
     return head :bad_request unless allowed.include?(field)
 
     @article.update_column(field, params[:value])
+    @article.reload
+
+    if field == "status" && @article.published?
+      @article.update_column(:published_at, Time.current) if @article.published_at.nil?
+      @article.reload
+      Story.find_or_create_by(storyable: @article).update_columns(
+        slug:         @article.slug,
+        is_published: true,
+        published_at: @article.published_at,
+        is_top:       @article.featured? || false
+      )
+    elsif field == "status" && !@article.published?
+      @article.story&.update_column(:is_published, false)
+    end
+
     render json: { ok: true }
   rescue ArgumentError, ActiveRecord::StatementInvalid => e
     render json: { error: e.message }, status: :unprocessable_entity
@@ -171,23 +189,27 @@ class Admin::ArticlesController < Admin::BaseController
 
   # POST /admin/articles/:id/direct_upload_photo_candidate
   def direct_upload_photo_candidate
-    if params[:photo_candidate].present?
-      @article.photo_candidates.attach(params[:photo_candidate])
-      photo = @article.photo_candidates.last
-      if photo&.persisted?
-        render json: {
-          id:           photo.id,
-          url:          url_for(photo.variant(resize_to_limit: [ 96, 96 ])),
-          original_url: url_for(photo)
-        }, status: :ok
-      else
-        error_messages = photo&.errors&.full_messages&.join(", ") || "Unknown error"
-        Rails.logger.error("Photo candidate attachment failed for article ##{@article.id}: #{error_messages}")
-        render json: { error: "Photo upload failed: #{error_messages}" }, status: :unprocessable_entity
-      end
-    else
-      render json: { error: "No file uploaded" }, status: :unprocessable_entity
-    end
+    return render json: { error: "No file uploaded" }, status: :unprocessable_entity unless params[:photo_candidate].present?
+
+    blob = ActiveStorage::Blob.create_and_upload!(
+      io:           params[:photo_candidate],
+      filename:     params[:photo_candidate].original_filename,
+      content_type: params[:photo_candidate].content_type
+    )
+    attachment = ActiveStorage::Attachment.create!(
+      name:   "photo_candidates",
+      record: @article,
+      blob:   blob
+    )
+
+    render json: {
+      id:           attachment.id,
+      url:          url_for(blob.variant(resize_to_limit: [ 96, 96 ])),
+      original_url: url_for(blob)
+    }, status: :ok
+  rescue => e
+    Rails.logger.error("Photo candidate attachment failed for article ##{@article.id}: #{e.message}")
+    render json: { error: "Photo upload failed: #{e.message}" }, status: :unprocessable_entity
   end
 
   # DELETE /admin/articles/:id/destroy_photo_candidate?attachment_id=X
