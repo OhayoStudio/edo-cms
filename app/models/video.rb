@@ -7,6 +7,7 @@ class Video < ApplicationRecord
       attachable.variant :thumb, resize_to_limit: [ 600, 400 ]
       attachable.variant :og,    resize_to_limit: [ 1200, 630 ], format: :webp
     end
+    has_many_attached :candidate_thumbnails
     has_one :story, as: :storyable
 
     attr_accessor :use_youtube_thumbnail
