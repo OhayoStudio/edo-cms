@@ -1,5 +1,9 @@
-<figure class="attachment attachment--<%= blob.representable? ? "preview" : "file" %> attachment--<%= blob.filename.extension %>">
-  <% if blob.representable? %>
+<figure class="attachment attachment--<%= blob.video? ? "preview attachment--video" : blob.representable? ? "preview" : "file" %> attachment--<%= blob.filename.extension %>">
+  <% if blob.video? %>
+    <video controls style="max-width:100%;height:auto;">
+      <source src="<%= rails_blob_path(blob, disposition: "inline") %>" type="<%= blob.content_type %>">
+    </video>
+  <% elsif blob.representable? %>
     <%= image_tag rails_blob_path(blob, disposition: "inline") %>
   <% end %>
 
