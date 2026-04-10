@@ -18,8 +18,11 @@ Rails.application.routes.draw do
     end
     resources :videos do
       member do
-        patch :publish
-        patch :unpublish
+        patch  :publish
+        patch  :unpublish
+        post   :ai_enhance_thumbnail
+        post   :promote_candidate_thumbnail
+        delete :destroy_candidate_thumbnail
       end
       collection do
         get :metadata
