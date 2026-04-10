@@ -1,5 +1,5 @@
 class Admin::VideosController < Admin::BaseController
-  before_action :set_video, only: %i[edit update destroy publish unpublish]
+  before_action :set_video, only: %i[edit update destroy publish unpublish ai_enhance_thumbnail promote_candidate_thumbnail destroy_candidate_thumbnail]
 
   def index
     @videos = Video.includes(:story)
@@ -92,6 +92,60 @@ class Admin::VideosController < Admin::BaseController
     end
   end
 
+  # POST /admin/videos/:id/ai_enhance_thumbnail
+  def ai_enhance_thumbnail
+    return render json: { error: "No featured image attached" }, status: :unprocessable_entity unless @video.featured_image.attached?
+
+    prompt     = params[:prompt].presence || default_enhance_prompt
+    blob       = @video.featured_image.blob
+    image_data = blob.download
+
+    result = GeminiImageService.new.enhance(
+      image_io:     StringIO.new(image_data),
+      content_type: blob.content_type,
+      prompt:       prompt
+    )
+
+    ext        = Rack::Mime::MIME_TYPES.invert[result[:content_type]] || ".jpg"
+    filename   = "#{@video.slug}-enhanced-#{Time.current.to_i}#{ext}"
+    new_blob   = ActiveStorage::Blob.create_and_upload!(
+      io:           StringIO.new(result[:data]),
+      filename:     filename,
+      content_type: result[:content_type]
+    )
+    attachment = ActiveStorage::Attachment.create!(
+      name:   "candidate_thumbnails",
+      record: @video,
+      blob:   new_blob
+    )
+
+    render json: {
+      id:  attachment.id,
+      url: url_for(new_blob.variant(resize_to_limit: [ 320, 180 ]))
+    }, status: :ok
+  rescue => e
+    Rails.logger.error "[GeminiImage] #{e.message}"
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  # POST /admin/videos/:id/promote_candidate_thumbnail
+  def promote_candidate_thumbnail
+    attachment = @video.candidate_thumbnails.find(params[:attachment_id])
+    @video.featured_image.attach(attachment.blob)
+    render json: { ok: true, url: url_for(@video.featured_image.variant(resize_to_limit: [ 200, 120 ])) }
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
+  end
+
+  # DELETE /admin/videos/:id/destroy_candidate_thumbnail
+  def destroy_candidate_thumbnail
+    attachment = @video.candidate_thumbnails.find(params[:attachment_id])
+    attachment.purge
+    head :no_content
+  rescue ActiveRecord::RecordNotFound
+    head :not_found
+  end
+
   private
 
   def set_video
@@ -102,7 +156,14 @@ class Admin::VideosController < Admin::BaseController
     params.require(:video).permit(:title, :description, :url, :featured_image, :use_youtube_thumbnail)
   end
 
+  DEFAULT_ENHANCE_PROMPT = "Upscale this thumbnail to 4K resolution(3840×2160),
+If there are back bands/borders at top and bottom or left/right, remove them and recenter the subject to the actual photo without these borders.
+Keep 16:9 aspect ratio. Enhance sharpness, detail and contrast. Keep the subject and composition faithful to the original."
+  # DEFAULT_ENHANCE_PROMPT = "Upscale this thumbnail to 4K resolution (3840×2160), 16:9 aspect ratio. Enhance sharpness, detail and contrast. Keep the subject and composition faithful to the original."
+
   YOUTUBE_ID_RE = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+
+  def default_enhance_prompt = DEFAULT_ENHANCE_PROMPT
 
   def attach_youtube_thumbnail(video)
     match = video.url.to_s.match(YOUTUBE_ID_RE)
