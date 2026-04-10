@@ -2,14 +2,14 @@ require "googleauth"
 require "google/apis/webmasters_v3"
 
 class GoogleSearchConsoleService
-  SITE_URL    = "https://sepiabraun.com/"
+  SITE_URL    = "sc-domain:sepiabraun.com"
   SITEMAP_URL = "https://sepiabraun.com/sitemaps/sitemap.xml.gz"
   SCOPE       = "https://www.googleapis.com/auth/webmasters"
 
   def submit_sitemap
     service               = Google::Apis::WebmastersV3::WebmastersService.new
     service.authorization = credentials
-    service.add_sitemap(SITE_URL, SITEMAP_URL)
+    service.submit_sitemap(SITE_URL, SITEMAP_URL)
     Rails.logger.info "[SearchConsole] Sitemap submitted: #{SITEMAP_URL}"
   end
 
