@@ -11,7 +11,7 @@
 # Admin user — single account for site owner
 # Set ADMIN_EMAIL and ADMIN_PASSWORD env vars before running db:seed
 if User.count.zero?
-  email    = ENV.fetch("ADMIN_EMAIL",    "admin@sepia-braun.com")
+  email    = ENV.fetch("ADMIN_EMAIL",    "jerome@ohayostudio.com")
   password = ENV.fetch("ADMIN_PASSWORD", SecureRandom.hex(16))
   User.create!(email_address: email, password: password, password_confirmation: password)
   puts "Admin user created: #{email}"

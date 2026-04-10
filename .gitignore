@@ -77,3 +77,4 @@ config/client_secret_*.json
 
 .basecamp/*
 .claude/*
+script/setup_droplet.sh

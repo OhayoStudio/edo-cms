@@ -107,6 +107,7 @@
       <div data-article-photo-candidates-target="previews" class="flex flex-wrap gap-2 mb-2">
         <% if @article.photo_candidates.attached? %>
           <% @article.photo_candidates.each do |photo| %>
+            <% next unless photo.blob.image? %>
             <div class="relative m-1 group" data-attachment-id="<%= photo.id %>">
               <img src="<%= url_for(photo.variant(resize_to_limit: [96,96])) %>"
                    data-original-url="<%= url_for(photo) %>"
