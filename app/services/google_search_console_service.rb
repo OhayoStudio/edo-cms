@@ -2,7 +2,7 @@ require "googleauth"
 require "google/apis/webmasters_v3"
 
 class GoogleSearchConsoleService
-  SITE_URL    = "https://example.com/"
+  SITE_URL    = "sc-domain:example.com"
   SITEMAP_URL = "https://example.com/sitemaps/sitemap.xml.gz"
   SCOPE       = "https://www.googleapis.com/auth/webmasters"
 
