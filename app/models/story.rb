@@ -8,7 +8,16 @@ class Story < ApplicationRecord
   scope :limit_4, -> { limit(4) }
   scope :top, -> { where(is_top: true) }
 
+  after_save :schedule_sitemap_refresh,
+    if: -> { Rails.env.production? && saved_change_to_is_published?(from: [ nil, false ], to: true) }
+
   def to_param
     slug
+  end
+
+  private
+
+  def schedule_sitemap_refresh
+    SitemapRefreshJob.perform_later
   end
 end
