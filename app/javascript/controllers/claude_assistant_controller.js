@@ -104,7 +104,7 @@ export default class extends Controller {
           const payload = line.slice(6).replace(/\\n/g, "\n")
 
           if (eventType === "done") {
-            try { this._showUsage(JSON.parse(payload)) } catch (_) {}
+            try { this._showUsage(JSON.parse(payload)) } catch (e) { console.warn("[claude] usage parse failed:", e, payload) }
             this._onStreamEnd()
             return
           }
