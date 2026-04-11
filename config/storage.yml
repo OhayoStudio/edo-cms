@@ -2,6 +2,16 @@ test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
 
+gcs_production:
+  service: GCS
+  credentials: <%= JSON.parse(Base64.strict_decode64(ENV["GOOGLE_SERVICE_ACCOUNT_JSON"])) %>
+  bucket: <%= ENV.fetch("GCS_BUCKET", "edo-cms-production") %>
+
+gcs_staging:
+  service: GCS
+  credentials: <%= JSON.parse(Base64.strict_decode64(ENV["GOOGLE_SERVICE_ACCOUNT_JSON"])) %>
+  bucket: <%= ENV.fetch("GCS_BUCKET", "edo-cms-staging") %>
+
 local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
