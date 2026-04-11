@@ -27,6 +27,8 @@ env:
     SOLID_QUEUE_IN_PUMA: true
     DB_HOST: host.docker.internal
     APPLICATION_HOST: sepiabraun.com
+    ACTIVE_STORAGE_SERVICE: gcs_production
+    GCS_BUCKET: sepiabraun-production
   secret:
     - RAILS_MASTER_KEY
     - EDO_DATABASE_PASSWORD

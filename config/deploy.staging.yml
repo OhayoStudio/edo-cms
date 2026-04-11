@@ -28,6 +28,8 @@ env:
     SOLID_QUEUE_IN_PUMA: true
     DB_HOST: host.docker.internal
     APPLICATION_HOST: stg.sepiabraun.com
+    ACTIVE_STORAGE_SERVICE: gcs_staging
+    GCS_BUCKET: sepiabraun-staging
   secret:
     - RAILS_MASTER_KEY
     - EDO_DATABASE_PASSWORD
