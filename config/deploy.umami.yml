@@ -1,0 +1,42 @@
+service: umami
+image: ghcr.io/umami-software/umami
+
+servers:
+  web:
+    hosts:
+      - 167.99.120.27
+
+proxy:
+  ssl: true
+  host: analytics.example.com
+  app_port: 3000
+
+registry:
+  server: ghcr.io
+  username: ohayostudio
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: amd64
+
+env:
+  secret:
+    - DATABASE_URL
+    - APP_SECRET
+
+accessories:
+  db:
+    image: postgres:15-alpine
+    host: 167.99.120.27
+    env:
+      clear:
+        POSTGRES_USER: umami
+        POSTGRES_DB: umami
+      secret:
+        - POSTGRES_PASSWORD
+    volumes:
+      - /var/lib/umami/db:/var/lib/postgresql/data
+
+ssh:
+  user: deploy
