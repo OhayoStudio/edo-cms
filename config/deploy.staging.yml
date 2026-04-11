@@ -47,7 +47,7 @@ env:
     - PEXELS_API_KEY
 
 volumes:
-  - /var/www/edo/storage:/rails/storage
+  - /var/www/edo-staging/storage:/rails/storage
 
 asset_path: /rails/public/assets
 
