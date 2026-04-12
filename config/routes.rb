@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       get  "albums", as: :flickr_albums
       post "import", as: :flickr_import
     end
+    get "blob/:signed_id", to: "blobs#show", as: :blob_proxy
   end
 
   resources :videos,     only: %i[index show]
