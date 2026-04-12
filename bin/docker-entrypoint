@@ -8,8 +8,12 @@ fi
 
 # Write GCS credentials file from base64-encoded env var
 if [ -n "${GOOGLE_SERVICE_ACCOUNT_JSON}" ]; then
-  echo "${GOOGLE_SERVICE_ACCOUNT_JSON}" | base64 -d > /tmp/gcs_credentials.json
-  export GCS_CREDENTIALS_PATH=/tmp/gcs_credentials.json
+  if printf '%s' "${GOOGLE_SERVICE_ACCOUNT_JSON}" | base64 -d > /tmp/gcs_credentials.json 2>/dev/null; then
+    export GCS_CREDENTIALS_PATH=/tmp/gcs_credentials.json
+  else
+    echo "WARNING: Failed to decode GOOGLE_SERVICE_ACCOUNT_JSON — GCS storage will not work" >&2
+    rm -f /tmp/gcs_credentials.json
+  fi
 fi
 
 # If running the rails server then create or migrate existing database
