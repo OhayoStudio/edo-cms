@@ -39,6 +39,10 @@
       document.addEventListener('turbo:load', applyTheme);
     </script>
     <%= auto_discovery_link_tag :rss, feed_url(format: :rss), title: "Sepia Braun RSS Feed" %>
+    <% if Rails.env.production? && ENV["UMAMI_WEBSITE_ID"].present? %>
+      <script defer src="https://analytics.sepiabraun.com/script.js"
+              data-website-id="<%= ENV['UMAMI_WEBSITE_ID'] %>"></script>
+    <% end %>
   </head>
 
   <body class="sepiabraun h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200" data-controller="dark-mode">
