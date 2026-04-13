@@ -10,15 +10,14 @@ class InstagramStoryVideoService
 
   # Focal-point presets (normalised 0..1) — one is picked at random each render.
   # Slight offsets from centre give a gentle directional drift without being distracting.
-  FOCAL_POINTS = [
-    [ 0.50, 0.50 ],  # pure centre
-    [ 0.40, 0.40 ],  # drift toward top-left
-    [ 0.60, 0.40 ],  # drift toward top-right
-    [ 0.40, 0.60 ],  # drift toward bottom-left
-    [ 0.60, 0.60 ]   # drift toward bottom-right
-  ].freeze
+  # Bottom edge is locked — only x varies for horizontal drift.
+  FOCAL_X = [ 0.50, 0.30, 0.70, 0.40, 0.60 ].freeze
   FADE_OUT_AT  = 5.0     # gradient + text start fading out at this second
   FADE_OUT_DUR = 3.0     # fade-out duration (reaches clean image at DURATION)
+
+  LOGO_SVG  = Rails.root.join("app/assets/images/sepia-clear.svg").freeze
+  LOGO_SIZE = 160  # px — rendered size on the 1080-wide canvas
+  LOGO_PAD  = 50   # px from right and bottom edges
 
   FFMPEG     = ENV.fetch("FFMPEG_PATH", "/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg")
   FONT_SERIF = ENV.fetch("STORY_FONT_SERIF", "/System/Library/Fonts/Supplemental/Georgia.ttf")
@@ -40,6 +39,7 @@ class InstagramStoryVideoService
     source        = MiniMagick::Image.read(blob.download)
     still_file    = Tempfile.new([ "story_still", ".png" ])
     gradient_file = Tempfile.new([ "story_grad",  ".png" ])
+    logo_file     = Tempfile.new([ "story_logo",  ".png" ])
     out_file      = Tempfile.new([ "story_video", ".mp4" ])
 
     orig_w, orig_h = source.width, source.height
@@ -61,7 +61,7 @@ class InstagramStoryVideoService
     # 1. Composite still (black canvas + positioned image, no text/gradient)
     MiniMagick::Tool::Convert.new do |c|
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
-      c << "canvas:black"
+      c << "xc:#423525"
       c << "("
       c << source.path
       c.resize "#{final_w}x#{final_h}!"
@@ -74,21 +74,30 @@ class InstagramStoryVideoService
     # 2. Gradient overlay image
     MiniMagick::Tool::Convert.new do |c|
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
-      c << "gradient:rgba(0,0,0,0)-rgba(0,0,0,0.88)"
+      c << "gradient:rgba(0,0,0,0.88)-rgba(0,0,0,0)"
       c << gradient_file.path
     end
 
-    # 3. Build FFmpeg filter graph and run
+    # 3. Rasterize logo SVG
+    MiniMagick::Tool::Convert.new do |c|
+      c << "-background" << "none"
+      c << "-resize"     << "#{LOGO_SIZE}x#{LOGO_SIZE}"
+      c << LOGO_SVG.to_s
+      c << logo_file.path
+    end
+
+    # 4. Build FFmpeg filter graph and run
     filters = build_filter_graph
 
     args = [
       FFMPEG, "-y",
-      "-loop", "1", "-framerate", FPS.to_s, "-i", still_file.path,
-      "-loop", "1", "-framerate", FPS.to_s, "-i", gradient_file.path,
-      "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",
+      "-loop", "1", "-framerate", FPS.to_s, "-i", still_file.path,    # [0:v]
+      "-loop", "1", "-framerate", FPS.to_s, "-i", gradient_file.path, # [1:v]
+      "-loop", "1", "-framerate", FPS.to_s, "-i", logo_file.path,     # [2:v]
+      "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",                # [3:a]
       "-filter_complex", filters,
       "-map", "[out]",
-      "-map", "2:a",
+      "-map", "3:a",
       "-t", DURATION.to_s,
       "-c:v", "libx264", "-preset", "fast", "-crf", "23",
       "-c:a", "aac", "-b:a", "128k",
@@ -103,7 +112,7 @@ class InstagramStoryVideoService
     out_file.read
   ensure
     source&.destroy!
-    [ still_file, gradient_file, out_file ].each { |f| f&.close; f&.unlink }
+    [ still_file, gradient_file, logo_file, out_file ].each { |f| f&.close; f&.unlink }
   end
 
   private
@@ -111,15 +120,14 @@ class InstagramStoryVideoService
   def build_filter_graph
     total_frames = FPS * DURATION
 
-    # Pick a random focal point for directional drift
-    fx, fy = FOCAL_POINTS.sample
+    # Random horizontal drift only — bottom edge is locked.
+    fx = FOCAL_X.sample
 
     # Ken Burns: scale 2× first so zoompan has sub-pixel precision (eliminates jitter).
     # Sine ease-out (fast start, gentle deceleration) for a more organic feel.
-    # Focal point clamped so the crop window never exceeds the 2× canvas.
     zoom_expr = "1+#{(MAX_ZOOM - 1.0).round(6)}*sin(PI/2*on/#{total_frames})"
     x_expr    = "max(0,min(iw-iw/zoom,#{fx.round(4)}*iw-iw/zoom/2))"
-    y_expr    = "max(0,min(ih-ih/zoom,#{fy.round(4)}*ih-ih/zoom/2))"
+    y_expr    = "ih*(1-1/zoom)"
 
     zoompan = "scale=#{STORY_WIDTH * 2}:#{STORY_HEIGHT * 2}," \
       "zoompan=z='#{zoom_expr}':x='#{x_expr}':y='#{y_expr}':" \
@@ -140,8 +148,11 @@ class InstagramStoryVideoService
       prev = curr
     end
 
-    # Fade in only (no fade-out — clean image stays visible at end)
-    graph << "[texted]fade=t=in:st=0:d=0.5[out]"
+    # Fade in, then overlay logo at bottom-right
+    logo_x = STORY_WIDTH  - LOGO_SIZE - LOGO_PAD
+    logo_y = STORY_HEIGHT - LOGO_SIZE - LOGO_PAD
+    graph << "[texted]fade=t=in:st=0:d=0.5[faded]"
+    graph << "[faded][2:v]overlay=#{logo_x}:#{logo_y}[out]"
 
     graph.join(";")
   end
@@ -164,7 +175,7 @@ class InstagramStoryVideoService
     # Title — one drawtext per wrapped line
     wrap(title, 18).split("\n").each_with_index do |line, i|
       layers << {
-        filter: drawtext(FONT_SERIF, line, 88, "white", 90, 1280 + i * 105, fade_start: 1.0)
+        filter: drawtext(FONT_SERIF, line, 88, "0xD9C4A6", 90, 1280 + i * 105, fade_start: 1.0)
       }
     end
 
