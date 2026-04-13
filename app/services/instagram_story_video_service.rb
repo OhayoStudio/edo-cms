@@ -66,7 +66,7 @@ class InstagramStoryVideoService
     # 1. Composite still (black canvas + positioned image, no text/gradient)
     MiniMagick::Tool::Convert.new do |c|
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
-      c << "xc:#1f2937"
+      c << "xc:#423525"
       c << "("
       c << source.path
       c.resize "#{final_w}x#{final_h}!"
