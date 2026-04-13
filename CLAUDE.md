@@ -72,3 +72,39 @@ Database config in `config/database.yml` reflects this multi-DB setup.
 ### Deployment
 
 Kamal (`config/deploy.yml`) with Docker. Production targets require SSL. Run `bin/kamal` for deployment commands.
+
+## Local development dependencies
+
+These tools must be installed on your machine (outside Docker/Kamal) for full local development:
+
+### FFmpeg — Instagram Story MP4 generation
+
+```bash
+brew install ffmpeg
+```
+
+The service (`app/services/instagram_story_video_service.rb`) reads `FFMPEG_PATH` from the environment, defaulting to `/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg`. If you install plain `ffmpeg` (not `ffmpeg-full`), override it in your shell or `.env`:
+
+```bash
+export FFMPEG_PATH=/opt/homebrew/bin/ffmpeg
+```
+
+On production (Docker), `ffmpeg` is installed via `apt-get` and `FFMPEG_PATH` is set to `/usr/bin/ffmpeg` in `config/deploy.yml`.
+
+### ImageMagick — image processing + SVG rasterization
+
+```bash
+brew install imagemagick
+```
+
+ImageMagick on macOS (via Homebrew) ships with SVG support out of the box. It is used to composite still frames and rasterize the logo SVG (`sepia-clear.svg`) before FFmpeg processes it.
+
+On production (Docker), `imagemagick` and `librsvg2-bin` (the SVG delegate) are both installed via `apt-get` in the `Dockerfile`.
+
+### PostgreSQL client
+
+```bash
+brew install libpq
+```
+
+Required for the `pg` gem to compile. Alternatively, install the full Postgres app from [postgresapp.com](https://postgresapp.com).
