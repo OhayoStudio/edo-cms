@@ -38,6 +38,7 @@
       applyTheme();
       document.addEventListener('turbo:load', applyTheme);
     </script>
+    <%= auto_discovery_link_tag :rss, feed_url(format: :rss), title: "Edo CMS RSS Feed" %>
   </head>
 
   <body class="edo-cms h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200" data-controller="dark-mode">
@@ -123,6 +124,8 @@
             <%= link_to "About", about_path,
                 class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
             <%= link_to "Colophon", colophon_path,
+                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
+            <%= link_to "RSS", feed_path(format: :rss),
                 class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
           </nav>
 
