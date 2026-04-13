@@ -51,6 +51,7 @@ Rails.application.routes.draw do
   resources :categories, only: %i[index show]
   resources :authors,    only: %i[show]
   resources :articles,   only: %i[index show]
+  get "feed" => "feeds#index", as: :feed, defaults: { format: :rss }
   get "colophon" => "colophons#show"
   get "about" => "about#index", as: :about
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
