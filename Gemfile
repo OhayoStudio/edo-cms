@@ -6,6 +6,7 @@ gem "dotenv-rails", groups: %i[development test]
 gem "meta-tags", "~> 2.22"
 gem "sitemap_generator"
 gem "google-apis-webmasters_v3"
+gem "google-cloud-storage", require: false
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record

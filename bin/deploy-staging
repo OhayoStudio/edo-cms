@@ -5,11 +5,15 @@ set -a && source .env.staging && set +a
 
 SHA=$(git rev-parse HEAD)
 
+echo "==> Building image for linux/amd64 ($SHA)..."
+docker buildx build --platform linux/amd64 \
+  --label "service=edo-staging" \
+  -t "ghcr.io/ohayostudio/edo:$SHA" \
+  -t "ghcr.io/ohayostudio/edo:latest-staging" \
+  --push .
+
 echo "==> Freeing space on staging server..."
 ssh deploy@152.42.197.168 "docker system prune -af"
-
-echo "==> Building image on staging server ($SHA)..."
-bin/kamal build push -d staging
 
 echo "==> Deploying to staging..."
 bin/kamal deploy --skip-push -d staging
