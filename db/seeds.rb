@@ -8,6 +8,29 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
+# Categories
+[
+  { name: "Sartorial",         description: "fashion",                                                                                    slug: "sartorial",        position: 1,   featured: false, status: nil,      meta_title: "",          meta_description: "",                                                                    parent_id: nil },
+  { name: "Tech",              description: "Tech",                                                                                       slug: "tech",             position: nil, featured: false, status: nil,      meta_title: "",          meta_description: "",                                                                    parent_id: nil },
+  { name: "Books",             description: "My books",                                                                                   slug: "books",            position: nil, featured: false, status: nil,      meta_title: "",          meta_description: "",                                                                    parent_id: nil },
+  { name: "Beverages",         description: "Other than water",                                                                           slug: "beverages",        position: nil, featured: false, status: nil,      meta_title: "",          meta_description: "",                                                                    parent_id: nil },
+  { name: "Furnitures",        description: "Furnitures",                                                                                 slug: "furnitures",       position: nil, featured: false, status: nil,      meta_title: "",          meta_description: "",                                                                    parent_id: nil },
+  { name: "Watches",           description: "Watches",                                                                                    slug: "watches",          position: nil, featured: false, status: "active", meta_title: "watches",   meta_description: "watches",                                                             parent_id: nil },
+  { name: "Music instruments", description: "Music instruments",                                                                          slug: "music-instruments",position: nil, featured: false, status: nil,      meta_title: "",          meta_description: "",                                                                    parent_id: nil },
+  { name: "Audiophile",        description: "Audiophile",                                                                                 slug: "audiophile",       position: nil, featured: false, status: nil,      meta_title: "",          meta_description: "",                                                                    parent_id: nil },
+  { name: "Mobility",          description: "Mobility",                                                                                   slug: "mobility",         position: nil, featured: false, status: "active", meta_title: "Mobility",  meta_description: "Mobility",                                                            parent_id: nil },
+  { name: "Arranged Sounds",   description: "Arranged Sounds",                                                                            slug: "arranged-sounds",  position: nil, featured: false, status: nil,      meta_title: "",          meta_description: "",                                                                    parent_id: nil },
+  { name: "Places",            description: "Cities / Travel",                                                                            slug: "places",           position: nil, featured: false, status: "active", meta_title: "places",    meta_description: "places, cities, travel",                                              parent_id: nil },
+  { name: "Wellness",          description: "Wellness, Sports, Health",                                                                   slug: "wellness",         position: nil, featured: false, status: "active", meta_title: "Wellness",  meta_description: "Wellness, Sports, Health",                                            parent_id: nil },
+  { name: "Bicycles",          description: "Bicycles: Aluminium, Steel, Chromoly, Carbon, Tatanium, frames, parts, brands",              slug: "bicycles",         position: nil, featured: false, status: "active", meta_title: "biycles",   meta_description: "Bicycles, Aluminium, Steel, Chromoly, Carbon, Tatanium, frames, parts, brands", parent_id: "Mobility" },
+].each do |attrs|
+  parent_name = attrs.delete(:parent_id)
+  parent = parent_name ? Category.find_by!(name: parent_name) : nil
+  Category.find_or_create_by!(slug: attrs[:slug]) do |c|
+    c.assign_attributes(attrs.merge(parent_id: parent&.id))
+  end
+end
+
 # Admin user — single account for site owner
 # Set ADMIN_EMAIL and ADMIN_PASSWORD env vars before running db:seed
 if User.count.zero?
