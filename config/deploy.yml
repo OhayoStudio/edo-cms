@@ -33,6 +33,7 @@ env:
     GCS_CREDENTIALS_PATH: /tmp/gcs_credentials.json
   secret:
     - RAILS_MASTER_KEY
+    - SENTRY_DSN
     - EDO_DATABASE_PASSWORD
     - ANTHROPIC_API_KEY
     - INSTAGRAM_ACCESS_TOKEN
