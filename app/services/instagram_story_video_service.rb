@@ -10,12 +10,14 @@ class InstagramStoryVideoService
 
   # Focal-point presets (normalised 0..1) — one is picked at random each render.
   # Slight offsets from centre give a gentle directional drift without being distracting.
+  # fy must be <= 0.417 so the zoompan y expression always clamps to 0
+  # (no downward drift). x varies for horizontal variety.
   FOCAL_POINTS = [
-    [ 0.50, 0.40 ],  # drift toward top-centre
-    [ 0.40, 0.40 ],  # drift toward top-left
-    [ 0.60, 0.40 ],  # drift toward top-right
-    [ 0.35, 0.45 ],  # drift toward upper-left
-    [ 0.65, 0.45 ]   # drift toward upper-right
+    [ 0.50, 0.20 ],  # zoom top-centre
+    [ 0.30, 0.20 ],  # zoom top-left
+    [ 0.70, 0.20 ],  # zoom top-right
+    [ 0.40, 0.25 ],  # zoom upper-left
+    [ 0.60, 0.25 ]   # zoom upper-right
   ].freeze
   FADE_OUT_AT  = 5.0     # gradient + text start fading out at this second
   FADE_OUT_DUR = 3.0     # fade-out duration (reaches clean image at DURATION)
