@@ -10,15 +10,8 @@ class InstagramStoryVideoService
 
   # Focal-point presets (normalised 0..1) — one is picked at random each render.
   # Slight offsets from centre give a gentle directional drift without being distracting.
-  # fy must be <= 0.417 so the zoompan y expression always clamps to 0
-  # (no downward drift). x varies for horizontal variety.
-  FOCAL_POINTS = [
-    [ 0.50, 0.20 ],  # zoom top-centre
-    [ 0.30, 0.20 ],  # zoom top-left
-    [ 0.70, 0.20 ],  # zoom top-right
-    [ 0.40, 0.25 ],  # zoom upper-left
-    [ 0.60, 0.25 ]   # zoom upper-right
-  ].freeze
+  # Bottom edge is locked — only x varies for horizontal drift.
+  FOCAL_X = [ 0.50, 0.30, 0.70, 0.40, 0.60 ].freeze
   FADE_OUT_AT  = 5.0     # gradient + text start fading out at this second
   FADE_OUT_DUR = 3.0     # fade-out duration (reaches clean image at DURATION)
 
@@ -127,15 +120,14 @@ class InstagramStoryVideoService
   def build_filter_graph
     total_frames = FPS * DURATION
 
-    # Pick a random focal point for directional drift
-    fx, fy = FOCAL_POINTS.sample
+    # Random horizontal drift only — bottom edge is locked.
+    fx = FOCAL_X.sample
 
     # Ken Burns: scale 2× first so zoompan has sub-pixel precision (eliminates jitter).
     # Sine ease-out (fast start, gentle deceleration) for a more organic feel.
-    # Focal point clamped so the crop window never exceeds the 2× canvas.
     zoom_expr = "1+#{(MAX_ZOOM - 1.0).round(6)}*sin(PI/2*on/#{total_frames})"
     x_expr    = "max(0,min(iw-iw/zoom,#{fx.round(4)}*iw-iw/zoom/2))"
-    y_expr    = "max(0,min(ih-ih/zoom,#{fy.round(4)}*ih-ih/zoom/2))"
+    y_expr    = "ih*(1-1/zoom)"
 
     zoompan = "scale=#{STORY_WIDTH * 2}:#{STORY_HEIGHT * 2}," \
       "zoompan=z='#{zoom_expr}':x='#{x_expr}':y='#{y_expr}':" \
