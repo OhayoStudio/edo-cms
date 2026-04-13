@@ -5,7 +5,7 @@ class FeedsController < ApplicationController
                     .limit(50)
 
     respond_to do |format|
-      format.rss { render layout: false }
+      format.rss { render layout: false, content_type: "text/xml" }
     end
   end
 end

@@ -2,7 +2,7 @@ xml.instruct! :xml, version: "1.0"
 xml.rss version: "2.0", "xmlns:atom" => "http://www.w3.org/2005/Atom" do
   xml.channel do
     xml.title       "Edo CMS"
-    xml.description "Things worth paying attention to."
+    xml.description "We have good taste. We are not uncertain ;-)"
     xml.link        root_url
     xml.language    "en"
     xml.tag!("atom:link", href: feed_url(format: :rss), rel: "self", type: "application/rss+xml")
