@@ -29,6 +29,7 @@ env:
     APPLICATION_HOST: example.com
     ACTIVE_STORAGE_SERVICE: gcs_production
     GCS_BUCKET: edo-cms-production
+    GCS_CREDENTIALS_PATH: /tmp/gcs_credentials.json
   secret:
     - RAILS_MASTER_KEY
     - EDO_DATABASE_PASSWORD
