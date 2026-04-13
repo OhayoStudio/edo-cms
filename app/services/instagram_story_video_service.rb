@@ -11,11 +11,11 @@ class InstagramStoryVideoService
   # Focal-point presets (normalised 0..1) — one is picked at random each render.
   # Slight offsets from centre give a gentle directional drift without being distracting.
   FOCAL_POINTS = [
-    [ 0.50, 0.50 ],  # pure centre
+    [ 0.50, 0.40 ],  # drift toward top-centre
     [ 0.40, 0.40 ],  # drift toward top-left
     [ 0.60, 0.40 ],  # drift toward top-right
-    [ 0.40, 0.60 ],  # drift toward bottom-left
-    [ 0.60, 0.60 ]   # drift toward bottom-right
+    [ 0.35, 0.45 ],  # drift toward upper-left
+    [ 0.65, 0.45 ]   # drift toward upper-right
   ].freeze
   FADE_OUT_AT  = 5.0     # gradient + text start fading out at this second
   FADE_OUT_DUR = 3.0     # fade-out duration (reaches clean image at DURATION)
