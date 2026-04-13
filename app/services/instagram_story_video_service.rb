@@ -20,6 +20,10 @@ class InstagramStoryVideoService
   FADE_OUT_AT  = 5.0     # gradient + text start fading out at this second
   FADE_OUT_DUR = 3.0     # fade-out duration (reaches clean image at DURATION)
 
+  LOGO_SVG  = Rails.root.join("app/assets/images/sepiabraun.svg").freeze
+  LOGO_SIZE = 160  # px — rendered size on the 1080-wide canvas
+  LOGO_PAD  = 50   # px from right and bottom edges
+
   FFMPEG     = ENV.fetch("FFMPEG_PATH", "/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg")
   FONT_SERIF = ENV.fetch("STORY_FONT_SERIF", "/System/Library/Fonts/Supplemental/Georgia.ttf")
   FONT_SANS  = ENV.fetch("STORY_FONT_SANS",  "/System/Library/Fonts/HelveticaNeue.ttc")
@@ -40,6 +44,7 @@ class InstagramStoryVideoService
     source        = MiniMagick::Image.read(blob.download)
     still_file    = Tempfile.new([ "story_still", ".png" ])
     gradient_file = Tempfile.new([ "story_grad",  ".png" ])
+    logo_file     = Tempfile.new([ "story_logo",  ".png" ])
     out_file      = Tempfile.new([ "story_video", ".mp4" ])
 
     orig_w, orig_h = source.width, source.height
@@ -61,7 +66,7 @@ class InstagramStoryVideoService
     # 1. Composite still (black canvas + positioned image, no text/gradient)
     MiniMagick::Tool::Convert.new do |c|
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
-      c << "canvas:black"
+      c << "canvas:#1f2937"
       c << "("
       c << source.path
       c.resize "#{final_w}x#{final_h}!"
@@ -78,17 +83,26 @@ class InstagramStoryVideoService
       c << gradient_file.path
     end
 
-    # 3. Build FFmpeg filter graph and run
+    # 3. Rasterize logo SVG
+    MiniMagick::Tool::Convert.new do |c|
+      c << "-background" << "none"
+      c << "-resize"     << "#{LOGO_SIZE}x#{LOGO_SIZE}"
+      c << LOGO_SVG.to_s
+      c << logo_file.path
+    end
+
+    # 4. Build FFmpeg filter graph and run
     filters = build_filter_graph
 
     args = [
       FFMPEG, "-y",
-      "-loop", "1", "-framerate", FPS.to_s, "-i", still_file.path,
-      "-loop", "1", "-framerate", FPS.to_s, "-i", gradient_file.path,
-      "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",
+      "-loop", "1", "-framerate", FPS.to_s, "-i", still_file.path,    # [0:v]
+      "-loop", "1", "-framerate", FPS.to_s, "-i", gradient_file.path, # [1:v]
+      "-loop", "1", "-framerate", FPS.to_s, "-i", logo_file.path,     # [2:v]
+      "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",                # [3:a]
       "-filter_complex", filters,
       "-map", "[out]",
-      "-map", "2:a",
+      "-map", "3:a",
       "-t", DURATION.to_s,
       "-c:v", "libx264", "-preset", "fast", "-crf", "23",
       "-c:a", "aac", "-b:a", "128k",
@@ -103,7 +117,7 @@ class InstagramStoryVideoService
     out_file.read
   ensure
     source&.destroy!
-    [ still_file, gradient_file, out_file ].each { |f| f&.close; f&.unlink }
+    [ still_file, gradient_file, logo_file, out_file ].each { |f| f&.close; f&.unlink }
   end
 
   private
@@ -140,8 +154,11 @@ class InstagramStoryVideoService
       prev = curr
     end
 
-    # Fade in only (no fade-out — clean image stays visible at end)
-    graph << "[texted]fade=t=in:st=0:d=0.5[out]"
+    # Fade in, then overlay logo at bottom-right
+    logo_x = STORY_WIDTH  - LOGO_SIZE - LOGO_PAD
+    logo_y = STORY_HEIGHT - LOGO_SIZE - LOGO_PAD
+    graph << "[texted]fade=t=in:st=0:d=0.5[faded]"
+    graph << "[faded][2:v]overlay=#{logo_x}:#{logo_y}[out]"
 
     graph.join(";")
   end
