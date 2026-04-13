@@ -24,6 +24,7 @@ builder:
 env:
   clear:
     RAILS_LOG_TO_STDOUT: "true"
+    FFMPEG_PATH: /usr/bin/ffmpeg
     SOLID_QUEUE_IN_PUMA: true
     DB_HOST: host.docker.internal
     APPLICATION_HOST: example.com
