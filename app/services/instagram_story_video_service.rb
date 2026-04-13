@@ -20,7 +20,7 @@ class InstagramStoryVideoService
   FADE_OUT_AT  = 5.0     # gradient + text start fading out at this second
   FADE_OUT_DUR = 3.0     # fade-out duration (reaches clean image at DURATION)
 
-  LOGO_SVG  = Rails.root.join("app/assets/images/edo-cms.svg").freeze
+  LOGO_SVG  = Rails.root.join("app/assets/images/sepia-clear.svg").freeze
   LOGO_SIZE = 160  # px — rendered size on the 1080-wide canvas
   LOGO_PAD  = 50   # px from right and bottom edges
 
@@ -66,7 +66,7 @@ class InstagramStoryVideoService
     # 1. Composite still (black canvas + positioned image, no text/gradient)
     MiniMagick::Tool::Convert.new do |c|
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
-      c << "canvas:#1f2937"
+      c << "xc:#1f2937"
       c << "("
       c << source.path
       c.resize "#{final_w}x#{final_h}!"

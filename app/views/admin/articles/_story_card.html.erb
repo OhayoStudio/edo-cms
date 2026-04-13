@@ -41,7 +41,7 @@
       <%# 9:16 preview frame %>
       <div data-story-preview-target="frame"
            class="relative mx-auto overflow-hidden rounded-lg select-none"
-           style="width:360px;height:640px;background:#111;">
+           style="width:360px;height:640px;background:#1f2937;">
 
         <img data-story-preview-target="image"
              src="<%= rails_blob_path(image_blob) %>"
@@ -59,23 +59,22 @@
         <div class="absolute inset-x-0 bottom-0 pointer-events-none" style="padding:20px 28px 26px;">
           <% if article.category %>
             <p class="uppercase tracking-widest mb-2"
-               style="font-size:11px;color:rgba(255,255,255,0.65);font-family:sans-serif;">
+               style="font-size:11px;color:rgba(255,255,255,0.70);font-family:sans-serif;letter-spacing:0.15em;">
               <%= article.category.name %>
             </p>
           <% end %>
           <p class="leading-snug mb-2"
-             style="font-size:24px;color:white;font-family:Georgia,serif;font-weight:bold;">
+             style="font-size:24px;color:#D9C4A6;font-family:Georgia,serif;font-weight:bold;">
             <%= article.title %>
           </p>
-          <!-- <%# blurb = article.excerpt.presence || article.subtitle.presence %>
-          <%# if blurb %>
-            <p style="font-size:13px;color:rgba(255,255,255,0.8);font-family:sans-serif;line-height:1.4;">
-              <%#= truncate(blurb, length: 90) %>
-            </p>
-          <%# end %> -->
-          <p class="mt-3" style="font-size:11px;color:rgba(255,255,255,0.45);font-family:sans-serif;">
+          <p class="mt-3" style="font-size:11px;color:rgba(255,255,255,0.55);font-family:sans-serif;">
             example.com
           </p>
+        </div>
+
+        <%# Logo — bottom-right %>
+        <div class="absolute pointer-events-none" style="bottom:14px;right:14px;width:44px;height:44px;opacity:0.85;">
+          <%= image_tag "sepia-clear.svg", alt: "", style: "width:100%;height:100%;object-fit:contain;" %>
         </div>
       </div>
 
