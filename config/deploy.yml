@@ -4,7 +4,7 @@ image: ohayostudio/edo
 servers:
   web:
     hosts:
-      - 152.42.197.168
+      - 167.99.120.27
     options:
       add-host: host.docker.internal:host-gateway
 
