@@ -83,3 +83,4 @@ sepiabraun-68d*.json
 .claude/*
 script/setup_droplet.sh
 script/setup_production.sh
+config/sepiabraun*.json
