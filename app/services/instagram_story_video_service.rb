@@ -79,7 +79,7 @@ class InstagramStoryVideoService
     # 2. Gradient overlay image
     MiniMagick::Tool::Convert.new do |c|
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
-      c << "gradient:rgba(0,0,0,0)-rgba(0,0,0,0.88)"
+      c << "gradient:rgba(0,0,0,0.88)-rgba(0,0,0,0)"
       c << gradient_file.path
     end
 
@@ -181,7 +181,7 @@ class InstagramStoryVideoService
     # Title — one drawtext per wrapped line
     wrap(title, 18).split("\n").each_with_index do |line, i|
       layers << {
-        filter: drawtext(FONT_SERIF, line, 88, "white", 90, 1280 + i * 105, fade_start: 1.0)
+        filter: drawtext(FONT_SERIF, line, 88, "0xD9C4A6", 90, 1280 + i * 105, fade_start: 1.0)
       }
     end
 
