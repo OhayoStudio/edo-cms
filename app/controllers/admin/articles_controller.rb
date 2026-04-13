@@ -191,10 +191,11 @@ class Admin::ArticlesController < Admin::BaseController
   def direct_upload_photo_candidate
     return render json: { error: "No file uploaded" }, status: :unprocessable_entity unless params[:photo_candidate].present?
 
+    upload = params[:photo_candidate]
     blob = ActiveStorage::Blob.create_and_upload!(
-      io:           params[:photo_candidate],
-      filename:     params[:photo_candidate].original_filename,
-      content_type: params[:photo_candidate].content_type
+      io:           upload.tempfile,
+      filename:     upload.original_filename,
+      content_type: upload.content_type
     )
     attachment = ActiveStorage::Attachment.create!(
       name:   "photo_candidates",
@@ -205,7 +206,7 @@ class Admin::ArticlesController < Admin::BaseController
     render json: {
       id:           attachment.id,
       url:          url_for(blob.variant(resize_to_limit: [ 96, 96 ])),
-      original_url: url_for(blob)
+      original_url: admin_blob_proxy_path(blob.signed_id)
     }, status: :ok
   rescue => e
     Rails.logger.error("Photo candidate attachment failed for article ##{@article.id}: #{e.message}")

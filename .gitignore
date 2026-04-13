@@ -73,6 +73,7 @@ public/sitemaps/*
 .env
 .env.*
 !.env.example
+!.env.production.example
 config/client_secret_*.json
 *service_account*.json
 *credentials*.json
@@ -81,3 +82,4 @@ sepiabraun-68d*.json
 .basecamp/*
 .claude/*
 script/setup_droplet.sh
+script/setup_production.sh

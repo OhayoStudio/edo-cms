@@ -20,7 +20,6 @@ registry:
 
 builder:
   arch: amd64
-  remote: ssh://root@152.42.197.168
 
 env:
   clear:
@@ -28,6 +27,8 @@ env:
     SOLID_QUEUE_IN_PUMA: true
     DB_HOST: host.docker.internal
     APPLICATION_HOST: stg.sepiabraun.com
+    ACTIVE_STORAGE_SERVICE: gcs_staging
+    GCS_BUCKET: sepiabraun-staging
   secret:
     - RAILS_MASTER_KEY
     - EDO_DATABASE_PASSWORD
@@ -43,11 +44,12 @@ env:
     - GOOGLE_CLIENT_ID
     - GOOGLE_CLIENT_SECRET
     - GOOGLE_API_KEY
+    - GOOGLE_SERVICE_ACCOUNT_JSON
     - GEMINI_API_KEY
     - PEXELS_API_KEY
 
 volumes:
-  - /var/www/edo/storage:/rails/storage
+  - /var/www/edo-staging/storage:/rails/storage
 
 asset_path: /rails/public/assets
 

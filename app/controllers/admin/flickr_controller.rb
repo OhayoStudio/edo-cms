@@ -45,7 +45,7 @@ class Admin::FlickrController < Admin::BaseController
       {
         id:           blob.id,
         url:          url_for(blob.variant(resize_to_limit: [ 96, 96 ])),
-        original_url: url_for(blob)
+        original_url: admin_blob_proxy_path(blob.blob.signed_id)
       }
     end
 

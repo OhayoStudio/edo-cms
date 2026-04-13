@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+set -a && source .env.production && set +a
+
+SHA=$(git rev-parse HEAD)
+
+echo "==> Building image for linux/amd64 ($SHA)..."
+docker buildx build --platform linux/amd64 \
+  --label "service=edo" \
+  -t "ghcr.io/ohayostudio/edo:$SHA" \
+  -t "ghcr.io/ohayostudio/edo:latest" \
+  --push .
+
+echo "==> Freeing space on production server..."
+ssh deploy@167.99.120.27 "docker system prune -af"
+
+echo "==> Deploying to production..."
+bin/kamal deploy --skip-push
+
+echo "==> Running migrations..."
+bin/kamal app exec --reuse "bin/rails db:migrate"
+
+echo "==> Done. https://sepiabraun.com"
