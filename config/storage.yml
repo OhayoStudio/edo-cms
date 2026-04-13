@@ -4,12 +4,12 @@ test:
 
 gcs_production:
   service: GCS
-  credentials: <%= JSON.parse(Base64.decode64(ENV.fetch("GOOGLE_SERVICE_ACCOUNT_JSON", ""))) rescue nil %>
+  credentials: <%= ENV["GCS_CREDENTIALS_PATH"] %>
   bucket: <%= ENV.fetch("GCS_BUCKET", "sepiabraun-production") %>
 
 gcs_staging:
   service: GCS
-  credentials: <%= JSON.parse(Base64.decode64(ENV.fetch("GOOGLE_SERVICE_ACCOUNT_JSON", ""))) rescue nil %>
+  credentials: <%= ENV["GCS_CREDENTIALS_PATH"] %>
   bucket: <%= ENV.fetch("GCS_BUCKET", "sepiabraun-staging") %>
 
 local:
