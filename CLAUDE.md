@@ -101,6 +101,15 @@ ImageMagick on macOS (via Homebrew) ships with SVG support out of the box. It is
 
 On production (Docker), `imagemagick` and `librsvg2-bin` (the SVG delegate) are both installed via `apt-get` in the `Dockerfile`.
 
+### Fonts — Instagram Story text rendering
+
+The story services read font paths from `STORY_FONT_SERIF` and `STORY_FONT_SANS`. On macOS these default to system fonts (`Georgia.ttf`, `HelveticaNeue.ttc`). On production (Docker), `fonts-liberation` is installed and the paths are set in `config/deploy.yml`:
+
+- `STORY_FONT_SERIF`: `/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf`
+- `STORY_FONT_SANS`: `/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf`
+
+No action needed locally — macOS system fonts are used automatically.
+
 ### PostgreSQL client
 
 ```bash
