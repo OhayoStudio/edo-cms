@@ -4,6 +4,10 @@ class InstagramStoryService
   STORY_WIDTH  = 1080
   STORY_HEIGHT = 1920
 
+  LOGO_SVG  = Rails.root.join("app/assets/images/sepia-clear.svg").freeze
+  LOGO_SIZE = 160
+  LOGO_PAD  = 50
+
   # Font paths — override via ENV for non-macOS environments
   FONT_SERIF = ENV.fetch("STORY_FONT_SERIF", "/System/Library/Fonts/Supplemental/Georgia.ttf")
   FONT_SANS  = ENV.fetch("STORY_FONT_SANS",  "/System/Library/Fonts/HelveticaNeue.ttc")
@@ -11,12 +15,13 @@ class InstagramStoryService
   # img_x/img_y: top-left position of the image in the 1080×1920 space (can be negative)
   # img_w/img_h: rendered size of the image in the 1080×1920 space
   # When nil, defaults to cover+center.
-  def initialize(article, img_x: nil, img_y: nil, img_w: nil, img_h: nil)
-    @article = article
-    @img_x   = img_x&.to_i
-    @img_y   = img_y&.to_i
-    @img_w   = img_w&.to_i
-    @img_h   = img_h&.to_i
+  def initialize(article, img_x: nil, img_y: nil, img_w: nil, img_h: nil, gradient_opacity: 55)
+    @article          = article
+    @img_x            = img_x&.to_i
+    @img_y            = img_y&.to_i
+    @img_w            = img_w&.to_i
+    @img_h            = img_h&.to_i
+    @gradient_opacity = gradient_opacity.to_i.clamp(0, 100) / 100.0
   end
 
   # Returns PNG bytes, or nil if no image source is available.
@@ -24,8 +29,16 @@ class InstagramStoryService
     blob = image_blob
     return nil unless blob
 
-    source   = MiniMagick::Image.read(blob.download)
-    out_file = Tempfile.new([ "story", ".png" ])
+    source    = MiniMagick::Image.read(blob.download)
+    out_file  = Tempfile.new([ "story", ".png" ])
+    logo_file = Tempfile.new([ "story_logo", ".png" ])
+
+    MiniMagick::Tool::Convert.new do |c|
+      c << "-background" << "none"
+      c << "-resize"     << "#{LOGO_SIZE}x#{LOGO_SIZE}"
+      c << LOGO_SVG.to_s
+      c << logo_file.path
+    end
 
     orig_w, orig_h = source.width, source.height
 
@@ -47,9 +60,9 @@ class InstagramStoryService
     geo = offset_geometry(pos_x, pos_y)
 
     MiniMagick::Tool::Convert.new do |c|
-      # 1. Black base canvas
+      # 1. Base canvas
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
-      c << "canvas:black"
+      c << "xc:#423525"
 
       # 2. Source image, resized and composited at position
       c << "("
@@ -62,20 +75,26 @@ class InstagramStoryService
       # 3. Gradient overlay (transparent → dark, bottom half)
       c << "("
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
-      c << "gradient:rgba(0,0,0,0)-rgba(0,0,0,0.88)"
+      c << "gradient:rgba(0,0,0,0)-rgba(0,0,0,#{@gradient_opacity})"
       c << ")"
       c.gravity "South"
       c.composite
 
       # 4. Text layers
       annotate c, font: FONT_SANS,  size: 40, fill: "rgba(255,255,255,0.7)",  gravity: "SouthWest", x: 90, y: 1680, body: category_label
-      annotate c, font: FONT_SERIF, size: 88, fill: "white",                   gravity: "SouthWest", x: 90, y: 640, body: wrap(title, 18)
-
-      unless excerpt.empty?
-        annotate c, font: FONT_SANS, size: 46, fill: "rgba(255,255,255,0.85)", gravity: "SouthWest", x: 90, y: 220, body: wrap(excerpt, 36)
-      end
+      annotate c, font: FONT_SERIF, size: 88, fill: "#D9C4A6",                 gravity: "SouthWest", x: 90, y: 480, body: wrap(title, 18)
 
       annotate c, font: FONT_SANS, size: 36, fill: "rgba(255,255,255,0.55)", gravity: "SouthWest", x: 90, y: 90, body: "sepiabraun.com"
+
+      # Logo — bottom-right
+      logo_x = STORY_WIDTH  - LOGO_SIZE - LOGO_PAD
+      logo_y = STORY_HEIGHT - LOGO_SIZE - LOGO_PAD
+      c << "("
+      c << logo_file.path
+      c << ")"
+      c.gravity "NorthWest"
+      c.geometry "+#{logo_x}+#{logo_y}"
+      c.composite
 
       c << out_file.path
     end
@@ -83,8 +102,7 @@ class InstagramStoryService
     out_file.read
   ensure
     source&.destroy!
-    out_file&.close
-    out_file&.unlink
+    [ out_file, logo_file ].each { |f| f&.close; f&.unlink }
   end
 
   private
@@ -98,7 +116,6 @@ class InstagramStoryService
   end
 
   def title          = @article.title.to_s
-  def excerpt        = (@article.excerpt.presence || @article.subtitle.presence).to_s
   def category_label = @article.category&.name.to_s.upcase
 
   # ImageMagick geometry string that handles negative offsets correctly.

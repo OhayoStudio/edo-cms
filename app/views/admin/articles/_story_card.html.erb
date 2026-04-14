@@ -52,8 +52,9 @@
              style="cursor:grab;user-select:none;-webkit-user-drag:none;max-width:none;">
 
         <%# Gradient overlay %>
-        <div class="absolute inset-0 pointer-events-none"
-             style="background:linear-gradient(to top, transparent 35%, rgba(0,0,0,0.88));"></div>
+        <div data-story-preview-target="gradientOverlay"
+             class="absolute inset-0 pointer-events-none"
+             style="background:linear-gradient(to top, transparent 35%, rgba(0,0,0,0.55));"></div>
 
         <%# Text preview (approximate) %>
         <div class="absolute inset-x-0 bottom-0 pointer-events-none" style="padding:20px 28px 26px;">
@@ -84,6 +85,15 @@
         <input type="range" min="100" max="350" value="100" step="1"
                data-story-preview-target="zoom"
                data-action="input->story-preview#onZoom"
+               class="w-full accent-[#704214]">
+      </div>
+
+      <%# Gradient slider %>
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-gray-500 dark:text-gray-400 shrink-0">Overlay</span>
+        <input type="range" min="0" max="100" value="55" step="1"
+               data-story-preview-target="gradient"
+               data-action="input->story-preview#onGradient"
                class="w-full accent-[#704214]">
       </div>
 
