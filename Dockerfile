@@ -16,7 +16,7 @@ WORKDIR /rails
 
 # Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl ffmpeg imagemagick librsvg2-bin libjemalloc2 libvips postgresql-client && \
+    apt-get install --no-install-recommends -y curl ffmpeg fonts-liberation imagemagick librsvg2-bin libjemalloc2 libvips postgresql-client && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment

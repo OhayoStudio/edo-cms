@@ -25,6 +25,8 @@ env:
   clear:
     RAILS_LOG_TO_STDOUT: "true"
     FFMPEG_PATH: /usr/bin/ffmpeg
+    STORY_FONT_SERIF: /usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf
+    STORY_FONT_SANS: /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf
     SOLID_QUEUE_IN_PUMA: true
     DB_HOST: host.docker.internal
     APPLICATION_HOST: example.com
