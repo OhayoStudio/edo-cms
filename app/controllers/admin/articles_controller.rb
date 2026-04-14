@@ -86,7 +86,8 @@ class Admin::ArticlesController < Admin::BaseController
       img_x: params[:img_x],
       img_y: params[:img_y],
       img_w: params[:img_w],
-      img_h: params[:img_h]
+      img_h: params[:img_h],
+      gradient_opacity: params[:gradient_opacity]
     ).generate
     if video_data
       send_data video_data,
@@ -107,7 +108,8 @@ class Admin::ArticlesController < Admin::BaseController
     media_type = params[:media_type].to_s  # "image" or "video"
     service_params = {
       img_x: params[:img_x], img_y: params[:img_y],
-      img_w: params[:img_w], img_h: params[:img_h]
+      img_w: params[:img_w], img_h: params[:img_h],
+      gradient_opacity: params[:gradient_opacity]
     }
 
     export_path, content_type, ext =
@@ -148,7 +150,8 @@ class Admin::ArticlesController < Admin::BaseController
       img_x: params[:img_x],
       img_y: params[:img_y],
       img_w: params[:img_w],
-      img_h: params[:img_h]
+      img_h: params[:img_h],
+      gradient_opacity: params[:gradient_opacity]
     ).generate
     if image_data
       send_data image_data,

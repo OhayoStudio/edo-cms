@@ -23,12 +23,13 @@ class InstagramStoryVideoService
   FONT_SERIF = ENV.fetch("STORY_FONT_SERIF", "/System/Library/Fonts/Supplemental/Georgia.ttf")
   FONT_SANS  = ENV.fetch("STORY_FONT_SANS",  "/System/Library/Fonts/HelveticaNeue.ttc")
 
-  def initialize(article, img_x: nil, img_y: nil, img_w: nil, img_h: nil)
-    @article = article
-    @img_x   = img_x&.to_i
-    @img_y   = img_y&.to_i
-    @img_w   = img_w&.to_i
-    @img_h   = img_h&.to_i
+  def initialize(article, img_x: nil, img_y: nil, img_w: nil, img_h: nil, gradient_opacity: 55)
+    @article          = article
+    @img_x            = img_x&.to_i
+    @img_y            = img_y&.to_i
+    @img_w            = img_w&.to_i
+    @img_h            = img_h&.to_i
+    @gradient_opacity = gradient_opacity.to_i.clamp(0, 100) / 100.0
   end
 
   # Returns MP4 bytes, or nil if no image source is available.
@@ -74,7 +75,7 @@ class InstagramStoryVideoService
     # 2. Gradient overlay image
     MiniMagick::Tool::Convert.new do |c|
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
-      c << "gradient:rgba(0,0,0,0.88)-rgba(0,0,0,0)"
+      c << "gradient:rgba(0,0,0,#{@gradient_opacity})-rgba(0,0,0,0)"
       c << gradient_file.path
     end
 

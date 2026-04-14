@@ -5,7 +5,7 @@ const FRAME_W = 360
 const FRAME_H = 640
 
 export default class extends Controller {
-  static targets = ["modal", "frame", "image", "zoom", "shareStatus", "shareImageBtn", "shareVideoBtn"]
+  static targets = ["modal", "frame", "image", "zoom", "gradient", "gradientOverlay", "shareStatus", "shareImageBtn", "shareVideoBtn"]
   static values  = { downloadUrl: String, imageUrl: String, videoUrl: String, shareUrl: String }
 
   connect() {
@@ -110,6 +110,12 @@ export default class extends Controller {
 
   // ── Zoom ──────────────────────────────────────────────────────────────────
 
+  onGradient() {
+    const opacity = (this.gradientTarget.value / 100).toFixed(2)
+    this.gradientOverlayTarget.style.background =
+      `linear-gradient(to top, transparent 35%, rgba(0,0,0,${opacity}))`
+  }
+
   onZoom(event) {
     const prevScale  = this.scale
     // Slider 100–350 maps to 1x–3.5x the contain scale
@@ -135,6 +141,7 @@ export default class extends Controller {
       img_h: Math.round(this.nh * this.scale * scaleToActual),
       img_x: Math.round(this.currentLeft * scaleToActual),
       img_y: Math.round(this.currentTop  * scaleToActual),
+      gradient_opacity: this.hasGradientTarget ? this.gradientTarget.value : 55,
     }
   }
 
