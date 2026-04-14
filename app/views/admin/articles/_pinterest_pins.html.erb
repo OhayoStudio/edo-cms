@@ -8,27 +8,24 @@
   end %>
 <% return unless image_blob %>
 
-<% article_url = url_for(article) %>
+<% article_url = article_url(article) %>
 <% image_url   = rails_blob_url(image_blob) %>
 <% category_name = article.category&.name.to_s %>
 <% top_tag       = article.tags.first&.name.to_s %>
+<% pin_description = [article.title, article.meta_description.presence || article.excerpt.presence].compact.join(" — ") %>
 
 <% pins = [
   {
     label:       "Pin 1 — Headline",
-    description: [article.title, article.excerpt.presence || article.meta_description].compact.join(" — ")
+    description: pin_description
   },
   {
     label:       "Pin 2 — Context",
-    description: [article.subtitle.presence || article.title, category_name].reject(&:blank?).join(" · ")
+    description: pin_description
   },
   {
     label:       "Pin 3 — Discovery",
-    description: [
-      article.title,
-      top_tag.present? ? "##{top_tag.parameterize(separator: '')}" : nil,
-      "Save for later"
-    ].compact.join(" · ")
+    description: pin_description
   }
 ] %>
 
