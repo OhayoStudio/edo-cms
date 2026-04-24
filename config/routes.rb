@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  mount LexxyAssistant::Engine, at: "/lexxy_assistant"
+  mount LexxyPhotos::Engine,    at: "/lexxy_photos"
+
   resource :session
   resources :passwords, param: :token
 
@@ -12,8 +15,6 @@ Rails.application.routes.draw do
         get   :story_video
         post  :share_instagram
         patch  :patch_field
-        post   :direct_upload_photo_candidate
-        delete :destroy_photo_candidate
       end
     end
     resources :videos do
@@ -29,7 +30,6 @@ Rails.application.routes.draw do
       end
     end
     resources :authors
-    post "claude/draft", to: "claude#draft", as: :claude_draft
     resources :categories
     resources :tags
     resource :colophon, only: %i[edit update]
