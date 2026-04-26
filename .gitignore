@@ -84,3 +84,4 @@ edo-cms-68d*.json
 script/setup_droplet.sh
 script/setup_production.sh
 config/edo-cms*.json
+iroiro.md
