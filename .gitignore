@@ -84,3 +84,5 @@ sepiabraun-68d*.json
 script/setup_droplet.sh
 script/setup_production.sh
 config/sepiabraun*.json
+iroiro.md
+public/placeholder.ark
