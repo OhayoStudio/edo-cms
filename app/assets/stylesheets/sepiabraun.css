@@ -34,7 +34,7 @@
     --color-slate-800: var(--color-primary-darkest);
     --color-gray-900: var(--color-primary-darker);
     --color-gray-800: var(--color-text);
-    --color-gray-700: var(--color-acccent);
+    --color-gray-700: var(--color-accent);
     --color-gray-600: var(--color-text);
     --color-gray-500: var(--color-text);
     --color-gray-400: var(--color-background);

@@ -1,62 +1,63 @@
-<div class="grid grid-cols-1 md:grid-cols-5 overflow-hidden my-8">
-  <div class="col-span-2">
-    <!-- the feature image of the article linked to the article -->
-    <div class="">
-      <%= link_to article_path(article.slug) do %>
-      <%= image_tag article.featured_image.variant(:thumb), alt: article.title, loading: "lazy", decoding: "async", class: "w-full h-56 object-cover" if article.featured_image.attached? %>
+<%# Article list item — magazine archive row
+    Layout:
+      - 2 columns: content (left, flexible) | image (right, fixed ~380px)
+      - "No. ###" eyebrow sits above the image, top-aligned with the date eyebrow above the title
+      - Slash-separated tags
+
+    Locals:
+      - article: Article
+      - number:  Integer (catalogue number, e.g. 146 for the most recent of 146)
+%>
+
+<article class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-8 pt-7 pb-8 border-t border-[#D9C4A6] dark:border-[#52300f]">
+
+  <%# ─── Content column ──────────────────────────────────────────── %>
+  <div class="min-w-0">
+    <%# Date eyebrow %>
+    <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-gray-500 dark:text-gray-400 mb-2.5">
+      <%= article.published_at.strftime("%b %-d, %Y") if article.published_at %>
+    </div>
+
+    <%# Serif title %>
+    <h2 class="lora font-medium text-2xl md:text-[30px] leading-[1.14] tracking-tight mb-3 text-[#423525] dark:text-gray-200 text-balance">
+      <%= link_to article.title, article_path(article.slug), class: "hover:text-[#704214] dark:hover:text-[#D9C4A6] transition-colors" %>
+    </h2>
+
+    <%# Excerpt %>
+    <p class="lora text-base leading-[1.55] text-gray-500 dark:text-gray-400 mb-4 max-w-[52ch]">
+      <%= link_to article_path(article.slug), class: "hover:text-[#423525] dark:hover:text-gray-300" do %>
+        <%= article.excerpt %><%= "…" if article.excerpt.present? %>
       <% end %>
-    </div>
-  </div>
-  <div class="col-span-3">
-    <div id="articles" class="min-w-full">
-      <article class="max-w-6xl mx-auto">
-        <div class="p-2 pt-2 md:p-4 md:pt-0">
-          <h1 class="text-2xl font-bold text-gray-900 mb-4 lora dark:text-gray-300">
-            <%= link_to article_path(article.slug) do %>
-            <%= article.title %>
-            <% end %>
-          </h1>
+    </p>
 
-          <p class="text-gray-600 mb-6 dark:text-gray-300 lora text-2md">
-            <%= link_to article_path(article.slug) do %>
-            <%= article.excerpt %>...
-            <% end %>
-          </p>
-
-          <div class=" md:pt-0 max-w-screen-lg">
-            <div class="flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-                />
-              </svg>
-              <div class="flex flex-wrap gap-2">
-                <% article.tags.each do |tag| %>
-                  <!-- if current tag is in list make it red -->
-                  <% if tag.slug == params[:id] %>
-                  <span class="px-3 py-1 text-sm text-red-600 bg-gray-100 rounded-full">
-                    <%= link_to tag.name, tag_path(tag.slug) %>
-                  </span>
-                  <% else %>
-                  <span class="px-3 py-1 text-sm text-gray-600 dark:text-gray-300 bg-gray-100 rounded-full">
-                    <%= link_to tag.name, tag_path(tag.slug) %>
-                  </span>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-    </div>
+    <%# Slash-separated tags %>
+    <% if article.tags.any? %>
+      <div class="flex flex-wrap items-baseline gap-x-1 gap-y-1">
+        <% article.tags.each_with_index do |tag, j| %>
+          <% is_current = tag.slug == params[:id] %>
+          <%= link_to tag.name, tag_path(tag.slug),
+                class: "font-mono text-[9px] tracking-[0.18em] uppercase py-0.5 #{is_current ? 'text-red-600' : 'text-[#704214] dark:text-[#D9C4A6]'} hover:underline" %>
+          <% if j < article.tags.size - 1 %>
+            <span class="font-mono text-[9px] text-[#D9C4A6] dark:text-[#52300f] px-1">/</span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
   </div>
-</div>
+
+  <%# ─── Image column (with No. ### eyebrow) ─────────────────────── %>
+  <div>
+    <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-[#704214] text-right mb-2.5">
+      No. <%= number.to_s.rjust(3, "0") %>
+    </div>
+    <%= link_to article_path(article.slug) do %>
+      <% if article.featured_image.attached? %>
+        <%= image_tag article.featured_image.variant(:thumb),
+              alt: article.title,
+              loading: "lazy",
+              decoding: "async",
+              class: "w-full h-56 object-cover" %>
+      <% end %>
+    <% end %>
+  </div>
+</article>

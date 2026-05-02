@@ -26,7 +26,7 @@ export default class extends Controller {
   }
 
   switchVideo(event) {
-    // Get data from the clicked thumbnail
+    event.preventDefault()
     const videoId = event.currentTarget.dataset.videoId
     const title = event.currentTarget.dataset.videoTitle
     const description = event.currentTarget.dataset.videoDescription
