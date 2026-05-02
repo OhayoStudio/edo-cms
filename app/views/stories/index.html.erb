@@ -22,70 +22,99 @@
 <% end %>
 
 <h1 class="sr-only">Edo CMS — Independent Publishing</h1>
-<div>
-  <div class="w-full">
-    <div id="stories" class="min-w-full dark:text-gray-300 mb-16">
-      <% if @top_story %> <%= render partial:'stories/top_story', locals: {
-      story: @top_story }%> <% end %>
 
-      <!-- Display all other stories -->
-      <div
-        id="recent_stories"
-        class="container dark:text-gray-300 mx-auto pt-4 md:mx-auto md:mt-2 md:px-5"
-      >
-        <h2 class="md:mt-2 text-4xl font-bold font-serif mb-8 pl-4">
-          Recently published
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 m-4">
-          <% @recent_stories.each do |story| %> <%= render story %> <% end %>
+<div id="stories" class="dark:text-gray-300">
+
+  <%# ─── HERO ──────────────────────────────────────────── %>
+  <% if @top_story %>
+    <%= render "stories/hero", story: @top_story %>
+  <% end %>
+
+  <%# ─── RECENTLY PUBLISHED ────────────────────────────── %>
+  <section id="recent_stories" class="container mx-auto px-5 md:px-20 pt-10 md:pt-24">
+    <header class="flex items-baseline justify-between mb-6 md:mb-12 pb-3 md:pb-4 border-b border-[var(--color-accent)]/40">
+      <h2 class="lora font-medium text-[22px] md:text-[32px] tracking-tight text-[var(--color-text)] dark:text-gray-200 m-0">
+        Recently published
+      </h2>
+      <%= link_to "All →".html_safe,
+            articles_path,
+            class: "text-[9px] md:text-[11px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-[var(--color-accent)] hover:underline" %>
+    </header>
+
+    <% if @recent_stories.any? %>
+      <%# Lead + 2 stacked (mobile: full single column) %>
+      <div class="grid grid-cols-1 md:grid-cols-[1.6fr_1fr] gap-8 md:gap-16 mb-10 md:mb-24">
+        <% if @recent_stories[0] %>
+          <%= render "stories/feature_card", story: @recent_stories[0] %>
+        <% end %>
+
+        <div class="flex flex-col gap-7 md:gap-12 md:pt-2">
+          <% [@recent_stories[1], @recent_stories[2]].compact.each do |s| %>
+            <%= render "stories/small_card", story: s %>
+          <% end %>
         </div>
       </div>
-    </div>
 
-    <!-- Display an horizontal carousel of the stories that are videos only -->
-    <% if @videos.any? %>
-    <div
-      id="videos"
-      class="min-w-full dark:text-gray-300 dark:bg-slate-800 text-gray-300 bg-gray-800 p-4 lora"
-    >
-      <div class="container mx-auto md:mx-auto md:mt-2 md:px-5">
-        <div class="flex items-center justify-between">
-          <h2 class="text-4xl font-serif font-bold mb-8 pl-2 pt-4">Videos <span class="text-sm">we liked</span></h2>
-          <p><%= link_to "See all videos", videos_path %></p>
+      <%# Rest: mobile 2-up, sm 2-up, md 3-up %>
+      <% rest = @recent_stories[3..5] || [] %>
+      <% if rest.any? %>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-10 mb-10 md:mb-24">
+          <% rest.each do |s| %>
+            <%= render "stories/small_card", story: s, tiny: true %>
+          <% end %>
         </div>
-        <div class="flex flex-col md:flex-row gap-4">
-          <!-- render Videos Component here under -->
-          <%= render VideosComponent.new(videos: @videos)%>
-        </div>
-      </div>
-    </div>
+      <% end %>
     <% end %>
+  </section>
 
-    <div
-      id="latest_stories_by_category"
-      class="min-w-full dark:text-gray-300 mt-8"
-    >
-      <!-- Display all other stories -->
-      <div class="container mx-auto md:mx-auto md:mt-2 md:px-5">
-        <!-- <h2 class="text-4xl font-bold font-serif m-4">Categories</h2> -->
-        <div class="pb-4 m-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <% @latest_stories_by_category.each do |story| %>
-            <div class="mt-8">
-              <span
-                class="category_name bg-slate-900 text-white p-2 font-medium"
-              >
-                <%= link_to story.storyable.try(:category).try(:name),
-                category_path(story.storyable.try(:category)) %>
-              </span>
-              <%= render story %>
+  <%# ─── MOTION PICTURES (dark band) ──────────────────── %>
+  <% if @videos.any? %>
+    <section id="videos" class="bg-[var(--color-primary-darkest)] dark:bg-slate-800 text-gray-200 lora py-10 md:py-22 mt-10 md:mt-0">
+      <div class="container mx-auto px-5 md:px-20">
+        <header class="flex items-baseline justify-between mb-6 md:mb-14">
+          <div>
+            <div class="text-[9px] md:text-[11px] tracking-[0.18em] uppercase font-mono text-[var(--color-accent)] mb-2 md:mb-3">
+              Now showing
             </div>
-            <% end %>
+            <h2 class="lora font-medium text-[26px] md:text-5xl leading-none tracking-tight text-balance m-0">
+              Motion pictures, things we liked.
+            </h2>
           </div>
+          <%= link_to "All videos →",
+                videos_path,
+                class: "hidden md:inline-block text-[11px] tracking-[0.18em] uppercase font-mono text-[var(--color-accent)] hover:underline shrink-0 ml-6" %>
+        </header>
+
+        <%= render VideosComponent.new(videos: @videos) %>
+
+        <div class="md:hidden mt-6 text-right">
+          <%= link_to "All videos →",
+                videos_path,
+                class: "text-[9px] tracking-[0.18em] uppercase font-mono text-[var(--color-accent)] hover:underline" %>
         </div>
       </div>
-    </div>
+    </section>
+  <% end %>
 
-    <div><%#= render InstagramComponent.new %></div>
-  </div>
+  <%# ─── ACROSS THE ROOMS ─────────────────────────────── %>
+  <% if @latest_stories_by_category.any? %>
+    <section id="latest_stories_by_category" class="container mx-auto px-5 md:px-20 pt-10 md:pt-24 pb-12 md:pb-20">
+      <header class="flex items-baseline justify-between mb-6 md:mb-12 pb-3 md:pb-4 border-b border-[var(--color-accent)]/40">
+        <h2 class="lora font-medium text-[22px] md:text-[32px] tracking-tight text-[var(--color-text)] dark:text-gray-200 m-0">
+          Across the rooms
+        </h2>
+        <%= link_to "All →".html_safe,
+              articles_path,
+              class: "text-[9px] md:text-[11px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-[var(--color-accent)] hover:underline" %>
+      </header>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-10">
+        <% @latest_stories_by_category.each do |s| %>
+          <%= render "stories/category_card", story: s %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <div><%#= render InstagramComponent.new %></div>
 </div>
