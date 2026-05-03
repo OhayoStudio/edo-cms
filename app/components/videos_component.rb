@@ -3,8 +3,8 @@ class VideosComponent < ViewComponent::Base
     attr_reader :videos
 
     def initialize(videos:)
-        @videos = videos
-        @main_video = videos.first
-        @videos = (@videos - [ @main_video ]).first(3) if @videos.length > 4
+        all = videos.to_a
+        @main_video = all.first
+        @videos = (all - [ @main_video ]).first(3)
     end
 end

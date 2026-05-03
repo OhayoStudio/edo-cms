@@ -1,0 +1,39 @@
+<%# Variation D — large panoramic card, used as the lead in "Recently published". %>
+<%# Mobile: single-column, full-width 16:9 image. Desktop: same shape, larger type. %>
+<%# Locals: story. %>
+<% s = story.storyable %>
+<% if s.respond_to?(:featured_image) && s.featured_image.attached? %>
+  <%= link_to s, class: "block group" do %>
+    <div class="overflow-hidden mb-4 md:mb-5 aspect-[16/9]">
+      <%= image_tag s.featured_image,
+            alt: s.title,
+            loading: "lazy",
+            decoding: "async",
+            class: "w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" %>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2 md:gap-3 mb-2 md:mb-3 text-[9px] md:text-[11px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-[var(--color-accent)]">
+      <% if s.respond_to?(:category) && s.category %>
+        <span><%= s.category.name %></span>
+      <% end %>
+      <% if s.respond_to?(:published_at) && s.published_at %>
+        <span class="opacity-60">·</span>
+        <span><%= s.published_at.strftime("%b %-d, %Y") %></span>
+      <% end %>
+      <% if s.respond_to?(:reading_time) && s.reading_time.present? %>
+        <span class="opacity-60">·</span>
+        <span><%= s.reading_time %> min read</span>
+      <% end %>
+    </div>
+
+    <h3 class="lora font-semibold text-[22px] md:text-[36px] leading-[1.18] md:leading-[1.12] tracking-tight mb-2 md:mb-3 text-balance text-[var(--color-text)] dark:text-gray-200 group-hover:underline decoration-[var(--color-secondary)]/40 underline-offset-4">
+      <%= s.title %>
+    </h3>
+
+    <% if s.respond_to?(:excerpt) && s.excerpt.present? %>
+      <p class="lora text-[15px] md:text-lg leading-[1.5] md:leading-[1.55] text-[var(--color-text)]/80 dark:text-gray-300 max-w-[56ch]">
+        <%= strip_tags(s.excerpt.to_s) %>
+      </p>
+    <% end %>
+  <% end %>
+<% end %>

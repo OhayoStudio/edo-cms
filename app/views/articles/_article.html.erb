@@ -1,94 +1,82 @@
-<!-- Article Show View Preview -->
-<article class="mx-auto overflow-hidden bg-gray-200 dark:bg-gray-600">
-  <div class="mb-4 w-full p-8">
-    <div id="title" class="w-full">
-      <h1
-        class="text-4xl font-bold text-gray-900 lora dark:text-gray-300 mt-4 text-center"
-      >
-        <%= article.title %>
-      </h1>
+<%# Article show — magazine-style
+    Layout:
+      1. Full-bleed hero photo (no overlay — let the photo breathe)
+      2. Centered title block:  Category · Date · No. ###  →  big serif title  →  italic subtitle
+      3. Reading column (~720px) using existing .lexxy-content classes
+         with a drop cap on the first paragraph (CSS in sepiabraun.css)
+      4. Slash-separated tags in mono
+      5. Byline (kept as-is)
+%>
+
+<article class="lora dark:bg-gray-800">
+
+  <%# ─── 1. Full-bleed hero ──────────────────────────────────────── %>
+  <% if article.featured_image.attached? %>
+    <div class="w-full h-[280px] md:h-[400px] lg:h-[540px] overflow-hidden bg-[#D9C4A6] dark:bg-[#52300f]">
+      <%= image_tag article.featured_image,
+            alt: article.title,
+            fetchpriority: "high",
+            decoding: "async",
+            class: "w-full h-full object-cover" %>
     </div>
-  </div>
-  <!-- add featured_image here : on desktop it should-->
-  <div>
-    <%= image_tag article.featured_image, alt: article.title, fetchpriority:
-    "high", decoding: "async", class: "w-full h-100 object-cover" if
-    article.featured_image.attached? %>
-  </div>
+  <% end %>
 
-  <div class="dark:text-gray-300 dark:bg-gray-800">
-    <div
-      class="px-2 md:p-8 md:pt-0 padding-action-text lora max-w-screen-lg md:mx-auto"
-    >
-      <div class="p-8 flex flex-col justify-center items-center">
-        <div
-          class="flex flex-col md:flex-row md:justify-between items-center gap-4 mb-4 w-full"
-        >
-          <div id="title" class="w-full">
-            <span
-              class="py-1 text-sm font-medium text-gray-600 bg-gray-100 dark:bg-slate-800 dark:text-gray-300 rounded-full"
-            >
-              <%= link_to article.category.name,
-              category_path(article.category.slug), class: "px-3 py-1 text-sm"
-              %>
-            </span>
-            <h1
-              class="text-4xl font-bold text-gray-900 lora dark:text-gray-300 mt-8"
-            >
-              <%= article.title %>
-            </h1>
+  <%# ─── 2. Title block ──────────────────────────────────────────── %>
+  <header class="max-w-[980px] mx-auto px-6 md:px-8 pt-12 md:pt-16 pb-10 md:pb-14 text-center">
 
-            <p class="text-xl text-gray-600 mb-2 dark:text-gray-200 lora">
-              <%= article.subtitle %>
-            </p>
-          </div>
-          <div id="search" class="mt-4 md:mt-10">
-            <%= render "articles/search" %>
-          </div>
-        </div>
-      </div>
-      <div class="lexxy-content lora mt-2 md:mt-8" data-controller="photo-zoom">
-        <%= article.content %>
-      </div>
-      <div class="flex">
-        <p class="font-medium text-gray-900 dark:text-gray-200 border-t border-gray-300 dark:border-gray-700 pt-4">
-          Written by Jérôme, with the little help of Claude
-          <!-- <a href="/colophon" target="_blank" class="text-gray-600 dark:text-gray-300">
-            <%= image_tag "claude.svg", class: "w-5 h-5 inline-block ml-1", style: "vertical-align: middle;width:75px;" %>
-          </a> -->
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <div class="p-4 max-w-screen-lg mx-auto dark:bg-gray-800 dark:text-gray-300">
-    <div class="flex items-center gap-2">
-      <% if article.tags.any? %>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 text-gray-500"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
-        />
-      </svg>
+    <%# Eyebrow row: Category · Date · No. ### %>
+    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-mono text-[11px] tracking-[0.18em] uppercase text-[#704214] dark:text-[#D9C4A6] mb-7">
+      <%= link_to article.category.name,
+            category_path(article.category.slug),
+            class: "hover:underline" %>
+      <span class="w-1 h-1 rounded-full bg-[#704214]/50 dark:bg-[#D9C4A6]/50"></span>
+      <span><%= article.published_at.strftime("%b %-d, %Y") if article.published_at %></span>
+      <% if article.respond_to?(:catalogue_number) && article.catalogue_number %>
+        <span class="w-1 h-1 rounded-full bg-[#704214]/50 dark:bg-[#D9C4A6]/50"></span>
+        <span>No. <%= article.catalogue_number.to_s.rjust(3, "0") %></span>
       <% end %>
-      <div class="flex flex-wrap gap-2">
-        <% article.tags.each do |tag| %>
-        <span
-          class="px-3 py-1 text-sm text-gray-600 bg-gray-100 dark:text-gray-300 dark:bg-slate-800 rounded-full"
-        >
-          <%= link_to tag.name, tag_path(tag.slug), class: "text-gray-600
-          dark:text-gray-300" %>
-        </span>
+    </div>
+
+    <%# Big serif title %>
+    <h1 class="lora font-medium text-4xl md:text-6xl lg:text-[80px] leading-[1.05] tracking-[-0.025em] text-[#423525] dark:text-gray-200 mb-7 text-balance">
+      <%= article.title %>
+    </h1>
+
+    <%# Italic subtitle %>
+    <% if article.subtitle.present? %>
+      <p class="lora italic text-lg md:text-xl lg:text-[22px] leading-[1.45] text-gray-500 dark:text-gray-400 max-w-[720px] mx-auto text-pretty">
+        <%= article.subtitle %>
+      </p>
+    <% end %>
+  </header>
+
+  <%# ─── 3. Reading column (Lexxy content) ──────────────────────── %>
+  <div class="max-w-[720px] mx-auto px-6 md:px-8 pb-16 md:pb-20">
+    <div class="lexxy-content lora article-body" data-controller="photo-zoom">
+      <%= article.content %>
+    </div>
+  </div>
+
+  <%# ─── 4. Tags ─────────────────────────────────────────────────── %>
+  <% if article.tags.any? %>
+    <div class="max-w-[720px] mx-auto px-6 md:px-8 pb-12">
+      <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-[#704214] dark:text-[#D9C4A6] mb-2.5">Tags</div>
+      <div class="flex flex-wrap items-baseline">
+        <% article.tags.each_with_index do |tag, j| %>
+          <%= link_to tag.name, tag_path(tag.slug),
+                class: "font-mono text-[10px] tracking-[0.18em] uppercase py-1 text-[#704214] dark:text-[#D9C4A6] hover:underline" %>
+          <% if j < article.tags.size - 1 %>
+            <span class="font-mono text-[10px] text-[#D9C4A6] dark:text-[#52300f] px-1.5 py-1">/</span>
+          <% end %>
         <% end %>
       </div>
     </div>
+  <% end %>
+
+  <%# ─── 5. Byline ───────────────────────────────────────────────── %>
+  <div class="max-w-[720px] mx-auto px-6 md:px-8 pb-16 md:pb-20">
+    <p class="pt-6 border-t border-[#D9C4A6] dark:border-[#52300f] lora text-base text-gray-500 dark:text-gray-400">
+      Written by Jérôme, with the little help of Claude.
+    </p>
   </div>
 </article>
