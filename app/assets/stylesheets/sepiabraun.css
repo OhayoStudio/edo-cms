@@ -251,3 +251,71 @@
 .description-modal-close:hover {
   opacity: 1;
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   Article body — magazine-style additions for the redesigned show page
+   ─────────────────────────────────────────────────────────────── */
+
+/* Larger, more comfortable body text inside the article reading column */
+.article-body.lexxy-content {
+  font-size: 19px;
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+.dark .article-body.lexxy-content {
+  color: var(--color-accent);
+}
+
+.article-body.lexxy-content p {
+  margin: 0 0 28px;
+  text-wrap: pretty;
+}
+
+/* Drop cap on the first paragraph */
+.article-body.lexxy-content > p:first-of-type::first-letter {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 86px;
+  line-height: 0.86;
+  float: left;
+  padding: 6px 14px 0 0;
+  color: var(--color-primary);
+}
+
+.dark .article-body.lexxy-content > p:first-of-type::first-letter {
+  color: var(--color-accent);
+}
+
+/* Pull-quote: any <blockquote> in Lexxy content gets the magazine treatment.
+   Slightly wider than the 720px reading column so it breaks out visually. */
+.article-body.lexxy-content blockquote {
+  max-width: 860px;
+  margin: 40px -70px 48px;
+  padding: 40px 0;
+  border-top: 1px solid var(--color-accent);
+  border-bottom: 1px solid var(--color-accent);
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 30px;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--color-text);
+  background: transparent;
+}
+
+.dark .article-body.lexxy-content blockquote {
+  border-color: #52300f;
+  color: var(--color-accent);
+}
+
+/* On narrow viewports, don't break out — pull quote stays inside the column */
+@media (max-width: 800px) {
+  .article-body.lexxy-content blockquote {
+    margin: 32px 0 36px;
+    padding: 28px 0;
+    font-size: 22px;
+  }
+}

@@ -32,14 +32,14 @@
         "timeRequired"     => "PT#{@article.reading_time}M"
       } %>
 <% end %>
+
 <div class="w-full">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <%3 end %>
+  <% end %>
 
   <%= render "article", article: @article %>
 
-  <%= render "articles/related_articles", related_articles: @article.related_articles %>
-
-  <%= render "articles/tag_related_articles", tag_related_articles: @article.tag_related_articles %>
+  <%# Merged "You might also like" — replaces the old two-section setup %>
+  <%= render "articles/related_articles", article: @article %>
 </div>
