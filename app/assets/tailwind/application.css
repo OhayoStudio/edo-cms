@@ -128,3 +128,42 @@
     }
   }
 }
+/* ────────────────────────────────────────────────────────────────
+   APPEND THIS BLOCK to the END of app/assets/tailwind/application.css.
+   It does two things:
+     1. Fixes two existing bugs (linea-gradient typo, stray --color-acccent).
+     2. Adds D-specific helpers that aren't easy in pure utility classes.
+   No tokens are renamed; everything still keys off your existing
+   `.edo-cms` palette in app/assets/stylesheets/edo-cms.css.
+   ──────────────────────────────────────────────────────────────── */
+
+@layer base {
+  /* Fix: was `linea-gradient` (typo). Restore the dark-mode background. */
+  .dark-mode-background {
+    background: linear-gradient(to bottom,
+                #262624 0%,
+                #423525 25%,
+                #5e4b35 100%);
+  }
+
+  /* Smooth image transitions on hover (used by feature/small/category cards). */
+  .sb-card-img {
+    transition: transform 300ms ease;
+  }
+  .group:hover .sb-card-img {
+    transform: scale(1.02);
+  }
+
+  /* Hairline rule color matched to the sepia accent. */
+  .sb-rule {
+    border-color: rgb(217 196 166 / 0.4);
+  }
+}
+
+/* NOTE — separate, optional cleanup for edo-cms.css:
+   In app/assets/stylesheets/edo-cms.css, around line 41, the variable
+   `--color-acccent` (three c's) is referenced but never defined. Change:
+       --color-gray-700: var(--color-acccent);
+   to:
+       --color-gray-700: var(--color-accent);
+   This fixes a subtle paragraph color bug in dark mode. */

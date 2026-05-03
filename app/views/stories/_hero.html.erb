@@ -1,0 +1,90 @@
+<%# Variation D — Hero. %>
+<%# DESKTOP: full-bleed cinematic image with text-over-image at the bottom. %>
+<%# MOBILE  (option b): short image, then title/subtitle/metadata BELOW on paper background. %>
+<%#                    Better readability than text-over-image at small widths. %>
+<%# Locals: story (a Story whose storyable has a featured_image). %>
+<% s = story.storyable %>
+<% if s.respond_to?(:featured_image) && s.featured_image.attached? %>
+  <%= link_to s, class: "block group" do %>
+
+    <%# ── Mobile: image only (240px tall) ─────────────────────────────── %>
+    <div class="md:hidden">
+      <%= image_tag s.featured_image,
+            alt: s.title,
+            fetchpriority: "high",
+            decoding: "async",
+            class: "w-full h-[240px] object-cover" %>
+      <div class="px-5 pt-6 pb-2 bg-[var(--color-background)] dark:bg-gray-800">
+        <%# Eyebrow: category · author · date · reading time %>
+        <div class="flex flex-wrap items-center gap-2 mb-3 text-[10px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-[var(--color-accent)]">
+          <% if s.respond_to?(:category) && s.category %>
+            <span><%= s.category.name %></span>
+          <% end %>
+          <% if s.respond_to?(:author) && s.author %>
+            <span class="opacity-60">·</span>
+            <span><%= s.author.try(:name) || s.author.try(:full_name) %></span>
+          <% end %>
+          <% if s.respond_to?(:published_at) && s.published_at %>
+            <span class="opacity-60">·</span>
+            <span><%= s.published_at.strftime("%b %-d, %Y") %></span>
+          <% end %>
+          <% if s.respond_to?(:reading_time) && s.reading_time.present? %>
+            <span class="opacity-60">·</span>
+            <span><%= s.reading_time %> min</span>
+          <% end %>
+        </div>
+
+        <h2 class="lora font-semibold text-3xl leading-[1.1] tracking-tight mb-3 text-balance text-[var(--color-text)] dark:text-gray-200">
+          <%= s.title %>
+        </h2>
+
+        <% if s.respond_to?(:subtitle) && s.subtitle.present? %>
+          <p class="lora italic text-[17px] leading-snug text-[var(--color-text)]/75 dark:text-gray-300">
+            <%= s.subtitle %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+
+    <%# ── Desktop / tablet: cinematic full-bleed with text overlay ─────── %>
+    <div class="hidden md:block relative w-full h-[560px] overflow-hidden">
+      <%= image_tag s.featured_image,
+            alt: s.title,
+            fetchpriority: "high",
+            decoding: "async",
+            class: "w-full h-full object-cover" %>
+      <div class="absolute inset-0"
+           style="background: linear-gradient(to bottom, rgba(44,34,26,0) 40%, rgba(44,34,26,0.85) 100%);"></div>
+      <div class="absolute inset-x-0 bottom-0 px-20 pb-12 max-w-[1100px] text-[var(--color-background)]">
+        <div class="flex flex-wrap items-center gap-4 mb-4 text-[11px] tracking-[0.16em] uppercase font-mono text-[var(--color-accent)]">
+          <% if s.respond_to?(:category) && s.category %>
+            <span><%= s.category.name %></span>
+            <span class="w-1 h-1 rounded-full bg-[var(--color-accent)]"></span>
+          <% end %>
+          <% if s.respond_to?(:author) && s.author %>
+            <span><%= s.author.try(:name) || s.author.try(:full_name) %></span>
+            <span class="w-1 h-1 rounded-full bg-[var(--color-accent)]"></span>
+          <% end %>
+          <% if s.respond_to?(:published_at) && s.published_at %>
+            <span><%= s.published_at.strftime("%B %-d, %Y") %></span>
+          <% end %>
+          <% if s.respond_to?(:reading_time) && s.reading_time.present? %>
+            <span class="w-1 h-1 rounded-full bg-[var(--color-accent)]"></span>
+            <span><%= s.reading_time %> min read</span>
+          <% end %>
+        </div>
+
+        <h2 class="lora font-medium text-6xl leading-[1.04] tracking-tight mb-4 text-balance group-hover:underline decoration-[var(--color-accent)]/40 underline-offset-8">
+          <%= s.title %>
+        </h2>
+
+        <% if s.respond_to?(:subtitle) && s.subtitle.present? %>
+          <p class="lora italic text-xl leading-snug max-w-[680px] text-[#EDE4D4]">
+            <%= s.subtitle %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+
+  <% end %>
+<% end %>

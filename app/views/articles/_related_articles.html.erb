@@ -1,19 +1,69 @@
+<%# "You might also like" — merged related + tag-related, deduped, capped at 6.
+    Replaces both _related_articles.html.erb and _tag_related_articles.html.erb.
 
-<% if related_articles.any? %>
-  <div class="max-w-6xl mx-auto my-10 p-4 border-b border-gray-300 dark:border-gray-600 lora">
-    <h2 class="text-2xl font-bold mb-4 dark:text-gray-300">More from <%= related_articles.first.category.name %></h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <% related_articles.each do |related_article| %>
-        <div class="overflow-hidden">
-          <%= link_to article_path(related_article.slug) do %>
-            <%= image_tag related_article.featured_image.variant(:thumb), alt: related_article.title, loading: "lazy", decoding: "async", class: "w-full h-40 object-cover" if related_article.featured_image.attached? %>
-            <div class="p-2">
-              <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-300"><%= related_article.title %></h3>
-              <p class="text-gray-600 dark:text-gray-400"><%= truncate(related_article.excerpt, length: 100) %></p>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
+    Locals:
+      - article: Article (the current one)
+%>
+
+<%
+  related = (article.related_articles.to_a + article.tag_related_articles.to_a)
+              .reject { |a| a.id == article.id }
+              .uniq(&:id)
+              .first(6)
+%>
+
+<% if related.any? %>
+  <section class="border-t-2 border-[#423525] dark:border-[#D9C4A6] bg-[#F4EFE3] dark:bg-[#3a2c1c] py-16 md:py-24 lora">
+    <div class="container mx-auto px-4 md:px-16 max-w-[1280px]">
+
+      <%# Section header %>
+      <div class="flex items-baseline justify-between pb-6 mb-10 border-b border-[#D9C4A6] dark:border-[#52300f]">
+        <h2 class="lora font-medium text-3xl md:text-4xl lg:text-[40px] tracking-[-0.015em] text-[#423525] dark:text-gray-200 m-0">
+          You might also like
+        </h2>
+        <span class="hidden sm:inline font-mono text-[11px] tracking-[0.18em] uppercase text-[#704214] dark:text-[#D9C4A6]">
+          <%= related.size %> stories
+        </span>
+      </div>
+
+      <%# 3-column grid (1-col on mobile, 2-col on tablet) %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+        <% related.each_with_index do |r, i| %>
+          <article class="flex flex-col">
+
+            <%# No. ### eyebrow above image %>
+            <% if r.respond_to?(:catalogue_number) && r.catalogue_number %>
+              <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-[#704214] dark:text-[#D9C4A6] text-right mb-2.5">
+                No. <%= r.catalogue_number.to_s.rjust(3, "0") %>
+              </div>
+            <% end %>
+
+            <%= link_to article_path(r.slug), class: "block group" do %>
+              <% if r.featured_image.attached? %>
+                <div class="w-full h-[200px] overflow-hidden bg-[#D9C4A6] dark:bg-[#52300f] mb-4">
+                  <%= image_tag r.featured_image.variant(:thumb),
+                        alt: r.title,
+                        loading: "lazy",
+                        decoding: "async",
+                        class: "w-full h-full object-cover" %>
+                </div>
+              <% end %>
+
+              <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-gray-500 dark:text-gray-400 mb-2">
+                <%= r.published_at.strftime("%b %-d, %Y") if r.published_at %>
+              </div>
+
+              <h3 class="lora font-medium text-xl md:text-[22px] leading-[1.2] tracking-[-0.01em] text-[#423525] dark:text-gray-200 mb-2.5 text-balance group-hover:text-[#704214] dark:group-hover:text-[#D9C4A6] transition-colors">
+                <%= r.title %>
+              </h3>
+
+              <p class="lora text-[15px] leading-[1.5] text-gray-500 dark:text-gray-400 m-0">
+                <%= truncate(r.excerpt, length: 110) %>
+              </p>
+            <% end %>
+          </article>
+        <% end %>
+      </div>
     </div>
-  </div>
+  </section>
 <% end %>

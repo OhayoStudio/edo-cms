@@ -1,0 +1,36 @@
+<%# Variation D — panoramic small card, used in the right column on desktop %>
+<%# and stacked on mobile. %>
+<%# Locals: story, optional `tiny: true` to render a denser version (used in the 2-up grid below the lead on mobile). %>
+<% tiny = local_assigns[:tiny] %>
+<% s = story.storyable %>
+<% if s.respond_to?(:featured_image) && s.featured_image.attached? %>
+  <%= link_to s, class: "block group" do %>
+    <div class="overflow-hidden mb-3 md:mb-4 aspect-[16/9] <#%= tiny ? 'aspect-[4/3]' : 'aspect-[16/9]' %>">
+      <%= image_tag s.featured_image.variant(:thumb),
+            alt: s.title,
+            loading: "lazy",
+            decoding: "async",
+            class: "w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" %>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2 mb-2 text-[9px] md:text-[10px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-[var(--color-accent)]">
+      <% if s.respond_to?(:category) && s.category %>
+        <span><%= s.category.name %></span>
+      <% end %>
+      <% if !tiny && s.respond_to?(:published_at) && s.published_at %>
+        <span class="opacity-60">·</span>
+        <span><%= s.published_at.strftime("%b %-d, %Y") %></span>
+      <% end %>
+    </div>
+
+    <h3 class="lora font-semibold <%= tiny ? 'text-sm md:text-base' : 'text-[17px] md:text-xl' %> leading-tight mb-1 md:mb-2 text-balance text-[var(--color-text)] dark:text-gray-200 group-hover:underline decoration-[var(--color-secondary)]/40 underline-offset-4">
+      <%= s.title %>
+    </h3>
+
+    <% if !tiny && s.respond_to?(:excerpt) && s.excerpt.present? %>
+      <p class="lora text-[13px] md:text-sm leading-[1.5] text-[var(--color-text)]/75 dark:text-gray-300">
+        <%= truncate(strip_tags(s.excerpt.to_s), length: 140) %>
+      </p>
+    <% end %>
+  <% end %>
+<% end %>
