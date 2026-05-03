@@ -11,7 +11,7 @@ class ArticlesController < ApplicationController
         "title ILIKE :q OR subtitle ILIKE :q OR excerpt ILIKE :q",
         q: search
       )
-      tagged_articles = Article.joins(:tags).where("tags.name ILIKE :q", q: search)
+      tagged_articles = Article.published.joins(:tags).where("tags.name ILIKE :q", q: search)
       @articles = Article.where(id: @articles.select(:id)).or(Article.where(id: tagged_articles.select(:id)))
     end
 
