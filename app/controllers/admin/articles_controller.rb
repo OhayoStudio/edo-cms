@@ -1,5 +1,5 @@
 class Admin::ArticlesController < Admin::BaseController
-  before_action :set_article, only: %i[edit update destroy publish unpublish story_card story_video share_instagram direct_upload_photo_candidate destroy_photo_candidate patch_field]
+  before_action :set_article, only: %i[edit update destroy publish unpublish story_card story_video share_instagram direct_upload_photo_candidate destroy_photo_candidate patch_field preview]
 
   def index
     @categories = Category.not_deleted.order(:name)
@@ -78,6 +78,10 @@ class Admin::ArticlesController < Admin::BaseController
       format.turbo_stream { render turbo_stream: turbo_stream.remove("article-row-#{@article.id}") }
       format.html         { redirect_to admin_articles_path, notice: "Article unpublished." }
     end
+  end
+
+  def preview
+    render template: "articles/show", layout: "application"
   end
 
   def story_video
