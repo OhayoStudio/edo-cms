@@ -14,7 +14,8 @@ Rails.application.routes.draw do
         get   :story_card
         get   :story_video
         post  :share_instagram
-        patch  :patch_field
+        patch :patch_field
+        get   :preview
       end
     end
     resources :videos do
@@ -34,6 +35,7 @@ Rails.application.routes.draw do
     resources :tags
     resource :colophon, only: %i[edit update]
     resource :about, only: %i[edit update]
+    post "research/stream", to: "research#stream", as: :research_stream
     scope "google_photos", controller: "google_photos" do
       post "open",   as: :google_photos_open
       post "import", as: :google_photos_import
