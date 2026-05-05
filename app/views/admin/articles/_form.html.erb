@@ -131,10 +131,11 @@
 
     <%# ── Claude Writing Assistant ──────────────────────────────────────────── %>
     <div class="md:col-span-2"
-         data-controller="lexxy-assistant"
+         data-controller="lexxy-assistant research-assistant"
          data-lexxy-assistant-stream-url-value="<%= lexxy_assistant.stream_path %>"
          data-lexxy-assistant-patch-url-value="<%= article.persisted? ? patch_field_admin_article_path(article) : '' %>"
-         data-lexxy-assistant-fields-value="<%= LexxyAssistant.config.field_mappings.to_json %>">
+         data-lexxy-assistant-fields-value="<%= LexxyAssistant.config.field_mappings.to_json %>"
+         data-research-assistant-url-value="<%= admin_research_stream_path %>">
 
       <button type="button"
               data-action="click->lexxy-assistant#toggle"
@@ -156,6 +157,40 @@
               class: "block w-full rounded border border-[#d4b896] dark:border-gray-600 px-3 py-2 text-sm
                       bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
                       focus:outline-[#704214] resize-y" %>
+
+        <%# ── Research panel ── %>
+        <div class="flex flex-wrap items-center gap-3 mb-1">
+          <button type="button"
+                  data-action="click->research-assistant#research"
+                  data-research-assistant-target="researchBtn"
+                  class="flex items-center gap-1.5 px-3 py-1.5 border border-[#704214] dark:border-amber-400
+                         text-[#704214] dark:text-amber-300 text-xs rounded hover:bg-[#faeee0]
+                         dark:hover:bg-gray-800 transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            Research topic
+          </button>
+          <span data-research-assistant-target="status"
+                class="text-xs text-gray-500 dark:text-gray-400 italic"></span>
+        </div>
+
+        <div data-research-assistant-target="brief" class="hidden mb-3">
+          <div class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Research brief</div>
+          <pre data-research-assistant-target="briefContent"
+               class="font-mono text-xs bg-white dark:bg-gray-800 rounded border border-gray-200
+                      dark:border-gray-700 p-3 max-h-56 overflow-y-auto whitespace-pre-wrap
+                      text-gray-700 dark:text-gray-300"></pre>
+          <button type="button"
+                  data-action="click->research-assistant#useBrief"
+                  data-research-assistant-target="useBtn"
+                  class="hidden mt-2 px-3 py-1.5 text-xs border border-[#704214] dark:border-amber-400
+                         text-[#704214] dark:text-amber-300 rounded hover:bg-[#faeee0] dark:hover:bg-gray-800
+                         transition-colors cursor-pointer">
+            ↑ Add research to prompt
+          </button>
+        </div>
 
         <div class="flex flex-wrap items-center gap-3">
           <button type="button"
