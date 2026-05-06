@@ -14,152 +14,135 @@
       } %>
 <% end %>
 
-<div class="container mx-auto px-4 md:px-8 max-w-screen-md py-12 lora">
-  <h1 class="text-4xl font-serif font-bold text-[#704214] dark:text-amber-200 mb-10">About</h1>
-  <div class="lexxy-content">
-    <%= @about.content %>
-    <div class="newsletter">
-      <p class="newsletter-label">One email when something new goes up. A story about a watch, a road in Kyushu, an aluminium bicycle frame — never more than once a week.</p>
-      <form action="https://buttondown.com/api/emails/embed-subscribe/sepiabraun" method="post" class="embeddable-buttondown-form newsletter-form">
-        <label for="bd-email" class="sr-only">Enter your email</label>
-        <input type="email" name="email" id="bd-email" class="newsletter-input" placeholder="your@email.com" required="">
-        <input type="submit" value="Notify me" class="newsletter-btn">
-      </form>
-      <p class="powered-by">
-        <a href="https://buttondown.com/refer/sepiabraun" target="_blank">Powered by Buttondown.</a>
-      </p>
-    </div>
+<%# ─── HERO BAND: pull statement (no "About" label) ─────────────── %>
+<section class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-14 md:pt-24 pb-10 md:pb-14 lora">
+  <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#704214] mb-7 md:mb-9">
+    A note from the editor · No. 001
   </div>
+
+  <p class="font-serif italic font-normal text-[34px] sm:text-[48px] md:text-[68px] lg:text-[80px] leading-[1.06] tracking-[-0.02em] text-[#423525] m-0 max-w-[1080px] text-balance">
+    I publish things I would liked to read
+    — about old films, quiet roads, bicycles, and the
+    few objects worth keeping.
+  </p>
+
+  <div class="mt-7 md:mt-9 flex items-center gap-3.5 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-gray-500">
+    <span class="flex-none w-14 h-px bg-[#423525] opacity-40"></span>
+    <span>Jérôme Sadou · Japan · est. 2026</span>
+  </div>
+</section>
+
+<div class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20">
+  <hr class="border-0 border-t-2 border-[#423525] m-0">
 </div>
-<style>
-   :root {
-      --primary: #704214;
-      --primary-darker: #52300f;
-      --primary-darkest: #281506;
-      --secondary: #A67B5B;
-      --accent: #D9C4A6;
-      --background: #F9F7F0;
-      --text: #423525;
-      --text-muted: #8a7561;
-      --divider: #d4c4ae;
-    }
-  /* --- Newsletter form --- */
-    .newsletter {
-      text-align: center;
-    }
 
-    .newsletter-label {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      font-style: italic;
-      margin-bottom: 1.2rem;
-      line-height: 1.65;
-      max-width: 460px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+<%# ─── BODY: editor content + sticky newsletter sidebar ────────── %>
+<section class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-12 md:pt-16 pb-16 md:pb-24 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-24 items-start lora">
 
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      border: 0;
-    }
+  <%# Editor-controlled prose %>
+  <article class="lexxy-content article-body about-body max-w-[660px] text-[#423525]">
+    <%= @about.content %>
+  </article>
 
-    .powered-by {
-      margin-top: 0.6rem;
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      opacity: 0.6;
-    }
+  <%# Sticky newsletter + contact sidebar %>
+  <aside class="lg:sticky lg:top-8">
+    <div class="border border-[#D9C4A6] p-7">
+      <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#704214] mb-3.5">By post</div>
+      <h3 class="font-serif font-medium text-[22px] leading-[1.2] tracking-[-0.01em] text-[#423525] m-0 mb-3 text-balance">
+        One letter, when something new goes up.
+      </h3>
+      <p class="font-serif italic text-[13.5px] leading-[1.55] text-gray-500 m-0 mb-5">
+        A story about a watch, a road in Kyushu, an aluminium bicycle
+        frame — never more than once a week, most probably less.
+      </p>
 
-    .powered-by a {
-      color: var(--text-muted);
-      text-decoration: none;
-    }
+      <form action="https://buttondown.com/api/emails/embed-subscribe/sepiabraun" method="post" class="embeddable-buttondown-form flex flex-col">
+        <label for="bd-email" class="sr-only">Enter your email</label>
+        <input type="email" name="email" id="bd-email"
+               placeholder="your@email.com"
+               required
+               class="px-3 py-2.5 border border-[#D9C4A6] bg-transparent font-serif text-sm text-[#423525] placeholder:text-[#A67B5B] placeholder:italic focus:outline-none focus:border-[#A67B5B]">
+        <input type="submit" value="Notify me"
+               class="-mt-px py-3 px-3.5 bg-[#704214] text-[#F9F7F0] border border-[#704214] font-mono text-[11px] uppercase tracking-[0.16em] cursor-pointer hover:bg-[#52300f] transition-colors">
+      </form>
 
-    .powered-by a:hover {
-      text-decoration: underline;
-    }
+      <div class="mt-2.5 text-right">
+        <a href="https://buttondown.com/refer/sepiabraun" target="_blank" rel="noopener"
+           class="font-mono text-[10px] uppercase tracking-[0.12em] text-gray-500 opacity-60 hover:opacity-100 hover:underline">
+          Powered by Buttondown
+        </a>
+      </div>
+    </div>
 
-    .newsletter-form {
-      display: flex;
-      gap: 0;
-      max-width: 380px;
-      margin: 0 auto;
-    }
+    <div class="mt-7 pt-7 border-t border-[#D9C4A6]">
+      <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#704214] mb-3.5">Otherwise</div>
+      <% [
+        ["Email",    "hello@sepiabraun.com",  "mailto:hello@sepiabraun.com"],
+        ["RSS",      "/feed",             "/feed"],
+      ].each_with_index do |(label, value, href), i| %>
+        <a href="<%= href %>" class="flex justify-between py-2.5 font-mono text-[11px] <%= 'border-t border-[#D9C4A6]' if i > 0 %> hover:text-[#704214] transition-colors group">
+          <span class="text-gray-500"><%= label %></span>
+          <span class="text-[#423525] group-hover:text-[#704214]"><%= value %></span>
+        </a>
+      <% end %>
+    </div>
+  </aside>
+</section>
 
-    .newsletter-input {
-      flex: 1;
-      padding: 0.65rem 1rem;
-      border: 1px solid var(--divider);
-      border-right: none;
-      background: transparent;
-      font-family: 'Lora', Georgia, serif;
-      font-size: 0.88rem;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.3s ease;
-    }
+<%# ─── LATEST STORIES FOOTER ───────────────────────────────────── %>
+<% if defined?(@recent_articles) && @recent_articles.present? %>
+  <% recent_total = Article.published.count rescue nil %>
+  <section class="bg-[#F5EFE6] border-t border-[#D9C4A6] lora">
+    <div class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-14 md:pt-16 pb-16 md:pb-20">
 
-    .newsletter-input::placeholder {
-      color: var(--accent);
-      font-style: italic;
-    }
+      <div class="flex items-baseline justify-between mb-9 pb-[18px] border-b-2 border-[#423525]">
+        <h2 class="font-serif font-medium text-2xl md:text-[30px] tracking-[-0.015em] text-[#423525] m-0">
+          Latest stories
+        </h2>
+        <%= link_to articles_path, class: "font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#704214] hover:underline" do %>
+          The archive →
+        <% end %>
+      </div>
 
-    .newsletter-input:focus {
-      border-color: var(--secondary);
-    }
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12">
+        <% @recent_articles.each_with_index do |article, i| %>
+          <% catalogue_number = recent_total ? recent_total - i : nil %>
+          <%= link_to article_path(article), class: "block group" do %>
+            <div class="flex justify-between items-baseline mb-3 font-mono text-[10px] uppercase tracking-[0.18em]">
+              <% if catalogue_number %>
+                <span class="text-[#704214]">No. <%= catalogue_number.to_s.rjust(3, "0") %></span>
+              <% else %>
+                <span></span>
+              <% end %>
+              <% if article.published_at %>
+                <span class="text-gray-500"><%= article.published_at.strftime("%d %b %Y") %></span>
+              <% end %>
+            </div>
 
-    .newsletter-btn {
-      padding: 0.65rem 1.4rem;
-      background: var(--primary);
-      color: var(--background);
-      border: 1px solid var(--primary);
-      font-family: 'Lora', Georgia, serif;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
+            <% if article.featured_image.attached? %>
+              <%= image_tag article.featured_image.variant(:thumb),
+                    class: "w-full aspect-[16/10] object-cover mb-3.5 bg-[#D9C4A6]",
+                    loading: "lazy", alt: article.title %>
+            <% end %>
 
-    .newsletter-btn:hover {
-      background: var(--primary-darker);
-    }
-/* --- Responsive --- */
-    @media (max-width: 640px) {
-      .brand {
-        font-size: 2rem;
-      }
+            <% if article.category.present? %>
+              <div class="font-mono text-[10px] uppercase tracking-[0.18em] text-[#704214] mb-2">
+                <%= article.category.name %>
+              </div>
+            <% end %>
 
-      .statement {
-        font-size: 1.05rem;
-        line-height: 1.7;
-      }
+            <h3 class="font-serif font-medium text-[20px] md:text-[22px] leading-[1.18] tracking-[-0.01em] text-[#423525] m-0 mb-2.5 text-balance group-hover:text-[#704214] transition-colors">
+              <%= article.title %>
+            </h3>
 
-      .corner { display: none; }
-
-      .newsletter-form {
-        flex-direction: column;
-        gap: 0;
-      }
-
-      .newsletter-input {
-        border-right: 1px solid var(--divider);
-        border-bottom: none;
-      }
-
-      .newsletter-input:focus {
-        border-color: var(--secondary);
-      }
-
-      .newsletter-btn {
-        border-top: none;
-      }
-    }
-</style>
+            <% if article.tags.any? %>
+              <div class="font-mono text-[10px] text-[#704214]">
+                <%= article.tags.first(3).map { |t| t.name }.join(' / ').html_safe %>
+              </div>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+<% end %>
