@@ -1,31 +1,42 @@
-<%# Variation D — VideosComponent template (mobile-first). %>
-<%# Same Ruby class & ivars (@main_video, @videos). Layout: %>
-<%#   - Mobile: stacked. Main video first, then 3 small ones full-width below. %>
-<%#   - Desktop: 1.7fr / 1fr split. Main left, 3 small stacked right. %>
-<%# Each tile: 16:9 thumbnail, brand-brown play button, title + short description below. %>
+<%# VideosComponent — /videos hero band (1 big + 3 small) %>
+<%# Same Ruby contract: @main_video, @videos. Cinematic dark frame. %>
+<%# Featured eyebrow + title above the main thumbnail; small column on the right. %>
+
 <% main_youtube_id = @main_video.url.split("v=")[1] %>
+<% main_date = (@main_video.respond_to?(:story) && @main_video.story.respond_to?(:published_at) && @main_video.story.published_at) ? @main_video.story.published_at.strftime("%d %b %Y") : nil %>
 
-<div class="grid grid-cols-1 md:grid-cols-[2.2fr_1fr] gap-7 md:gap-12" data-controller="video-player">
+<div class="grid grid-cols-1 md:grid-cols-[2.2fr_1fr] gap-8 md:gap-14" data-controller="video-player">
 
-  <%# ── Main video ─────────────────────────────────────── %>
+  <%# ── MAIN VIDEO ─────────────────────────────────────── %>
   <div>
-    <div class="relative aspect-video bg-gray-100/10 overflow-hidden"
-         data-video-player-target="mainContainer"
-         style="box-shadow: 3.4px 6.9px 6.9px hsl(0deg 0% 0% / 0.39)">
+    <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#A67B5B] mb-2.5 md:mb-3.5">
+      Now showing<% if main_date %>&nbsp;·&nbsp; <%= main_date %><% end %>
+    </div>
+    <h2 class="font-serif font-medium text-[26px] md:text-[38px] leading-[1.12] tracking-[-0.02em] text-[#F9F7F0] m-0 mb-4 md:mb-6 text-balance"
+        data-video-player-target="mainTitle">
+      <%= @main_video.title %>
+    </h2>
+
+    <div class="relative aspect-video overflow-hidden bg-[#1a130d] shadow-[0_18px_50px_rgba(0,0,0,0.45)]"
+         data-video-player-target="mainContainer">
       <img
         src="<%= @main_video.thumbnail_url %>"
         alt="<%= @main_video.title %>"
         class="w-full h-full object-cover cursor-pointer"
         data-video-player-target="mainThumbnail"
         data-action="click->video-player#playMainVideo"
-        data-video-id="<%= main_youtube_id %>"
-      >
+        data-video-id="<%= main_youtube_id %>">
+
+      <%# Corner labels (mix-blend so they read on any image) %>
+      <div class="absolute top-3.5 right-4 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#F9F7F0]/80 mix-blend-difference pointer-events-none">
+        Featured
+      </div>
+
+      <%# Play button — paper inverted (matches Tweaks final state) %>
       <div class="absolute inset-0 flex items-center justify-center pointer-events-none"
            data-video-player-target="mainPlayButton">
-        <div class="w-14 h-14 md:w-[76px] md:h-[76px] rounded-full grid place-items-center"
-             style="background: var(--color-primary); box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-7 md:w-7 text-[var(--color-background)]"
-               viewBox="0 0 24 24" fill="currentColor">
+        <div class="w-16 h-16 md:w-[88px] md:h-[88px] rounded-full grid place-items-center bg-[#F9F7F0] shadow-[0_6px_24px_rgba(0,0,0,0.4)]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-7 md:w-7 text-[#704214]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z"/>
           </svg>
         </div>
@@ -34,24 +45,18 @@
       <div class="hidden w-full h-full" data-video-player-target="videoFrame"></div>
     </div>
 
-    <div class="mt-3 md:mt-5 text-[9px] md:text-[11px] tracking-[0.18em] uppercase font-mono text-[var(--color-accent)]">
-      Featured
-    </div>
-    <h3 class="lora font-semibold text-[19px] md:text-[28px] leading-tight tracking-tight mt-1 md:mt-2 text-balance text-[var(--color-background)]"
-        data-video-player-target="mainTitle">
-      <%= @main_video.title %>
-    </h3>
-    <p class="mt-2 md:mt-3 text-[13px] md:text-base leading-relaxed text-[var(--color-accent)]/80 lora line-clamp-2 md:line-clamp-none"
+    <p class="mt-4 md:mt-5 font-serif text-[14px] md:text-[17px] leading-[1.55] text-[#F9F7F0]/75 max-w-[64ch] m-0"
        data-video-player-target="mainDescription"
        data-controller="description-expand">
       <%= @main_video.description %>
     </p>
   </div>
 
-  <%# ── Small videos column / stack ────────────────────── %>
-  <div class="flex flex-col gap-7 md:gap-9">
+  <%# ── SMALL VIDEOS COLUMN ────────────────────────────── %>
+  <div class="flex flex-col gap-6 md:gap-7">
     <% videos.each do |video| %>
       <% youtube_id = video.url.split("v=")[1] %>
+      <% small_date = (video.respond_to?(:story) && video.story.respond_to?(:published_at) && video.story.published_at) ? video.story.published_at.strftime("%d %b %Y") : nil %>
       <a href="#"
          class="group cursor-pointer block"
          data-action="click->video-player#switchVideo"
@@ -59,28 +64,30 @@
          data-video-title="<%= video.title %>"
          data-video-description="<%= video.description %>"
          data-video-thumbnail="<%= video.thumbnail_url %>">
-        <div class="relative aspect-video bg-gray-100/10 overflow-hidden"
-             style="box-shadow: 3.4px 6.9px 6.9px hsl(0deg 0% 0% / 0.39)">
+        <div class="relative aspect-video overflow-hidden bg-[#1a130d]">
           <img src="<%= video.thumbnail_url %>"
                alt="<%= video.title %>"
                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]">
-          <div class="absolute inset-0 flex items-center justify-center pointer-events-none"
-               data-video-player-target="thumbnailPlayButton">
-            <div class="w-10 h-10 md:w-11 md:h-11 rounded-full grid place-items-center"
-                 style="background: var(--color-primary); box-shadow: 0 4px 16px rgba(0,0,0,0.3);">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 md:h-4 md:w-4 text-[var(--color-background)]"
-                   viewBox="0 0 24 24" fill="currentColor">
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div class="w-11 h-11 rounded-full grid place-items-center bg-[#F9F7F0] shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-[#704214]" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z"/>
               </svg>
             </div>
           </div>
           <div class="hidden absolute inset-0" data-inline-frame></div>
         </div>
-        <h4 class="lora font-semibold text-[15px] md:text-lg leading-snug mt-2 md:mt-3 text-balance text-[var(--color-background)] group-hover:underline decoration-[var(--color-accent)]/40 underline-offset-4">
+
+        <% if small_date %>
+          <div class="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#A67B5B]/70">
+            <%= small_date %>
+          </div>
+        <% end %>
+        <h4 class="font-serif font-semibold text-[16px] md:text-[18px] leading-[1.25] mt-1.5 text-balance text-[#F9F7F0] group-hover:underline decoration-[#A67B5B]/40 underline-offset-4">
           <%= video.title %>
         </h4>
         <% if video.description.present? %>
-          <p class="mt-1 md:mt-2 text-[12px] md:text-sm leading-relaxed text-[var(--color-accent)]/70 lora line-clamp-2">
+          <p class="mt-1.5 font-serif text-[12.5px] md:text-[13.5px] leading-[1.5] text-[#F9F7F0]/65 line-clamp-2">
             <%= truncate(strip_tags(video.description), length: 110) %>
           </p>
         <% end %>
