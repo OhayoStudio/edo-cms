@@ -318,4 +318,107 @@
     padding: 28px 0;
     font-size: 22px;
   }
+
+/* ──────────────────────────────────────────────────────────────
+ * SepiaBraun — /about + /colophon page styles
+ *
+ * Two scoped rule sets:
+ *   .about-body     — drop cap + pull-quote treatment for /about
+ *   .colophon-body  — numbered spec-row treatment for the <dl> on /colophon
+ *
+ * Both are inside .lexxy-content/.article-body so they inherit the
+ * existing reading-column type sizes; only override what's specific.
+ * ────────────────────────────────────────────────────────────── */
+
+/* ─── /about ───────────────────────────────────────────────── */
+
+/* Drop cap on the first paragraph of the editor content */
+.lexxy-content.about-body > p:first-of-type::first-letter {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 600;
+  color: #704214;
+  float: left;
+  font-size: 78px;
+  line-height: 0.88;
+  padding-top: 6px;
+  padding-right: 14px;
+}
+
+/* Editor pull quotes — same treatment as articles, with magazine framing */
+.lexxy-content.about-body blockquote {
+  font-family: "Lora", Georgia, serif;
+  font-style: italic;
+  font-size: 28px;
+  line-height: 1.4;
+  color: #704214;
+  border-top: 1px solid #D9C4A6;
+  border-bottom: 1px solid #D9C4A6;
+  padding: 28px 0;
+  margin: 36px 0;
+  text-wrap: balance;
+  quotes: none;
+}
+.lexxy-content.about-body blockquote::before,
+.lexxy-content.about-body blockquote::after { content: none; }
+
+/* Editor headings inside the about body */
+.lexxy-content.about-body h2,
+.lexxy-content.about-body h3 {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #423525;
+  margin: 40px 0 14px 0;
+}
+.lexxy-content.about-body h2 { font-size: 22px; line-height: 1.25; }
+.lexxy-content.about-body h3 { font-size: 18px; line-height: 1.3; }
+
+/* Body paragraphs — slightly tighter than article body but bigger than default */
+.lexxy-content.about-body p {
+  font-family: "Lora", Georgia, serif;
+  font-size: 19px;
+  line-height: 1.72;
+  color: #423525;
+  margin: 0 0 24px 0;
+  text-wrap: pretty;
+}
+
+@media (max-width: 640px) {
+  .lexxy-content.about-body > p:first-of-type::first-letter {
+    font-size: 60px;
+    padding-top: 4px;
+    padding-right: 10px;
+  }
+  .lexxy-content.about-body blockquote { font-size: 22px; padding: 22px 0; margin: 28px 0; }
+  .lexxy-content.about-body p { font-size: 17px; line-height: 1.7; }
+}
+
+/* Drop the inline newsletter that lived inside the old about index — */
+/* the new layout puts it in a sticky sidebar instead. If you keep    */
+/* the markup, hide the editor copy of it.                            */
+.lexxy-content.about-body .newsletter { display: none; }
+
+/* ─── /colophon ────────────────────────────────────────────── */
+
+/* Intro paragraphs above the spec list — italic, tight, brand-tinted */
+.lexxy-content.colophon-body p {
+  font-family: "Lora", Georgia, serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.65;
+  color: #5e4b35;
+  margin: 0 0 18px 0;
+  max-width: 720px;
+  text-wrap: pretty;
+}
+
+/* Editor headings inside the colophon body */
+.lexxy-content.colophon-body h2 {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: #423525;
+  margin: 36px 0 14px 0;
+}
 }
