@@ -1,0 +1,160 @@
+
+/* Section header */
+.sb-specs-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #423525;
+  margin-bottom: 32px;
+}
+
+.sb-specs-header h2 {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: -0.015em;
+  color: #423525;
+  margin: 0;
+}
+
+.sb-specs-count {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #704214;
+}
+
+/* Optional intro paragraphs above the spec list */
+.sb-specs-intro p {
+  font-family: "Lora", Georgia, serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.65;
+  color: #5e4b35;
+  margin: 0 0 18px 0;
+  /* max-width: 720px; */
+  text-wrap: pretty;
+}
+
+/* The spec list itself */
+.sb-specs-list {
+  --sb-col1: 56px;
+  --sb-col2: 220px;
+  --sb-gap: 24px;
+  counter-reset: sb-specs-counter;
+  display: grid;
+  grid-template-columns: var(--sb-col1) var(--sb-col2) 1fr;
+  column-gap: var(--sb-gap);
+  margin: 24px 0 0 0;
+  padding: 0;
+  border-top: 1px solid #D9C4A6;
+}
+
+.sb-specs-list > dt {
+  grid-column: 2;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #5e4b35;
+  padding: 18px 0;
+  border-bottom: none;
+  align-self: baseline;
+  position: relative;
+  margin: 0;
+}
+
+/* Counter prefix (01, 02, …) sits in the first column */
+.sb-specs-list > dt::before {
+  counter-increment: sb-specs-counter;
+  content: counter(sb-specs-counter, decimal-leading-zero);
+  position: absolute;
+  left: -80px;            /* 56px col + 24px gap */
+  top: 0;
+  width: 56px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #704214;
+  padding: 18px 0 0 0;
+}
+
+.sb-specs-list > dd {
+  grid-column: 3;
+  font-family: "Lora", Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #423525;
+  margin: 0;
+  padding: 14px 0 18px 0;
+  border-bottom: none;
+  align-self: baseline;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+}
+
+.sb-specs-note {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #A67B5B;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-style: normal;
+}
+
+/* Single hairline spanning all 3 columns — drawn from dd's right edge back to col 1's left edge */
+.sb-specs-list > dd::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: calc(-1 * (var(--sb-col1) + var(--sb-gap) + var(--sb-col2) + var(--sb-gap)));
+  right: 0;
+  height: 1px;
+  background: #D9C4A6;
+}
+
+/* Brand accent on specific values (optional) */
+.sb-specs-list > dd.sb-specs-accent {
+  color: #704214;
+}
+
+/* Mobile: stack into a single column */
+@media (max-width: 720px) {
+  .sb-specs-list {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+  .sb-specs-list > dt {
+    grid-column: 1;
+    padding: 16px 0 6px 0;
+    border-bottom: none;
+  }
+  .sb-specs-list > dt::before {
+    position: static;
+    display: inline-block;
+    width: auto;
+    padding: 0;
+    margin-right: 10px;
+  }
+  .sb-specs-list > dd {
+    grid-column: 1;
+    padding: 0 0 16px 0;
+    font-size: 19px;
+  }
+  .sb-specs-list > dd::after {
+    left: 0; /* no columns to span back over — single column layout */
+  }
+  .sb-specs-note {
+    display: none;
+  }
+}
