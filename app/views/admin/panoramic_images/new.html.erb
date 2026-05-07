@@ -1,0 +1,11 @@
+<% content_for :title, "New Panoramic Image" %>
+
+<div class="w-full max-w-2xl">
+  <div class="mb-8">
+    <%= link_to "← Back to panoramic images", admin_panoramic_images_path, class: "text-[#704214] dark:text-amber-400 hover:underline" %>
+  </div>
+
+  <h1 class="font-bold text-4xl mb-8">New Panoramic Image</h1>
+
+  <%= render "form", panoramic_image: @panoramic_image %>
+</div>

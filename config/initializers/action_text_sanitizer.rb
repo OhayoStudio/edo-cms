@@ -1,10 +1,10 @@
-# Allow YouTube iframe embeds in Lexxy/ActionText rich text content.
+# Allow YouTube iframe embeds AND ActionText attachments in Lexxy/ActionText rich text content.
 ActiveSupport.on_load(:action_text_content) do
-  base_tags  = Rails::Html::SafeListSanitizer.allowed_tags.to_a
-  base_attrs = Rails::Html::SafeListSanitizer.allowed_attributes.to_a
-
-  ActionText::ContentHelper.allowed_tags  = base_tags  | %w[figure iframe]
-  ActionText::ContentHelper.allowed_attributes = base_attrs | %w[
+  # Append to ActionText's own defaults instead of replacing — its defaults
+  # already include "action-text-attachment" and the attributes ActionText needs.
+  ActionText::ContentHelper.allowed_tags |= %w[ figure iframe action-text-attachment ]
+  ActionText::ContentHelper.allowed_attributes |= %w[
     src title frameborder allowfullscreen loading allow style
+    sgid content content-type caption presentation
   ]
 end
