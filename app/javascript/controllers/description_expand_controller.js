@@ -22,9 +22,14 @@ export default class extends Controller {
     // Pause observer to avoid triggering on our own DOM writes
     this._observer.disconnect()
 
+    // Remove any existing button to get clean text content
+    this.element.querySelectorAll('button').forEach(btn => btn.remove())
+
     const full = this.element.textContent.trim()
+    this._full = full  // Always store the current full description
+    this.element.dataset.fullDescription = full  // Store in data attribute for video-player controller
+
     if (full.length > LIMIT) {
-      this._full = full
       this.element.textContent = full.slice(0, LIMIT) + "…"
 
       const btn = document.createElement("button")
