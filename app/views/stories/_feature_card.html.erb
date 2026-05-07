@@ -30,7 +30,11 @@
       <%= s.title %>
     </h3>
 
-    <% if s.respond_to?(:excerpt) && s.excerpt.present? %>
+    <% if s.is_a?(Video) && s.respond_to?(:description) && s.description.present? %>
+      <div class="lora text-[15px] md:text-lg leading-[1.5] md:leading-[1.55] text-[var(--color-text)]/80 dark:text-gray-300 max-w-[56ch] whitespace-pre-wrap">
+        <%= truncate(strip_tags(s.description), length: 300) %>
+      </div>
+    <% elsif s.respond_to?(:excerpt) && s.excerpt.present? %>
       <p class="lora text-[15px] md:text-lg leading-[1.5] md:leading-[1.55] text-[var(--color-text)]/80 dark:text-gray-300 max-w-[56ch]">
         <%= strip_tags(s.excerpt.to_s) %>
       </p>

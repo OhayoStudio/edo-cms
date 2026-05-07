@@ -68,11 +68,11 @@ export default class extends Controller {
   _swapToMain(el) {
     const wasPlaying = !this.videoFrameTarget.classList.contains('hidden')
 
-    // Snapshot the current main
+    // Snapshot the current main (remove any "See more" button to get clean text)
     const oldMain = {
       videoId:     this.mainThumbnailTarget.dataset.videoId,
       title:       this.mainTitleTarget.textContent.trim(),
-      description: this.mainDescriptionTarget.textContent.trim(),
+      description: this._getCleanDescription(this.mainDescriptionTarget),
       thumbnail:   this.mainThumbnailTarget.src
     }
 
@@ -129,5 +129,17 @@ export default class extends Controller {
     this.videoFrameTarget.classList.remove('hidden')
     this.mainPlayButtonTarget.classList.add('hidden')
     this.currentVideoId = videoId
+  }
+
+  _getCleanDescription(descElement) {
+    // Try to get the full description from the data attribute (set by description-expand controller)
+    if (descElement.dataset.fullDescription) {
+      return descElement.dataset.fullDescription
+    }
+
+    // Fallback: clone the element and remove buttons
+    const clone = descElement.cloneNode(true)
+    clone.querySelectorAll('button').forEach(btn => btn.remove())
+    return clone.textContent.trim()
   }
 }
