@@ -1,0 +1,41 @@
+/* Panoramic images
+ * --------------------------------------------------------------------------
+ * Custom Action Text attachment that breaks out of the article's reading
+ * column to span the full viewport width. Inserted via the modal in the
+ * article form (see admin/shared/_panoramic_images_modal.html.erb).
+ */
+
+.panoramic-image {
+  display: block;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.panoramic-image__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  max-block-size: none;
+  margin: 0;
+  object-fit: cover;
+}
+
+/* Inside the Lexxy editor, keep the panoramic figure within the editor box
+ * instead of breaking out to the viewport (which would overflow the form).
+ */
+lexxy-editor .panoramic-image {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+lexxy-editor .panoramic-image__img {
+  width: 100%;
+  inline-size: 100%;
+  block-size: auto;
+  border-radius: 0;
+}
