@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     resources :authors
     resources :categories
     resources :tags
+    resources :panoramic_images
     resource :colophon, only: %i[edit update]
     resource :about, only: %i[edit update]
     post "research/stream", to: "research#stream", as: :research_stream

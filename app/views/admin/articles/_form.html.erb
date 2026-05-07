@@ -228,9 +228,17 @@
     </div>
     <%# ── /Claude Writing Assistant ─────────────────────────────────────────── %>
 
-    <div class="md:col-span-2">
-      <%= f.label :content, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+    <div class="md:col-span-2" data-controller="panoramic-images">
+      <div class="flex items-center justify-between mb-1">
+        <%= f.label :content, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
+        <button type="button"
+                data-action="click->panoramic-images#open"
+                class="text-xs px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded transition-colors font-medium">
+          Insert Panoramic Image
+        </button>
+      </div>
       <%= f.lexxy_rich_text_area :content %>
+      <%= render "admin/shared/panoramic_images_modal" %>
     </div>
 
     <div class="md:col-span-2">
@@ -285,5 +293,6 @@
         class: "px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
                 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" %>
   </div>
+
 <% end %>
 
