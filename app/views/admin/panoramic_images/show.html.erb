@@ -1,0 +1,39 @@
+<% content_for :title, "Panoramic Image" %>
+
+<div class="w-full max-w-2xl">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 dark:bg-green-900/20 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
+  <% end %>
+
+  <div class="mb-8">
+    <%= link_to "← Back to panoramic images", admin_panoramic_images_path, class: "text-[#704214] dark:text-amber-400 hover:underline" %>
+  </div>
+
+  <div class="border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden">
+    <% if @panoramic_image.image.attached? %>
+      <div class="bg-gray-100 dark:bg-gray-900 p-6">
+        <%= image_tag @panoramic_image.image, alt: "Panoramic image", class: "max-w-full h-auto rounded" %>
+      </div>
+      <div class="p-6 border-t border-gray-300 dark:border-gray-700">
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          <strong>Filename:</strong> <%= @panoramic_image.image.filename %>
+        </p>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          <strong>Size:</strong> <%= number_to_human_size(@panoramic_image.image.byte_size) %>
+        </p>
+      </div>
+    <% else %>
+      <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+        No image attached
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-8 flex gap-3">
+    <%= link_to "Edit", edit_admin_panoramic_image_path(@panoramic_image),
+        class: "px-4 py-2 bg-[#704214] hover:bg-[#8b5a2b] text-white rounded-lg font-medium" %>
+    <%= button_to "Delete", admin_panoramic_image_path(@panoramic_image), method: :delete,
+        class: "px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium",
+        data: { turbo_confirm: "Are you sure?" } %>
+  </div>
+</div>

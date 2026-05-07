@@ -72,6 +72,10 @@
                 class: "px-3 py-2 rounded transition-colors #{controller_name == 'tags' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
           </li>
           <li>
+            <%= link_to "Panoramics", admin_panoramic_images_path,
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'panoramic_images' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+          </li>
+          <li>
             <%= link_to "Colophon", edit_admin_colophon_path,
                 class: "px-3 py-2 rounded transition-colors #{controller_name == 'colophons' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
           </li>

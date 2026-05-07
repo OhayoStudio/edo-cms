@@ -1,0 +1,76 @@
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-serif text-[#704214] dark:text-amber-200">Panoramic Images</h1>
+  <%= link_to "New Panoramic Image", new_admin_panoramic_image_path,
+      class: "px-4 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors" %>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-[#F9F7F0] dark:bg-gray-700 text-[#704214] dark:text-amber-300">
+      <tr>
+        <th class="text-left px-4 py-3 font-semibold w-16">ID</th>
+        <th class="text-left px-4 py-3 font-semibold w-32">Preview</th>
+        <th class="text-left px-4 py-3 font-semibold">Filename</th>
+        <th class="text-left px-4 py-3 font-semibold">Size</th>
+        <th class="text-left px-4 py-3 font-semibold">Created</th>
+        <th class="text-right px-4 py-3 font-semibold">Actions</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+      <% @panoramic_images.each do |img| %>
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+          <td class="px-4 py-3 font-mono text-xs text-gray-500 dark:text-gray-400">
+            #<%= img.id %>
+          </td>
+          <td class="px-4 py-3">
+            <% if img.image.attached? %>
+              <%= image_tag img.image, alt: "", class: "h-12 w-24 object-cover rounded border border-gray-200 dark:border-gray-600" %>
+            <% else %>
+              <span class="text-gray-400 dark:text-gray-500 text-xs">No image</span>
+            <% end %>
+          </td>
+          <td class="px-4 py-3 text-gray-700 dark:text-gray-300 text-xs">
+            <%= img.image.filename if img.image.attached? %>
+          </td>
+          <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+            <%= number_to_human_size(img.image.byte_size) if img.image.attached? %>
+          </td>
+          <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+            <%= img.created_at.strftime("%b %-d, %Y") %>
+          </td>
+          <td class="px-4 py-3 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <%= link_to "Edit", edit_admin_panoramic_image_path(img),
+                  class: "px-2 py-1 text-xs border border-[#704214] text-[#704214]
+                          dark:border-amber-400 dark:text-amber-400 rounded hover:bg-amber-50
+                          dark:hover:bg-amber-900/20 transition-colors" %>
+
+              <button type="button"
+                      class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors cursor-pointer"
+                      data-controller="admin-modal"
+                      data-action="click->admin-modal#open"
+                      data-admin-modal-url-value="<%= admin_panoramic_image_path(img) %>"
+                      data-admin-modal-title-value="Delete panoramic image #<%= img.id %>?">
+                Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+
+      <% if @panoramic_images.empty? %>
+        <tr>
+          <td colspan="6" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
+            No panoramic images yet.
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-6 flex justify-center">
+  <%= paginate @panoramic_images %>
+</div>
+
+<%= render "admin/shared/confirm_modal" %>
