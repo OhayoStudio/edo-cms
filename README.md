@@ -14,12 +14,24 @@ A Rails 8 content publishing template. Articles, videos, authors, categories, ta
 
 ## Getting started
 
+The easiest way: click the green **Use this template** button at the top of this repo to create your own copy under your account/org. Then clone *your* new repo locally:
+
 ```bash
-git clone <your-fork-url> my-cms
-cd my-cms
+git clone https://github.com/<you>/<your-repo>.git
+cd <your-repo>
 
 bin/setup                    # bundle, install JS, create + migrate + seed databases
 bin/dev                      # http://localhost:3001
+```
+
+If you'd rather track upstream and pull future template updates, clone directly and rewire remotes:
+
+```bash
+git clone https://github.com/OhayoStudio/edo-cms.git my-cms
+cd my-cms
+git remote rename origin upstream                          # keep a read-only feed of template updates
+git remote add origin https://github.com/<you>/<your-repo>.git
+git push -u origin main
 ```
 
 The seed creates an admin user (default `admin@example.com` with a random password printed to STDOUT — override with `ADMIN_EMAIL` and `ADMIN_PASSWORD`).
