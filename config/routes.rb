@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  mount LexxyAssistant::Engine, at: "/lexxy_assistant"
-  mount LexxyPhotos::Engine,    at: "/lexxy_photos"
-
   resource :session
   resources :passwords, param: :token
 
@@ -11,20 +8,14 @@ Rails.application.routes.draw do
       member do
         patch :publish
         patch :unpublish
-        get   :story_card
-        get   :story_video
-        post  :share_instagram
         patch :patch_field
         get   :preview
       end
     end
     resources :videos do
       member do
-        patch  :publish
-        patch  :unpublish
-        post   :ai_enhance_thumbnail
-        post   :promote_candidate_thumbnail
-        delete :destroy_candidate_thumbnail
+        patch :publish
+        patch :unpublish
       end
       collection do
         get :metadata
@@ -33,19 +24,8 @@ Rails.application.routes.draw do
     resources :authors
     resources :categories
     resources :tags
-    resources :panoramic_images
     resource :colophon, only: %i[edit update]
     resource :about, only: %i[edit update]
-    post "research/stream", to: "research#stream", as: :research_stream
-    scope "google_photos", controller: "google_photos" do
-      post "open",   as: :google_photos_open
-      post "import", as: :google_photos_import
-    end
-    scope "flickr", controller: "flickr" do
-      get  "albums", as: :flickr_albums
-      post "import", as: :flickr_import
-    end
-    get "blob/:signed_id", to: "blobs#show", as: :blob_proxy
   end
 
   resources :videos,     only: %i[index show]
@@ -57,7 +37,6 @@ Rails.application.routes.draw do
   get "feed" => "feeds#index", as: :feed, defaults: { format: :rss }
   get "colophon" => "colophons#show"
   get "about" => "about#index", as: :about
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

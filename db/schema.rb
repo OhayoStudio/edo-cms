@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_07_020619) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_17_011844) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,7 +60,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_020619) do
   create_table "articles", force: :cascade do |t|
     t.bigint "author_id", null: false
     t.bigint "category_id", null: false
-    t.text "claude_prompt"
     t.datetime "created_at", null: false
     t.text "excerpt"
     t.boolean "featured"
@@ -117,11 +116,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_020619) do
   end
 
   create_table "colophons", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "panoramic_images", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

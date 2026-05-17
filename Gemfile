@@ -5,7 +5,6 @@ gem "rails", "~> 8.1.3"
 gem "dotenv-rails", groups: %i[development test]
 gem "meta-tags", "~> 2.22"
 gem "sitemap_generator"
-gem "google-apis-webmasters_v3"
 gem "google-cloud-storage", require: false
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
@@ -53,11 +52,6 @@ gem "httparty"
 gem "kaminari"
 gem "view_component"
 gem "lexxy", "~> 0.9.3.beta"
-gem "lexxy-youtube",   github: "OhayoStudio/lexxy-youtube",   branch: "main"
-gem "lexxy-assistant", github: "OhayoStudio/lexxy-assistant", branch: "main"
-gem "lexxy-photos",    github: "OhayoStudio/lexxy-photos",    branch: "main"
-gem "flickraw"
-gem "anthropic"
 gem "sentry-ruby"
 gem "sentry-rails"
 
