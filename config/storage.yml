@@ -2,19 +2,19 @@ test:
   service: Disk
   root: <%= Rails.root.join("tmp/storage") %>
 
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
+
 gcs_production:
   service: GCS
   credentials: <%= ENV["GCS_CREDENTIALS_PATH"] %>
-  bucket: <%= ENV.fetch("GCS_BUCKET", "sepiabraun-production") %>
+  bucket: <%= ENV["GCS_BUCKET"] %>
 
 gcs_staging:
   service: GCS
   credentials: <%= ENV["GCS_CREDENTIALS_PATH"] %>
-  bucket: <%= ENV.fetch("GCS_BUCKET", "sepiabraun-staging") %>
-
-local:
-  service: Disk
-  root: <%= Rails.root.join("storage") %>
+  bucket: <%= ENV["GCS_BUCKET"] %>
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
@@ -23,22 +23,3 @@ local:
 #   secret_access_key: <%= Rails.application.credentials.dig(:aws, :secret_access_key) %>
 #   region: us-east-1
 #   bucket: your_own_bucket-<%= Rails.env %>
-
-# Remember not to checkin your GCS keyfile to a repository
-# google:
-#   service: GCS
-#   project: your_project
-#   credentials: <%= Rails.root.join("path/to/gcs.keyfile") %>
-#   bucket: your_own_bucket-<%= Rails.env %>
-
-# Use bin/rails credentials:edit to set the Azure Storage secret (as azure_storage:storage_access_key)
-# microsoft:
-#   service: AzureStorage
-#   storage_account_name: your_account_name
-#   storage_access_key: <%= Rails.application.credentials.dig(:azure_storage, :storage_access_key) %>
-#   container: your_container_name-<%= Rails.env %>
-
-# mirror:
-#   service: Mirror
-#   primary: local
-#   mirrors: [ amazon, google, microsoft ]

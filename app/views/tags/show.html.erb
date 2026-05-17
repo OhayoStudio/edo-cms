@@ -1,6 +1,6 @@
 <% content_for :head do %>
   <% page_title = @tag.meta_title.presence || @tag.name %>
-  <% page_desc  = @tag.meta_description.presence || "Articles tagged #{@tag.name} on Sepia Braun." %>
+  <% page_desc  = @tag.meta_description.presence || "Articles tagged #{@tag.name} on #{site_name}." %>
   <% set_meta_tags(
        title:       page_title,
        description: page_desc,

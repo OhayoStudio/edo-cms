@@ -1,60 +1,53 @@
+/* Theme palette
+ *
+ * The --cms-* variables are injected at runtime by cms_theme_style_tag,
+ * driven by Setting#theme_colors. This file maps them to the legacy
+ * --color-* and Lexxy editor variables used across the app.
+ */
+
 :root {
-  --color-gray-200: #F9F7F0;
-  --color-slate-800: #5e4b35;
+  --color-gray-200: var(--cms-background, #F9F7F0);
+  --color-slate-800: var(--cms-text, #5e4b35);
 }
 
-/* .oldsepiabraun {
-    --color-slate-900: #5e4b35;
-    --color-slate-800: #423525;
-    --color-gray-900: #2c221a;
-    --color-gray-800: #7a6a58;
-    --color-gray-700: #b3a290;
-    --color-gray-600: #9c8b7a;
-    --color-gray-500: #bfb1a0;
-    --color-gray-400: #d6c9b8;
-    --color-gray-300: #e8e1d7;
-    --color-gray-200: #f9f7f0;
-    --color-gray-100: #fcfbf7;
-} */
+.brand-theme {
+  --color-primary:         var(--cms-primary,       #704214);
+  --color-primary-header:  var(--cms-primary,       #704214);
+  --color-primary-darker:  var(--cms-primary-dark,  #52300f);
+  --color-primary-darkest: #2c1808;
 
-.sepiabraun {
-    --color-primary: #704214;
-    --color-primary-header: #703914;
-    --color-primary-darker: #643916; /* #52300f */
-    --color-primary-darkest: #392718;
+  --color-secondary: var(--cms-secondary,    #A67B5B);
+  --color-accent:    var(--cms-accent,       #D9C4A6);
+  --color-background: var(--cms-background,  #F9F7F0);
 
-    --color-secondary: #A67B5B;
-    --color-accent: #D9C4A6;
-    --color-background: #F9F7F0;
+  --color-text-primary: var(--cms-text-primary, var(--color-primary));
+  --color-text:         var(--cms-text,         #423525);
 
-    --color-text-primary: var(--color-primary);
-    --color-text: #423525;
-
-    --color-slate-900: var(--color-primary-header);
-    --color-slate-800: var(--color-primary-darkest);
-    --color-gray-900: var(--color-primary-darker);
-    --color-gray-800: var(--color-text);
-    --color-gray-700: var(--color-accent);
-    --color-gray-600: var(--color-text);
-    --color-gray-500: var(--color-text);
-    --color-gray-400: var(--color-background);
-    --color-gray-300: var(--color-accent);
-    --color-gray-200: var(--color-background);
-    --color-gray-100: #70421482;    
+  --color-slate-900: var(--color-primary-header);
+  --color-slate-800: var(--color-primary-darkest);
+  --color-gray-900: var(--color-primary-darker);
+  --color-gray-800: var(--color-text);
+  --color-gray-700: var(--color-accent);
+  --color-gray-600: var(--color-text);
+  --color-gray-500: var(--color-text);
+  --color-gray-400: var(--color-background);
+  --color-gray-300: var(--color-accent);
+  --color-gray-200: var(--color-background);
+  --color-gray-100: color-mix(in srgb, var(--color-primary) 50%, transparent);
 }
 
-/* Remap lexxy editor/content variables to the sepia theme */
-.sepiabraun {
-  --lexxy-color-ink:           #423525;
+/* Lexxy editor — inherit from theme palette */
+.brand-theme {
+  --lexxy-color-ink:           var(--color-text);
   --lexxy-color-ink-medium:    #7a6a58;
   --lexxy-color-ink-light:     #b3a290;
-  --lexxy-color-ink-lighter:   #d6c9b8;
-  --lexxy-color-ink-lightest:  #f9f7f0;
-  --lexxy-color-canvas:        #F9F7F0;
+  --lexxy-color-ink-lighter:   var(--color-accent);
+  --lexxy-color-ink-lightest:  var(--color-background);
+  --lexxy-color-canvas:        var(--color-background);
 
-  --lexxy-color-accent-dark:    #704214;
-  --lexxy-color-accent-medium:  #A67B5B;
-  --lexxy-color-accent-light:   #D9C4A6;
+  --lexxy-color-accent-dark:    var(--color-primary);
+  --lexxy-color-accent-medium:  var(--color-secondary);
+  --lexxy-color-accent-light:   var(--color-accent);
   --lexxy-color-accent-lightest: #f5efe6;
 }
 
@@ -69,17 +62,17 @@
 }
 
 .lexxy-content a {
-  color: #5c3410;
+  color: var(--color-primary);
   text-decoration: none;
-  border-bottom: 1px solid #c4a882;
+  border-bottom: 1px solid var(--color-accent);
   padding-bottom: 1px;
   transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .lexxy-content a:hover {
-  color: #704214;
-  border-bottom-color: #704214;
-  background-color: #f5efe6;
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
   border-radius: 2px;
 }
 
@@ -167,10 +160,10 @@
   cursor: zoom-in;
 }
 
-/* Photo zoom badge ─────────────────────────────────────────────── */
+/* Photo zoom badge */
 .photo-zoom-host {
   position: relative;
-  display: inline-block; /* shrink-wrap the image */
+  display: inline-block;
 }
 
 .photo-zoom-badge {
@@ -187,11 +180,10 @@
   color: #fff;
   opacity: 0;
   transition: opacity 0.18s ease, background 0.18s ease;
-  pointer-events: none; /* badge itself is visual-only; click bubbles to host */
+  pointer-events: none;
   cursor: zoom-in;
 }
 
-/* Always show at low opacity so mobile users see it */
 .photo-zoom-host:hover .photo-zoom-badge,
 .photo-zoom-badge {
   opacity: 0.55;
@@ -203,7 +195,7 @@
   background: rgba(0, 0, 0, 0.85);
 }
 
-/* Video page — unified sepia filter on all thumbnails ──────────── */
+/* Video archive thumbnails — subtle filter */
 #videos img,
 #videos-archive img {
   filter: sepia(0.5) saturate(0.55);
@@ -215,10 +207,10 @@
   filter: sepia(0.1) saturate(1);
 }
 
-/* Description expand modal ─────────────────────────────────────── */
+/* Description expand modal */
 .description-modal-card {
-  background: #F9F7F0;
-  color: #423525;
+  background: var(--color-background);
+  color: var(--color-text);
   border-radius: 0.5rem;
   max-width: 36rem;
   width: 100%;
@@ -230,7 +222,7 @@
 }
 
 .dark .description-modal-card {
-  background: #423525;
+  background: var(--color-text);
   color: #d1d5db;
 }
 
@@ -252,11 +244,7 @@
   opacity: 1;
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   Article body — magazine-style additions for the redesigned show page
-   ─────────────────────────────────────────────────────────────── */
-
-/* Larger, more comfortable body text inside the article reading column */
+/* Article body — magazine-style */
 .article-body.lexxy-content {
   font-size: 19px;
   line-height: 1.7;
@@ -287,8 +275,7 @@
   color: var(--color-accent);
 }
 
-/* Pull-quote: any <blockquote> in Lexxy content gets the magazine treatment.
-   Slightly wider than the 720px reading column so it breaks out visually. */
+/* Pull-quote */
 .article-body.lexxy-content blockquote {
   max-width: 860px;
   margin: 40px -70px 48px;
@@ -307,36 +294,23 @@
 }
 
 .dark .article-body.lexxy-content blockquote {
-  border-color: #52300f;
+  border-color: var(--color-primary-darker);
   color: var(--color-accent);
 }
 
-/* On narrow viewports, don't break out — pull quote stays inside the column */
 @media (max-width: 800px) {
   .article-body.lexxy-content blockquote {
     margin: 32px 0 36px;
     padding: 28px 0;
     font-size: 22px;
   }
+}
 
-/* ──────────────────────────────────────────────────────────────
- * SepiaBraun — /about + /colophon page styles
- *
- * Two scoped rule sets:
- *   .about-body     — drop cap + pull-quote treatment for /about
- *   .colophon-body  — numbered spec-row treatment for the <dl> on /colophon
- *
- * Both are inside .lexxy-content/.article-body so they inherit the
- * existing reading-column type sizes; only override what's specific.
- * ────────────────────────────────────────────────────────────── */
-
-/* ─── /about ───────────────────────────────────────────────── */
-
-/* Drop cap on the first paragraph of the editor content */
+/* About page body */
 .lexxy-content.about-body > p:first-of-type::first-letter {
   font-family: "Lora", Georgia, serif;
   font-weight: 600;
-  color: #704214;
+  color: var(--color-primary);
   float: left;
   font-size: 78px;
   line-height: 0.88;
@@ -344,15 +318,14 @@
   padding-right: 14px;
 }
 
-/* Editor pull quotes — same treatment as articles, with magazine framing */
 .lexxy-content.about-body blockquote {
   font-family: "Lora", Georgia, serif;
   font-style: italic;
   font-size: 28px;
   line-height: 1.4;
-  color: #704214;
-  border-top: 1px solid #D9C4A6;
-  border-bottom: 1px solid #D9C4A6;
+  color: var(--color-primary);
+  border-top: 1px solid var(--color-accent);
+  border-bottom: 1px solid var(--color-accent);
   padding: 28px 0;
   margin: 36px 0;
   text-wrap: balance;
@@ -361,24 +334,22 @@
 .lexxy-content.about-body blockquote::before,
 .lexxy-content.about-body blockquote::after { content: none; }
 
-/* Editor headings inside the about body */
 .lexxy-content.about-body h2,
 .lexxy-content.about-body h3 {
   font-family: "Lora", Georgia, serif;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: #423525;
+  color: var(--color-text);
   margin: 40px 0 14px 0;
 }
 .lexxy-content.about-body h2 { font-size: 22px; line-height: 1.25; }
 .lexxy-content.about-body h3 { font-size: 18px; line-height: 1.3; }
 
-/* Body paragraphs — slightly tighter than article body but bigger than default */
 .lexxy-content.about-body p {
   font-family: "Lora", Georgia, serif;
   font-size: 19px;
   line-height: 1.72;
-  color: #423525;
+  color: var(--color-text);
   margin: 0 0 24px 0;
   text-wrap: pretty;
 }
@@ -393,32 +364,23 @@
   .lexxy-content.about-body p { font-size: 17px; line-height: 1.7; }
 }
 
-/* Drop the inline newsletter that lived inside the old about index — */
-/* the new layout puts it in a sticky sidebar instead. If you keep    */
-/* the markup, hide the editor copy of it.                            */
-.lexxy-content.about-body .newsletter { display: none; }
-
-/* ─── /colophon ────────────────────────────────────────────── */
-
-/* Intro paragraphs above the spec list — italic, tight, brand-tinted */
+/* Colophon page body */
 .lexxy-content.colophon-body p {
   font-family: "Lora", Georgia, serif;
   font-style: italic;
   font-size: 17px;
   line-height: 1.65;
-  color: #5e4b35;
+  color: var(--color-text);
   margin: 0 0 18px 0;
   max-width: 720px;
   text-wrap: pretty;
 }
 
-/* Editor headings inside the colophon body */
 .lexxy-content.colophon-body h2 {
   font-family: "Lora", Georgia, serif;
   font-weight: 500;
   font-size: 22px;
   letter-spacing: -0.01em;
-  color: #423525;
+  color: var(--color-text);
   margin: 36px 0 14px 0;
-}
 }

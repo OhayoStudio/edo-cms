@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" class="sepiabraun">
+<html lang="en" class="brand-theme">
   <head>
-    <title><%= content_for(:title) || "Admin — Sepia Braun" %></title>
+    <title><%= content_for(:title) || "Admin — #{site_name}" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="icon" href="/icon.png" type="image/png" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
@@ -9,6 +9,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "theme", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "lexxy" %>
     <%= javascript_importmap_tags %>
     <script>
@@ -27,7 +28,7 @@
     </script>
   </head>
 
-  <body class="sepiabraun h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200"
+  <body class="brand-theme h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200"
         data-controller="dark-mode">
 
     <% if notice.present? %>

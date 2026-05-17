@@ -2,14 +2,14 @@
   <% set_meta_tags(
        title:     "Colophon",
        canonical: colophon_url,
-       og: { title: "Colophon | Sepia Braun", url: colophon_url }
+       og: { title: "Colophon | #{site_name}", url: colophon_url }
      ) %>
   <%= render "shared/json_ld", schema: {
         "@context"  => "https://schema.org",
         "@type"     => "WebPage",
         "name"      => "Colophon",
         "url"       => colophon_url,
-        "isPartOf"  => { "@id" => "#{MetaTagsHelper::SITE_URL}/#website" },
+        "isPartOf"  => { "@id" => "#{site_url}/#website" },
         "publisher" => schema_publisher
       } %>
 <% end %>
@@ -19,103 +19,33 @@
   <div class="border border-[#423525] bg-[#F9F7F0] relative">
     <div class="absolute inset-2 border border-[#D9C4A6] pointer-events-none"></div>
 
-    <%# Card header strip %>
     <div class="px-6 md:px-8 py-4 md:py-5 border-b border-[#423525] flex justify-between items-center font-mono text-[10px] md:text-[10.5px] uppercase tracking-[0.22em]">
-      <span class="text-[#423525]">SB · Specimen sheet</span>
-      <span class="text-[#704214]">Form 1 · Rev. <%= I18n.l(@colophon.updated_at.to_date, format: "%b %Y") rescue "May 2026" %></span>
+      <span class="text-[#423525]"><%= site_name %></span>
+      <span class="text-[#704214]">Updated <%= I18n.l(@colophon.updated_at.to_date, format: "%b %Y") rescue "" %></span>
     </div>
 
-    <%# Card body: wordmark + file metadata %>
-    <div class="px-6 md:px-12 lg:px-16 py-10 md:py-14 grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-12 md:gap-16 items-end">
-      <div>
-        <h1 class="font-serif font-medium text-[64px] sm:text-[88px] md:text-[120px] lg:text-[132px] tracking-[-0.035em] leading-[0.92] text-[#423525] m-0">
-          Colophon
-        </h1>
+    <div class="px-6 md:px-12 lg:px-16 py-10 md:py-14">
+      <h1 class="font-serif font-medium text-[64px] sm:text-[88px] md:text-[120px] lg:text-[132px] tracking-[-0.035em] leading-[0.92] text-[#423525] m-0">
+        Colophon
+      </h1>
+      <% if cms_setting.tagline.present? %>
         <p class="font-serif italic text-base md:text-[22px] leading-[1.35] tracking-[-0.005em] text-[#704214] mt-3 md:mt-4 max-w-[480px] m-0">
-          The materials, the typefaces, the machine in Singapore. A short
-          accounting of how this magazine is made.
+          <%= cms_setting.tagline %>
         </p>
-      </div>
-
-      <dl class="grid grid-cols-[120px_1fr] gap-y-2.5 font-mono text-[11px] tracking-[0.04em] text-[#423525] m-0">
-        <dt class="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500 m-0">File</dt>
-        <dd class="m-0">sepiabraun.com / colophon</dd>
-        <dt class="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500 m-0">Issued</dt>
-        <dd class="m-0">2026 · Japan</dd>
-        <dt class="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500 m-0">Updated</dt>
-        <dd class="m-0 text-[#704214]"><%= @colophon.updated_at.strftime("%d %b %Y") rescue "12 May 2026" %></dd>
-        <dt class="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500 m-0">Webmaster</dt>
-        <dd class="m-0">Jérôme Sadou</dd>
-        <!-- <dt class="font-mono text-[10px] uppercase tracking-[0.18em] text-gray-500 m-0">License</dt>
-        <dd class="m-0">CC BY-NC 4.0</dd> -->
-      </dl>
+      <% end %>
     </div>
   </div>
 </section>
 
-
-<%# ─── EDITOR-CONTROLLED SPECS ────────────────────────────────── %>
-<%# Jérôme: write a <dl> in Lexxy. Each <dt> is the field label,        %>
-<%# each <dd> is the value. The .colophon-body CSS in sepiabraun.css   %>
-<%# styles each pair as a numbered spec row (01 / Type / Lora · serif).%>
-<%# Plain <p> paragraphs render as a normal italic intro above the list.%>
+<%# ─── EDITOR-CONTROLLED BODY ─────────────────────────────────── %>
 <section class="max-w-[1200px] mx-auto px-5 md:px-16 lg:px-20 pt-14 md:pt-20 pb-8 lora">
-
-<article class="lexxy-content article-body colophon-body text-[#423525]">
+  <article class="lexxy-content article-body colophon-body text-[#423525]">
     <%= @colophon.content %>
-</article>
-  <div class="flex items-baseline justify-between mb-8 pb-3.5 border-b-2 border-[#423525]">
-    <!-- ─── Specifications block ─────────────────────────────── -->
-      <section class="sb-specs">
-        <header class="sb-specs-header">
-          <h2>Specifications</h2>
-          <span class="sb-specs-count">10 fields</span>
-        </header>
-
-        <div class="sb-specs-intro">
-          <p>Sepia Braun is hand-typeset in Lora, a serif by Olga Karpushina, with JetBrains Mono for captions and meta. Both are open and generous about their licensing, which matters here.</p>
-          <p>The site runs on Rails 8 and Tailwind CSS, hosted on a DigitalOcean Droplet in Singapore. Articles are written in Lexxy, a rich-text editor I help maintain.</p>
-        </div>
-
-        <dl class="sb-specs-list">
-          <dt>Type</dt>
-          <dd class="sb-specs-accent">Lora <span class="sb-specs-note">Designed byAlexei Vanyashin and Olga Karpushina From Google</span></dd>
-
-          <dt>Captions</dt>
-          <dd>JetBrains Mono<span class="sb-specs-note">JetBrains s.r.o., OFL</span></dd>
-
-          <dt>Framework</dt>
-          <dd>Ruby on Rails 8<span class="sb-specs-note">ruby 3.4</span></dd>
-
-          <dt>Front-end</dt>
-          <dd>Tailwind CSS 3 · Stimulus · Turbo<span class="sb-specs-note">no SPA, no bundler</span></dd>
-
-          <dt>Editor</dt>
-          <dd>Lexxy<span class="sb-specs-note">rich text · open source + with home made custom gems added</span></dd>
-
-          <dt>Storage</dt>
-          <dd>Active Storage · GCP<span class="sb-specs-note">sepia variant baked in</span></dd>
-
-          <dt>Hosting</dt>
-          <dd>DigitalOcean · Singapore<span class="sb-specs-note">vps</span></dd>
-
-          <dt>Database</dt>
-          <dd>PostgreSQL <span class="sb-specs-note">v18</span></dd>
-
-          <dt>Analytics</dt>
-          <dd class="sb-specs-accent">None<span class="sb-specs-note">no tracking, no cookies</span></dd>
-
-          <dt>Last updated</dt>
-          <dd>12 May 2026<span class="sb-specs-note">rev. 1</span></dd>
-        </dl>
-      </section>
-  </div>
+  </article>
 </section>
 
-<%# ─── BOTTOM CALLOUTS: RSS + REPO ────────────────────────────── %>
-<section class="max-w-[1200px] mx-auto px-5 md:px-16 lg:px-20 pt-10 pb-20 md:pb-24 grid grid-cols-1 md:grid-cols-2 gap-7 lora">
-
-  <%# RSS callout — paper %>
+<%# ─── RSS CALLOUT ────────────────────────────────────────────── %>
+<section class="max-w-[1200px] mx-auto px-5 md:px-16 lg:px-20 pt-10 pb-20 md:pb-24 lora">
   <a href="/feed"
      class="block border border-[#423525] bg-[#F9F7F0] p-7 md:p-8 hover:bg-[#F5EFE6] transition-colors">
     <div class="flex justify-between items-baseline pb-3.5 mb-[18px] border-b border-[#423525] font-mono text-[10px] md:text-[10.5px] uppercase tracking-[0.22em] text-[#423525] opacity-70">
@@ -125,37 +55,11 @@
     <h3 class="font-serif font-medium text-[28px] md:text-[36px] tracking-[-0.02em] leading-[1.05] m-0 mb-2.5 text-[#423525]">
       Read it in your reader.
     </h3>
-    <p class="font-mono text-[12.5px] md:text-[13px] tracking-[0.04em] text-[#704214] m-0 mb-4 break-all">
-      https://sepiabraun.com/feed
-    </p>
     <p class="font-serif italic text-[14px] leading-[1.55] text-[#423525]/85 m-0 mb-[18px]">
-      Every story, every video. No tracking pixels, no email needed.
+      Every story, every video. No tracking, no email needed.
     </p>
     <div class="pt-3.5 border-t border-[#423525] flex justify-between font-mono text-[11px] uppercase tracking-[0.18em] text-[#423525] opacity-80">
       <span>Add to feed reader</span>
-      <span>→</span>
-    </div>
-  </a>
-
-  <%# Source code callout — inverted ink %>
-  <a href="https://github.com/OhayoStudio/edo" target="_blank" rel="noopener"
-     class="block border border-[#423525] bg-[#423525] text-[#F9F7F0] p-7 md:p-8 hover:bg-[#52300f] transition-colors">
-    <div class="flex justify-between items-baseline pb-3.5 mb-[18px] border-b border-[#F9F7F0]/60 font-mono text-[10px] md:text-[10.5px] uppercase tracking-[0.22em] opacity-70">
-      <span>Source code</span>
-      <span>MIT</span>
-    </div>
-    <h3 class="font-serif font-medium text-[28px] md:text-[36px] tracking-[-0.02em] leading-[1.05] m-0 mb-2.5">
-      The magazine, open.
-    </h3>
-    <p class="font-mono text-[12.5px] md:text-[13px] tracking-[0.04em] text-[#A67B5B] m-0 mb-4 break-all">
-      github.com/OhayoStudio/edo
-    </p>
-    <p class="font-serif italic text-[14px] leading-[1.55] opacity-85 m-0 mb-[18px]">
-      Rails app, Lexxy editor, YouTube + photos extensions. Issues and
-      pull requests welcome.
-    </p>
-    <div class="pt-3.5 border-t border-[#F9F7F0]/60 flex justify-between font-mono text-[11px] uppercase tracking-[0.18em] opacity-80">
-      <span>Open repository</span>
       <span>→</span>
     </div>
   </a>
@@ -163,21 +67,7 @@
 
 <div class="max-w-[1200px] mx-auto px-5 md:px-16 lg:px-20 pb-12">
   <div class="border-t border-[#423525] pt-5 flex justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-gray-500">
-    <span>End of specimen sheet</span>
-    <span>SB / <%= Date.current.year %></span>
+    <span>End of colophon</span>
+    <span><%= site_name %> / <%= Date.current.year %></span>
   </div>
 </div>
-
-<%# Tiny enhancement: count <dl> rows in the editor content and       %>
-<%# show "N fields" in the Specifications header. No-op if no <dl>.    %>
-<script>
-  (function() {
-    var body = document.querySelector('.colophon-body');
-    var counter = document.querySelector('.colophon-spec-count');
-    if (!body || !counter) return;
-    var dts = body.querySelectorAll('dl > dt');
-    if (dts.length > 0) {
-      counter.textContent = dts.length + ' field' + (dts.length === 1 ? '' : 's');
-    }
-  })();
-</script>

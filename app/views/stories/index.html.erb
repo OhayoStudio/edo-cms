@@ -21,7 +21,7 @@
         ] } %>
 <% end %>
 
-<h1 class="sr-only">Sepia Braun — Independent Publishing</h1>
+<h1 class="sr-only"><%= site_name %><%= " — #{cms_setting.tagline}" if cms_setting.tagline.present? %></h1>
 
 <div id="stories" class="dark:text-gray-300">
 

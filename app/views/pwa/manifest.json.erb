@@ -1,5 +1,10 @@
-{
-  "name": "Sepia Braun",
+<%
+  name = site_name
+  description = default_meta_description
+  theme = cms_color(:primary)
+  background = cms_color(:background)
+%>{
+  "name": <%= name.to_json %>,
   "icons": [
     {
       "src": "/icon.png",
@@ -16,7 +21,7 @@
   "start_url": "/",
   "display": "standalone",
   "scope": "/",
-  "description": "Sepia Braun.",
-  "theme_color": "#5e4b35",
-  "background_color": "#F9F7F0"
+  "description": <%= description.to_json %>,
+  "theme_color": <%= theme.to_json %>,
+  "background_color": <%= background.to_json %>
 }

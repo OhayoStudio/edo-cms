@@ -1,5 +1,5 @@
 <% content_for :head do %>
-  <% page_desc = @author.bio.presence || "Articles by #{@author.full_name} on Sepia Braun." %>
+  <% page_desc = @author.bio.presence || "Articles by #{@author.full_name} on #{site_name}." %>
   <% set_meta_tags(
        title:       @author.full_name,
        description: page_desc,

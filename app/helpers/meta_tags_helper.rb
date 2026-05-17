@@ -1,31 +1,47 @@
 module MetaTagsHelper
-  SITE_NAME        = "Sepia Braun"
-  SITE_URL         = "https://sepiabraun.com"
-  DEFAULT_DESC     = "Independent publishing by Sepia Braun. Essays, stories, and videos about culture, technology, and the human experience."
-  DEFAULT_OG_IMAGE = "/og-default.jpg"  # served from public/
+  DEFAULT_OG_IMAGE_PATH = "/og-default.jpg"  # served from public/ as fallback
+
+  def site_name
+    cms_setting.site_name.presence || "My CMS"
+  end
+
+  def site_url
+    host = ENV["APPLICATION_HOST"].presence
+    scheme = Rails.env.production? ? "https" : (request&.protocol&.delete_suffix("://") || "http")
+    if host.present?
+      "#{scheme}://#{host}"
+    elsif request
+      "#{scheme}://#{request.host_with_port}"
+    else
+      "http://localhost"
+    end
+  end
+
+  def default_meta_description
+    cms_setting.meta_description.presence || site_name
+  end
 
   # Meta description fallback chain:
   # meta_description → excerpt → subtitle → description → site default
   def meta_description_for(record)
-    return DEFAULT_DESC unless record
+    return default_meta_description unless record
     record.try(:meta_description).presence ||
       record.try(:excerpt).presence        ||
       record.try(:subtitle).presence       ||
       record.try(:description).presence    ||
-      DEFAULT_DESC
+      default_meta_description
   end
 
-  # OG image: featured_image → avatar → public fallback
+  # OG image: featured_image → avatar → setting default → public fallback
   def og_image_url_for(record)
     if record.try(:featured_image)&.attached?
-      rails_representation_url(
-        record.featured_image.variant(:og),
-        host: SITE_URL
-      )
+      rails_representation_url(record.featured_image.variant(:og), host: site_url)
     elsif record.try(:avatar)&.attached?
-      rails_representation_url(record.avatar.variant(:thumb), host: SITE_URL)
+      rails_representation_url(record.avatar.variant(:thumb), host: site_url)
+    elsif cms_setting.og_default_image.attached?
+      rails_representation_url(cms_setting.og_default_image, host: site_url)
     else
-      "#{SITE_URL}#{DEFAULT_OG_IMAGE}"
+      "#{site_url}#{DEFAULT_OG_IMAGE_PATH}"
     end
   end
 
@@ -39,10 +55,10 @@ module MetaTagsHelper
   def schema_publisher
     {
       "@type" => "Organization",
-      "@id"   => "#{SITE_URL}/#organization",
-      "name"  => SITE_NAME,
-      "url"   => SITE_URL,
-      "logo"  => { "@type" => "ImageObject", "url" => "#{SITE_URL}/icon.png" }
+      "@id"   => "#{site_url}/#organization",
+      "name"  => site_name,
+      "url"   => site_url,
+      "logo"  => { "@type" => "ImageObject", "url" => "#{site_url}/icon.png" }
     }
   end
 
@@ -51,11 +67,11 @@ module MetaTagsHelper
     return schema_publisher unless author
     h = {
       "@type" => "Person",
-      "@id"   => "#{SITE_URL}#{author_path(author)}",
+      "@id"   => "#{site_url}#{author_path(author)}",
       "name"  => author.full_name,
-      "url"   => "#{SITE_URL}#{author_path(author)}"
+      "url"   => "#{site_url}#{author_path(author)}"
     }
-    h["image"]  = rails_representation_url(author.avatar.variant(:thumb), host: SITE_URL) if author.avatar.attached?
+    h["image"]  = rails_representation_url(author.avatar.variant(:thumb), host: site_url) if author.avatar.attached?
     h["sameAs"] = [ "https://twitter.com/#{author.twitter_handle}" ] if author.twitter_handle.present?
     h
   end

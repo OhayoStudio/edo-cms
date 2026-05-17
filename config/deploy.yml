@@ -1,20 +1,29 @@
-service: edo
-image: ohayostudio/edo
+# Kamal deploy config. Each fork of this template should:
+#   1. Set `service` and `image` to its own project name / registry image.
+#   2. Replace the `hosts` and `proxy.host` with its production host.
+#   3. Set `volumes` to a project-specific path on the host.
+#   4. Fill secrets via Kamal's secret manager (`kamal secrets push`) or
+#      via the deployer host's environment.
+#
+# See https://kamal-deploy.org for full reference.
+
+service: edo-cms
+image: your-registry/edo-cms
 
 servers:
   web:
     hosts:
-      - 167.99.120.27
+      - <%= ENV.fetch("DEPLOY_HOST", "your.production.host") %>
     options:
       add-host: host.docker.internal:host-gateway
 
 proxy:
   ssl: true
-  host: sepiabraun.com
+  host: <%= ENV.fetch("APPLICATION_HOST", "your-domain.example") %>
 
 registry:
   server: ghcr.io
-  username: jeromesadou
+  username: your-github-user
   password:
     - KAMAL_REGISTRY_PASSWORD
 
@@ -24,38 +33,20 @@ builder:
 env:
   clear:
     RAILS_LOG_TO_STDOUT: "true"
-    FFMPEG_PATH: /usr/bin/ffmpeg
-    STORY_FONT_SERIF: /usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf
-    STORY_FONT_SANS: /usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf
     SOLID_QUEUE_IN_PUMA: true
     DB_HOST: host.docker.internal
-    APPLICATION_HOST: sepiabraun.com
+    APPLICATION_HOST: <%= ENV.fetch("APPLICATION_HOST", "your-domain.example") %>
     ACTIVE_STORAGE_SERVICE: gcs_production
-    GCS_BUCKET: sepiabraun-production
+    GCS_BUCKET: <%= ENV.fetch("GCS_BUCKET", "your-bucket-name") %>
     GCS_CREDENTIALS_PATH: /tmp/gcs_credentials.json
   secret:
     - RAILS_MASTER_KEY
     - SENTRY_DSN
-    - EDO_DATABASE_PASSWORD
-    - ANTHROPIC_API_KEY
-    - INSTAGRAM_ACCESS_TOKEN
-    - INSTAGRAM_USER_ID
-    - FLICKR_API_KEY
-    - FLICKR_API_SECRET
-    - FLICKR_ACCESS_TOKEN
-    - FLICKR_ACCESS_TOKEN_SECRET
-    - FLICKR_USER_NSID
+    - EDO_CMS_DATABASE_PASSWORD
     - YOUTUBE_API_KEY
-    - GOOGLE_CLIENT_ID
-    - GOOGLE_CLIENT_SECRET
-    - GOOGLE_API_KEY
-    - GOOGLE_SERVICE_ACCOUNT_JSON
-    - GEMINI_API_KEY
-    - PEXELS_API_KEY
-    - UMAMI_WEBSITE_ID
 
 volumes:
-  - /var/www/edo-production/storage:/rails/storage
+  - /var/www/edo-cms-production/storage:/rails/storage
 
 asset_path: /rails/public/assets
 
