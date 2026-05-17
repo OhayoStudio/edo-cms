@@ -25,7 +25,7 @@ bin/rails db:seed
 
 ## Architecture
 
-**EDO** is a Rails 8 content publishing platform. The central concept is a **polymorphic `Story`** model that wraps content types (currently `Article`, `Video`) for unified display.
+**EDO CMS** is a Rails 8 content publishing template. The central concept is a polymorphic `Story` model that wraps content types (`Article`, `Video`) for unified display on the homepage.
 
 ### Content flow
 
@@ -42,78 +42,64 @@ bin/rails db:seed
 | `Author` | Soft-deleted via `deleted_at`; roles: writer/editor/admin |
 | `Category` / `Tag` | Categorization; articles tagged via join tables |
 | `Video` | Standalone video content type |
+| `About` / `Colophon` | Singleton editorial pages, rich text via Lexxy |
+| `Setting` | Singleton record driving site name, tagline, logo, colors, nav, social, analytics, newsletter |
+
+### Branding & configuration
+
+This is a brand-agnostic template. Each fork configures its identity through `/admin/settings` instead of editing source:
+
+- **Site name, tagline, meta description, contact email** → `Setting`
+- **Logos (light/dark), favicon, OG default image** → `Setting` (Active Storage)
+- **Theme colors** → `Setting#theme_colors`, injected as `--cms-*` CSS variables by `cms_theme_style_tag` (helper in `app/helpers/settings_helper.rb`)
+- **Navigation** → `Setting#nav_items` (primary + footer)
+- **Social links** → `Setting#social_links`
+- **Analytics provider** (currently Umami) → `Setting#analytics_*`
+- **Newsletter** → `Setting#newsletter_*` (form action; provider field is informational)
+
+Infrastructure stays in ENV / config:
+
+- `APPLICATION_HOST` → public hostname (used by sitemap, meta tags, OG URLs)
+- `RAILS_MASTER_KEY`, `EDO_CMS_DATABASE_PASSWORD`, `GCS_BUCKET`, `GCS_CREDENTIALS_PATH`, etc.
+- `YOUTUBE_API_KEY` enables the YouTube metadata fetch in admin (optional)
+
+See `.env.production.example` for the full list.
 
 ### Infrastructure
 
 Rails 8 Solid stack — no external Redis/Memcached:
-- **Solid Cache** → `edo_production_cache` DB
-- **Solid Queue** → `edo_production_queue` DB
-- **Solid Cable** → `edo_production_cable` DB
+- **Solid Cache** → `edo_cms_production_cache` DB
+- **Solid Queue** → `edo_cms_production_queue` DB
+- **Solid Cable** → `edo_cms_production_cable` DB
 
 Database config in `config/database.yml` reflects this multi-DB setup.
 
 ### Frontend
 
 - **Hotwire** (Turbo + Stimulus) — no React/Vue
-- **Tailwind CSS** — dark mode enabled, custom design tokens, plugins: forms, typography, container-queries
+- **Tailwind CSS** — dark mode enabled, theme colors driven by Setting via CSS custom properties
 - **Import maps** — no webpack/bundler; JS managed via `config/importmap.rb`
 - **ViewComponent** — reusable UI components live in `app/components/`
-- **Action Text** — rich text editor backed by Active Storage
+- **Lexxy** — rich text editor backed by Active Storage / Action Text
 
 ### Notable patterns
 
-- **Slug generation**: FriendlyId on `Article` and `Tag` (via `before_validation` callback)
-- **Reading time**: Calculated automatically on save in `Article`
-- **Pagination**: Kaminari, hardcoded `paginates_per 3` on Article
-- **Search**: Full-text across title, subtitle, excerpt, and tags in `ArticlesController`
-- **Services**: `app/services/instagram_service.rb` — external Instagram API via HTTParty
-- **Story creation callback**: Publishing an article auto-creates its `Story` record
+- **Slug generation**: FriendlyId on `Article` and `Tag`
+- **Reading time**: Auto-calculated on save in `Article`
+- **Pagination**: Kaminari, `paginates_per 10`
+- **Search**: Full-text across title, subtitle, excerpt, tags in `ArticlesController`
+- **Settings cache**: `Setting.instance` is `Rails.cache`-memoized; `after_save`/`after_touch` invalidate
 
 ### Deployment
 
-Kamal (`config/deploy.yml`) with Docker. Production targets require SSL. Run `bin/kamal` for deployment commands.
+Kamal (`config/deploy.yml`) with Docker. `config/deploy.yml` is templated with ENV placeholders — replace `service`, `image`, `hosts`, `registry`, and `volumes` for your project before deploying.
 
 ## Local development dependencies
 
-These tools must be installed on your machine (outside Docker/Kamal) for full local development:
-
-### FFmpeg — Instagram Story MP4 generation
-
 ```bash
-brew install ffmpeg
+brew install libpq postgresql
 ```
 
-The service (`app/services/instagram_story_video_service.rb`) reads `FFMPEG_PATH` from the environment, defaulting to `/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg`. If you install plain `ffmpeg` (not `ffmpeg-full`), override it in your shell or `.env`:
+`libpq` is required for the `pg` gem to compile.
 
-```bash
-export FFMPEG_PATH=/opt/homebrew/bin/ffmpeg
-```
-
-On production (Docker), `ffmpeg` is installed via `apt-get` and `FFMPEG_PATH` is set to `/usr/bin/ffmpeg` in `config/deploy.yml`.
-
-### ImageMagick — image processing + SVG rasterization
-
-```bash
-brew install imagemagick
-```
-
-ImageMagick on macOS (via Homebrew) ships with SVG support out of the box. It is used to composite still frames and rasterize the logo SVG (`sepia-clear.svg`) before FFmpeg processes it.
-
-On production (Docker), `imagemagick` and `librsvg2-bin` (the SVG delegate) are both installed via `apt-get` in the `Dockerfile`.
-
-### Fonts — Instagram Story text rendering
-
-The story services read font paths from `STORY_FONT_SERIF` and `STORY_FONT_SANS`. On macOS these default to system fonts (`Georgia.ttf`, `HelveticaNeue.ttc`). On production (Docker), `fonts-liberation` is installed and the paths are set in `config/deploy.yml`:
-
-- `STORY_FONT_SERIF`: `/usr/share/fonts/truetype/liberation/LiberationSerif-Regular.ttf`
-- `STORY_FONT_SANS`: `/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf`
-
-No action needed locally — macOS system fonts are used automatically.
-
-### PostgreSQL client
-
-```bash
-brew install libpq
-```
-
-Required for the `pg` gem to compile. Alternatively, install the full Postgres app from [postgresapp.com](https://postgresapp.com).
+Optional: Postgres.app (https://postgresapp.com) if you'd rather not run Postgres via Homebrew.
