@@ -78,167 +78,9 @@
       <p class="mt-1 text-xs text-gray-400">Max 150 characters</p>
     </div>
 
-    <div class="md:col-span-2 sticky top-4 z-10 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 shadow-sm"
-         data-controller="lexxy-photos google-photos flickr"
-         data-action="dragover->lexxy-photos#zoneDragover dragleave->lexxy-photos#zoneDragleave drop->lexxy-photos#zoneDrop"
-         data-lexxy-photos-upload-url-value="<%= @article.persisted? ? lexxy_photos.upload_photo_path(@article.id) : '' %>"
-         data-lexxy-photos-destroy-url-value="<%= @article.persisted? ? lexxy_photos.destroy_photo_path(@article.id, '__ID__') : '' %>"
-         data-google-photos-client-id-value="<%= ENV.fetch('GOOGLE_CLIENT_ID') %>"
-         data-google-photos-open-url-value="<%= admin_google_photos_open_path %>"
-         data-google-photos-import-url-value="<%= admin_google_photos_import_path %>"
-         data-google-photos-article-id-value="<%= @article.id %>"
-         data-flickr-albums-url-value="<%= admin_flickr_albums_path %>"
-         data-flickr-import-url-value="<%= admin_flickr_import_path %>"
-         data-flickr-article-id-value="<%= @article.id %>">
-      <div class="flex items-center justify-between mb-2">
-        <%= f.label :photo_candidates, "Photos — drag into content or click to insert at cursor", class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-        <button type="button"
-                data-action="click->google-photos#open"
-                class="flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          Google Photos
-        </button>
-        <button type="button"
-                data-action="click->flickr#open"
-                class="flex items-center gap-1 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
-          Flickr
-        </button>
-      </div>
-      <div data-lexxy-photos-target="previews" class="flex flex-wrap gap-2 mb-2">
-        <% if @article.photo_candidates.attached? %>
-          <% @article.photo_candidates.each do |photo| %>
-            <% next unless photo.blob.variable? %>
-            <div class="relative m-1 group" data-attachment-id="<%= photo.id %>">
-              <img src="<%= url_for(photo.variant(resize_to_limit: [96,96])) %>"
-                   data-original-url="<%= rails_blob_path(photo.blob, disposition: 'inline') %>"
-                   draggable="true"
-                   data-action="dragstart->lexxy-photos#onThumbnailDragStart click->lexxy-photos#onThumbnailClick"
-                   class="object-cover w-24 h-24 rounded border bg-white cursor-pointer hover:ring-2 hover:ring-[#704214]"
-                   title="Click to insert at cursor · Drag to position" />
-              <button type="button"
-                      data-action="click->lexxy-photos#deletePhoto"
-                      class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
-                      title="Delete photo">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-              </button>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-      <%= f.file_field :photo_candidates, multiple: true, class: "block w-full border-2 border-dashed border-gray-300 rounded-md p-3 text-center cursor-pointer bg-gray-50 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm", accept: "image/*", data: { action: "change->lexxy-photos#uploadFiles", lexxy_photos_target: "input" } %>
-    </div>
-
-    <%# ── Claude Writing Assistant ──────────────────────────────────────────── %>
-    <div class="md:col-span-2"
-         data-controller="lexxy-assistant research-assistant"
-         data-lexxy-assistant-stream-url-value="<%= lexxy_assistant.stream_path %>"
-         data-lexxy-assistant-patch-url-value="<%= article.persisted? ? patch_field_admin_article_path(article) : '' %>"
-         data-lexxy-assistant-fields-value="<%= LexxyAssistant.config.field_mappings.to_json %>"
-         data-research-assistant-url-value="<%= admin_research_stream_path %>">
-
-      <button type="button"
-              data-action="click->lexxy-assistant#toggle"
-              class="flex items-center gap-2 text-sm font-medium text-[#704214] dark:text-amber-300 mb-2 hover:opacity-70 transition-opacity">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-        </svg>
-        Writing Assistant
-        <span data-lexxy-assistant-target="chevron" class="text-xs">▸</span>
-      </button>
-
-      <div data-lexxy-assistant-target="panel"
-           class="hidden space-y-3 bg-[#fdf8f2] dark:bg-gray-900 border border-[#d4b896] dark:border-gray-600 rounded-lg p-4">
-
-        <%= f.text_area :claude_prompt,
-              data: { lexxy_assistant_target: "prompt" },
-              rows: 4,
-              placeholder: "Topic, URLs, rough notes — or a mix. e.g. 'Leica M3 — the film camera that refuses to age. https://...' ",
-              class: "block w-full rounded border border-[#d4b896] dark:border-gray-600 px-3 py-2 text-sm
-                      bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
-                      focus:outline-[#704214] resize-y" %>
-
-        <%# ── Research panel ── %>
-        <div class="flex flex-wrap items-center gap-3 mb-1">
-          <button type="button"
-                  data-action="click->research-assistant#research"
-                  data-research-assistant-target="researchBtn"
-                  class="flex items-center gap-1.5 px-3 py-1.5 border border-[#704214] dark:border-amber-400
-                         text-[#704214] dark:text-amber-300 text-xs rounded hover:bg-[#faeee0]
-                         dark:hover:bg-gray-800 transition-colors cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="none"
-                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            Research topic
-          </button>
-          <span data-research-assistant-target="status"
-                class="text-xs text-gray-500 dark:text-gray-400 italic"></span>
-        </div>
-
-        <div data-research-assistant-target="brief" class="hidden mb-3">
-          <div class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Research brief</div>
-          <pre data-research-assistant-target="briefContent"
-               class="font-mono text-xs bg-white dark:bg-gray-800 rounded border border-gray-200
-                      dark:border-gray-700 p-3 max-h-56 overflow-y-auto whitespace-pre-wrap
-                      text-gray-700 dark:text-gray-300"></pre>
-          <button type="button"
-                  data-action="click->research-assistant#useBrief"
-                  data-research-assistant-target="useBtn"
-                  class="hidden mt-2 px-3 py-1.5 text-xs border border-[#704214] dark:border-amber-400
-                         text-[#704214] dark:text-amber-300 rounded hover:bg-[#faeee0] dark:hover:bg-gray-800
-                         transition-colors cursor-pointer">
-            ↑ Add research to prompt
-          </button>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-3">
-          <button type="button"
-                  data-action="click->lexxy-assistant#generate"
-                  data-lexxy-assistant-target="generateBtn"
-                  class="px-4 py-2 bg-[#704214] hover:bg-[#52300f] text-white text-sm rounded transition-colors cursor-pointer">
-            Generate draft
-          </button>
-          <button type="button"
-                  data-action="click->lexxy-assistant#applyFields"
-                  data-lexxy-assistant-target="applyBtn"
-                  class="hidden px-4 py-2 border border-[#704214] dark:border-amber-400 text-[#704214] dark:text-amber-300
-                         text-sm rounded hover:bg-[#faeee0] dark:hover:bg-gray-800 transition-colors cursor-pointer">
-            Apply CMS fields
-          </button>
-          <button type="button"
-                  data-action="click->lexxy-assistant#insertBody"
-                  data-lexxy-assistant-target="insertBtn"
-                  class="hidden px-4 py-2 border border-[#704214] dark:border-amber-400 text-[#704214] dark:text-amber-300
-                         text-sm rounded hover:bg-[#faeee0] dark:hover:bg-gray-800 transition-colors cursor-pointer">
-            Insert into editor
-          </button>
-          <span data-lexxy-assistant-target="status"
-                class="text-xs text-gray-500 dark:text-gray-400 italic"></span>
-        </div>
-
-        <div data-lexxy-assistant-target="output"
-             class="hidden font-mono text-xs bg-white dark:bg-gray-800 rounded border
-                    border-gray-200 dark:border-gray-700 p-3 max-h-96 overflow-y-auto
-                    whitespace-pre-wrap text-gray-700 dark:text-gray-300"></div>
-
-        <div data-lexxy-assistant-target="usage"
-             class="hidden text-xs text-gray-400 dark:text-gray-500 font-mono"></div>
-      </div>
-    </div>
-    <%# ── /Claude Writing Assistant ─────────────────────────────────────────── %>
-
-    <div class="md:col-span-2" data-controller="panoramic-images">
-      <div class="flex items-center justify-between mb-1">
-        <%= f.label :content, class: "block text-sm font-medium text-gray-700 dark:text-gray-300" %>
-        <button type="button"
-                data-action="click->panoramic-images#open"
-                class="text-xs px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded transition-colors font-medium">
-          Insert Panoramic Image
-        </button>
-      </div>
+    <div class="md:col-span-2">
+      <%= f.label :content, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.lexxy_rich_text_area :content %>
-      <%= render "admin/shared/panoramic_images_modal" %>
     </div>
 
     <div class="md:col-span-2">
@@ -271,7 +113,7 @@
       <% end %>
       <p data-featured-image-drop-target="hint"
          class="text-xs text-gray-400 mb-2 <%= article.persisted? && article.featured_image.attached? ? 'hidden' : '' %>">
-        Drop a photo candidate here or use the file picker below
+        Drop an image here or use the file picker below
       </p>
       <%= f.file_field :featured_image, accept: "image/*",
           data: { featured_image_drop_target: "input" },
@@ -295,4 +137,3 @@
   </div>
 
 <% end %>
-

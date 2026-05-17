@@ -13,8 +13,6 @@ class Article < ApplicationRecord
     attachable.variant :og,    resize_to_limit: [ 1200, 630 ], format: :webp
   end
 
-  has_many_attached :photo_candidates
-
   # Relationships
   belongs_to :author
   belongs_to :category
