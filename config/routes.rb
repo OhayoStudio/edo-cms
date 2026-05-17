@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     resources :tags
     resource :colophon, only: %i[edit update]
     resource :about, only: %i[edit update]
+    resource :setting, only: %i[edit update]
   end
 
   resources :videos,     only: %i[index show]

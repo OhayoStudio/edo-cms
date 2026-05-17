@@ -79,6 +79,10 @@
             <%= link_to "About", edit_admin_about_path,
                 class: "px-3 py-2 rounded transition-colors #{controller_name == 'abouts' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
           </li>
+          <li>
+            <%= link_to "Settings", edit_admin_setting_path,
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'settings' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+          </li>
           <li class="ml-2">
             <%= render "common/darkmode_toggle" %>
           </li>
