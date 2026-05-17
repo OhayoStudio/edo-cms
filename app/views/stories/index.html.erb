@@ -1,20 +1,24 @@
+<%# Homepage layout: top story → recent grid → latest per category → featured videos.
+    Each fork can customize this view directly; the partials in stories/_*.html.erb
+    are brand-agnostic (driven by theme.css variables). %>
+
 <% content_for :head do %>
   <% set_meta_tags(
-       description: MetaTagsHelper::DEFAULT_DESC,
+       description: default_meta_description,
        canonical:   root_url,
-       og: { title: MetaTagsHelper::SITE_NAME, url: root_url,
-             description: MetaTagsHelper::DEFAULT_DESC,
-             image: MetaTagsHelper::SITE_URL + MetaTagsHelper::DEFAULT_OG_IMAGE }
+       og: { title: site_name, url: root_url,
+             description: default_meta_description,
+             image: og_image_url_for(nil) }
      ) %>
   <%= render "shared/json_ld", schema: {
         "@context" => "https://schema.org",
         "@graph"   => [
-          { "@type" => "WebSite", "@id" => "#{MetaTagsHelper::SITE_URL}/#website",
-            "url" => MetaTagsHelper::SITE_URL, "name" => MetaTagsHelper::SITE_NAME,
-            "description" => MetaTagsHelper::DEFAULT_DESC,
+          { "@type" => "WebSite", "@id" => "#{site_url}/#website",
+            "url" => site_url, "name" => site_name,
+            "description" => default_meta_description,
             "potentialAction" => {
               "@type" => "SearchAction",
-              "target" => "#{MetaTagsHelper::SITE_URL}/articles?search={search_term_string}",
+              "target" => "#{site_url}/articles?search={search_term_string}",
               "query-input" => "required name=search_term_string"
             } },
           schema_publisher
