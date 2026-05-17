@@ -1,0 +1,386 @@
+/* Theme palette
+ *
+ * The --cms-* variables are injected at runtime by cms_theme_style_tag,
+ * driven by Setting#theme_colors. This file maps them to the legacy
+ * --color-* and Lexxy editor variables used across the app.
+ */
+
+:root {
+  --color-gray-200: var(--cms-background, #F9F7F0);
+  --color-slate-800: var(--cms-text, #5e4b35);
+}
+
+.brand-theme {
+  --color-primary:         var(--cms-primary,       #704214);
+  --color-primary-header:  var(--cms-primary,       #704214);
+  --color-primary-darker:  var(--cms-primary-dark,  #52300f);
+  --color-primary-darkest: #2c1808;
+
+  --color-secondary: var(--cms-secondary,    #A67B5B);
+  --color-accent:    var(--cms-accent,       #D9C4A6);
+  --color-background: var(--cms-background,  #F9F7F0);
+
+  --color-text-primary: var(--cms-text-primary, var(--color-primary));
+  --color-text:         var(--cms-text,         #423525);
+
+  --color-slate-900: var(--color-primary-header);
+  --color-slate-800: var(--color-primary-darkest);
+  --color-gray-900: var(--color-primary-darker);
+  --color-gray-800: var(--color-text);
+  --color-gray-700: var(--color-accent);
+  --color-gray-600: var(--color-text);
+  --color-gray-500: var(--color-text);
+  --color-gray-400: var(--color-background);
+  --color-gray-300: var(--color-accent);
+  --color-gray-200: var(--color-background);
+  --color-gray-100: color-mix(in srgb, var(--color-primary) 50%, transparent);
+}
+
+/* Lexxy editor — inherit from theme palette */
+.brand-theme {
+  --lexxy-color-ink:           var(--color-text);
+  --lexxy-color-ink-medium:    #7a6a58;
+  --lexxy-color-ink-light:     #b3a290;
+  --lexxy-color-ink-lighter:   var(--color-accent);
+  --lexxy-color-ink-lightest:  var(--color-background);
+  --lexxy-color-canvas:        var(--color-background);
+
+  --lexxy-color-accent-dark:    var(--color-primary);
+  --lexxy-color-accent-medium:  var(--color-secondary);
+  --lexxy-color-accent-light:   var(--color-accent);
+  --lexxy-color-accent-lightest: #f5efe6;
+}
+
+/* Lexxy dark mode */
+.dark .lexxy-content,
+.dark .lexxy-content p,
+.dark .lexxy-content h1,
+.dark .lexxy-content h2,
+.dark .lexxy-content h3,
+.dark .lexxy-content h4 {
+  color: var(--color-accent);
+}
+
+.lexxy-content a {
+  color: var(--color-primary);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-accent);
+  padding-bottom: 1px;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.lexxy-content a:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  background-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  border-radius: 2px;
+}
+
+.dark .lexxy-content a {
+  color: #d4a55a;
+  border-bottom: 1px solid #7a5c30;
+  padding-bottom: 1px;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.dark .lexxy-content a:hover {
+  color: #e8b96a;
+  border-bottom-color: #e8b96a;
+  background-color: rgba(232, 185, 106, 0.08);
+  border-radius: 2px;
+}
+
+.dark .lexxy-content blockquote {
+  color: #b3a290;
+  border-color: #3d2d1f;
+}
+
+.dark .lexxy-content code,
+.dark .lexxy-content pre {
+  background: #241810;
+  color: #e8ddd0;
+}
+
+/* Responsive tables — stack columns on small screens */
+@media (max-width: 640px) {
+  .lexxy-content .lexxy-content__table-wrapper {
+    overflow-x: unset;
+  }
+
+  .lexxy-content table,
+  .lexxy-content tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .lexxy-content thead {
+    display: none;
+  }
+
+  .lexxy-content tr {
+    display: block;
+    margin-bottom: 0.75rem;
+    border: 1px solid var(--lexxy-color-ink-lighter);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .lexxy-content td {
+    display: block;
+    max-width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--lexxy-color-ink-lighter);
+    padding: 0.6rem 0.75rem;
+  }
+
+  .lexxy-content td:last-child {
+    border-bottom: none;
+  }
+}
+
+/* YouTube embed — responsive 16:9 */
+.lexxy-youtube-embed {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  margin: 1.5rem 0;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.lexxy-youtube-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+[data-controller~="photo-zoom"] img {
+  cursor: zoom-in;
+}
+
+/* Photo zoom badge */
+.photo-zoom-host {
+  position: relative;
+  display: inline-block;
+}
+
+.photo-zoom-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.18s ease, background 0.18s ease;
+  pointer-events: none;
+  cursor: zoom-in;
+}
+
+.photo-zoom-host:hover .photo-zoom-badge,
+.photo-zoom-badge {
+  opacity: 0.55;
+  pointer-events: auto;
+}
+
+.photo-zoom-host:hover .photo-zoom-badge {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+/* Video archive thumbnails — subtle filter */
+#videos img,
+#videos-archive img {
+  filter: sepia(0.5) saturate(0.55);
+  transition: filter 0.3s ease;
+}
+
+#videos img:hover,
+#videos-archive img:hover {
+  filter: sepia(0.1) saturate(1);
+}
+
+/* Description expand modal */
+.description-modal-card {
+  background: var(--color-background);
+  color: var(--color-text);
+  border-radius: 0.5rem;
+  max-width: 36rem;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+}
+
+.dark .description-modal-card {
+  background: var(--color-text);
+  color: #d1d5db;
+}
+
+.description-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  opacity: 0.5;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+  transition: opacity 0.15s;
+}
+
+.description-modal-close:hover {
+  opacity: 1;
+}
+
+/* Article body — magazine-style */
+.article-body.lexxy-content {
+  font-size: 19px;
+  line-height: 1.7;
+  color: var(--color-text);
+}
+
+.dark .article-body.lexxy-content {
+  color: var(--color-accent);
+}
+
+.article-body.lexxy-content p {
+  margin: 0 0 28px;
+  text-wrap: pretty;
+}
+
+/* Drop cap on the first paragraph */
+.article-body.lexxy-content > p:first-of-type::first-letter {
+  font-family: 'Lora', serif;
+  font-weight: 600;
+  font-size: 86px;
+  line-height: 0.86;
+  float: left;
+  padding: 6px 14px 0 0;
+  color: var(--color-primary);
+}
+
+.dark .article-body.lexxy-content > p:first-of-type::first-letter {
+  color: var(--color-accent);
+}
+
+/* Pull-quote */
+.article-body.lexxy-content blockquote {
+  max-width: 860px;
+  margin: 40px -70px 48px;
+  padding: 40px 0;
+  border-top: 1px solid var(--color-accent);
+  border-bottom: 1px solid var(--color-accent);
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-size: 30px;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--color-text);
+  background: transparent;
+}
+
+.dark .article-body.lexxy-content blockquote {
+  border-color: var(--color-primary-darker);
+  color: var(--color-accent);
+}
+
+@media (max-width: 800px) {
+  .article-body.lexxy-content blockquote {
+    margin: 32px 0 36px;
+    padding: 28px 0;
+    font-size: 22px;
+  }
+}
+
+/* About page body */
+.lexxy-content.about-body > p:first-of-type::first-letter {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 600;
+  color: var(--color-primary);
+  float: left;
+  font-size: 78px;
+  line-height: 0.88;
+  padding-top: 6px;
+  padding-right: 14px;
+}
+
+.lexxy-content.about-body blockquote {
+  font-family: "Lora", Georgia, serif;
+  font-style: italic;
+  font-size: 28px;
+  line-height: 1.4;
+  color: var(--color-primary);
+  border-top: 1px solid var(--color-accent);
+  border-bottom: 1px solid var(--color-accent);
+  padding: 28px 0;
+  margin: 36px 0;
+  text-wrap: balance;
+  quotes: none;
+}
+.lexxy-content.about-body blockquote::before,
+.lexxy-content.about-body blockquote::after { content: none; }
+
+.lexxy-content.about-body h2,
+.lexxy-content.about-body h3 {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 40px 0 14px 0;
+}
+.lexxy-content.about-body h2 { font-size: 22px; line-height: 1.25; }
+.lexxy-content.about-body h3 { font-size: 18px; line-height: 1.3; }
+
+.lexxy-content.about-body p {
+  font-family: "Lora", Georgia, serif;
+  font-size: 19px;
+  line-height: 1.72;
+  color: var(--color-text);
+  margin: 0 0 24px 0;
+  text-wrap: pretty;
+}
+
+@media (max-width: 640px) {
+  .lexxy-content.about-body > p:first-of-type::first-letter {
+    font-size: 60px;
+    padding-top: 4px;
+    padding-right: 10px;
+  }
+  .lexxy-content.about-body blockquote { font-size: 22px; padding: 22px 0; margin: 28px 0; }
+  .lexxy-content.about-body p { font-size: 17px; line-height: 1.7; }
+}
+
+/* Colophon page body */
+.lexxy-content.colophon-body p {
+  font-family: "Lora", Georgia, serif;
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--color-text);
+  margin: 0 0 18px 0;
+  max-width: 720px;
+  text-wrap: pretty;
+}
+
+.lexxy-content.colophon-body h2 {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+  margin: 36px 0 14px 0;
+}

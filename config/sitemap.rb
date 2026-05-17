@@ -1,4 +1,7 @@
-SitemapGenerator::Sitemap.default_host  = "https://example.com"
+host = ENV["APPLICATION_HOST"].presence || "localhost"
+scheme = ENV.fetch("APPLICATION_HOST_SCHEME", "https")
+
+SitemapGenerator::Sitemap.default_host  = "#{scheme}://#{host}"
 SitemapGenerator::Sitemap.public_path   = "public/"
 SitemapGenerator::Sitemap.sitemaps_path = "sitemaps/"
 

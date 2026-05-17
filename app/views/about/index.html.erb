@@ -2,40 +2,36 @@
   <% set_meta_tags(
        title:     "About",
        canonical: about_url,
-       og: { title: "About | Edo CMS", url: about_url }
+       og: { title: "About | #{site_name}", url: about_url }
      ) %>
   <%= render "shared/json_ld", schema: {
         "@context"  => "https://schema.org",
         "@type"     => "WebPage",
-        "name"      => "About Edo CMS",
+        "name"      => "About #{site_name}",
         "url"       => about_url,
-        "isPartOf"  => { "@id" => "#{MetaTagsHelper::SITE_URL}/#website" },
+        "isPartOf"  => { "@id" => "#{site_url}/#website" },
         "publisher" => schema_publisher
       } %>
 <% end %>
 
-<%# ─── HERO BAND: pull statement (no "About" label) ─────────────── %>
-<section class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-14 md:pt-24 pb-10 md:pb-14 lora">
-  <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#704214] mb-7 md:mb-9">
-    A note from the editor · No. 001
+<%# ─── HERO BAND: tagline ─────────────────────────────────────── %>
+<% if cms_setting.tagline.present? %>
+  <section class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-14 md:pt-24 pb-10 md:pb-14 lora">
+    <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#704214] mb-7 md:mb-9">
+      About
+    </div>
+
+    <p class="font-serif italic font-normal text-[34px] sm:text-[48px] md:text-[68px] lg:text-[80px] leading-[1.06] tracking-[-0.02em] text-[#423525] m-0 max-w-[1080px] text-balance">
+      <%= cms_setting.tagline %>
+    </p>
+  </section>
+
+  <div class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20">
+    <hr class="border-0 border-t-2 border-[#423525] m-0">
   </div>
+<% end %>
 
-  <p class="font-serif italic font-normal text-[34px] sm:text-[48px] md:text-[68px] lg:text-[80px] leading-[1.06] tracking-[-0.02em] text-[#423525] m-0 max-w-[1080px] text-balance">
-    We have good taste, <br />
-    we are not uncertain ;-)
-  </p>
-
-  <div class="mt-7 md:mt-9 flex items-center gap-3.5 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-gray-500">
-    <span class="flex-none w-14 h-px bg-[#423525] opacity-40"></span>
-    <span>Jérôme · Japan · est. 2026</span>
-  </div>
-</section>
-
-<div class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20">
-  <hr class="border-0 border-t-2 border-[#423525] m-0">
-</div>
-
-<%# ─── BODY: editor content + sticky newsletter sidebar ────────── %>
+<%# ─── BODY: editor content + optional newsletter/contact sidebar ── %>
 <section class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-12 md:pt-16 pb-16 md:pb-24 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-24 items-start lora">
 
   <%# Editor-controlled prose %>
@@ -43,49 +39,46 @@
     <%= @about.content %>
   </article>
 
-  <%# Sticky newsletter + contact sidebar %>
-  <aside class="lg:sticky lg:top-8">
-    <div class="border border-[#D9C4A6] p-7">
-      <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#704214] mb-3.5">By post</div>
-      <h3 class="font-serif font-medium text-[22px] leading-[1.2] tracking-[-0.01em] text-[#423525] m-0 mb-3 text-balance">
-        One letter, when something new goes up.
-      </h3>
-      <p class="font-serif italic text-[13.5px] leading-[1.55] text-gray-500 m-0 mb-5">
-        A story about a watch, a road in Kyushu, an aluminium bicycle
-        frame — never more than once a week, most probably less.
-      </p>
+  <%# Sidebar — only renders sections that are configured %>
+  <% show_newsletter = cms_setting.newsletter_provider.present? && cms_setting.newsletter_form_action.present? %>
+  <% show_contact    = cms_setting.contact_email.present? %>
+  <% if show_newsletter || show_contact %>
+    <aside class="lg:sticky lg:top-8">
+      <% if show_newsletter %>
+        <div class="border border-[#D9C4A6] p-7">
+          <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#704214] mb-3.5">By post</div>
+          <h3 class="font-serif font-medium text-[22px] leading-[1.2] tracking-[-0.01em] text-[#423525] m-0 mb-3 text-balance">
+            One letter, when something new goes up.
+          </h3>
 
-      <form action="https://buttondown.com/api/emails/embed-subscribe/edo-cms" method="post" class="embeddable-buttondown-form flex flex-col">
-        <label for="bd-email" class="sr-only">Enter your email</label>
-        <input type="email" name="email" id="bd-email"
-               placeholder="your@email.com"
-               required
-               class="px-3 py-2.5 border border-[#D9C4A6] bg-transparent font-serif text-sm text-[#423525] placeholder:text-[#A67B5B] placeholder:italic focus:outline-none focus:border-[#A67B5B]">
-        <input type="submit" value="Notify me"
-               class="-mt-px py-3 px-3.5 bg-[#704214] text-[#F9F7F0] border border-[#704214] font-mono text-[11px] uppercase tracking-[0.16em] cursor-pointer hover:bg-[#52300f] transition-colors">
-      </form>
-
-      <div class="mt-2.5 text-right">
-        <a href="https://buttondown.com/refer/edo-cms" target="_blank" rel="noopener"
-           class="font-mono text-[10px] uppercase tracking-[0.12em] text-gray-500 opacity-60 hover:opacity-100 hover:underline">
-          Powered by Buttondown
-        </a>
-      </div>
-    </div>
-
-    <div class="mt-7 pt-7 border-t border-[#D9C4A6]">
-      <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#704214] mb-3.5">Otherwise</div>
-      <% [
-        ["Email",    "hello@example.com",  "mailto:hello@example.com"],
-        ["RSS",      "/feed",             "/feed"],
-      ].each_with_index do |(label, value, href), i| %>
-        <a href="<%= href %>" class="flex justify-between py-2.5 font-mono text-[11px] <%= 'border-t border-[#D9C4A6]' if i > 0 %> hover:text-[#704214] transition-colors group">
-          <span class="text-gray-500"><%= label %></span>
-          <span class="text-[#423525] group-hover:text-[#704214]"><%= value %></span>
-        </a>
+          <form action="<%= cms_setting.newsletter_form_action %>" method="post" class="flex flex-col">
+            <label for="newsletter-email" class="sr-only">Enter your email</label>
+            <input type="email" name="email" id="newsletter-email"
+                   placeholder="your@email.com"
+                   required
+                   class="px-3 py-2.5 border border-[#D9C4A6] bg-transparent font-serif text-sm text-[#423525] placeholder:text-[#A67B5B] placeholder:italic focus:outline-none focus:border-[#A67B5B]">
+            <input type="submit" value="Notify me"
+                   class="-mt-px py-3 px-3.5 bg-[#704214] text-[#F9F7F0] border border-[#704214] font-mono text-[11px] uppercase tracking-[0.16em] cursor-pointer hover:bg-[#52300f] transition-colors">
+          </form>
+        </div>
       <% end %>
-    </div>
-  </aside>
+
+      <% if show_contact %>
+        <div class="<%= 'mt-7 pt-7 border-t border-[#D9C4A6]' if show_newsletter %>">
+          <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#704214] mb-3.5">Otherwise</div>
+          <% [
+            [ "Email", cms_setting.contact_email, "mailto:#{cms_setting.contact_email}" ],
+            [ "RSS",   "/feed", "/feed" ]
+          ].each_with_index do |(label, value, href), i| %>
+            <a href="<%= href %>" class="flex justify-between py-2.5 font-mono text-[11px] <%= 'border-t border-[#D9C4A6]' if i > 0 %> hover:text-[#704214] transition-colors group">
+              <span class="text-gray-500"><%= label %></span>
+              <span class="text-[#423525] group-hover:text-[#704214]"><%= value %></span>
+            </a>
+          <% end %>
+        </div>
+      <% end %>
+    </aside>
+  <% end %>
 </section>
 
 <%# ─── LATEST STORIES FOOTER ───────────────────────────────────── %>

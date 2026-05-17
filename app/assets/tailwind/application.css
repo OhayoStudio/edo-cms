@@ -49,35 +49,6 @@
     }
   }
 
-  .movie-theatre {
-     background-image: url(theatre.jpg); 
-     background-size: cover; 
-     background-position: bottom;
-     height: 1200px;
-     margin-top: -200px;
-
-     /* for mobile screens */
-      @media screen and (max-width: 640px) {
-        height: 800px;
-        background-position: center;
-        margin-top: -100px;
-      }
-
-      .youtube-video {
-        padding-top: 360px; 
-        padding-left:13px; 
-        width:640px; 
-        margin:auto; 
-        text-align: center;
-
-        @media screen and (max-width: 640px) {
-          padding-top: 200px; 
-          width: 100%;
-          padding-left: 0;
-        }
-      }
-  }
-
   .dark-mode-background {
     /* background: linear-gradient(to bottom, 
                 #2a1810 0%, 
@@ -128,17 +99,7 @@
     }
   }
 }
-/* ────────────────────────────────────────────────────────────────
-   APPEND THIS BLOCK to the END of app/assets/tailwind/application.css.
-   It does two things:
-     1. Fixes two existing bugs (linea-gradient typo, stray --color-acccent).
-     2. Adds D-specific helpers that aren't easy in pure utility classes.
-   No tokens are renamed; everything still keys off your existing
-   `.edo-cms` palette in app/assets/stylesheets/edo-cms.css.
-   ──────────────────────────────────────────────────────────────── */
-
 @layer base {
-  /* Fix: was `linea-gradient` (typo). Restore the dark-mode background. */
   .dark-mode-background {
     background: linear-gradient(to bottom,
                 #262624 0%,
@@ -146,24 +107,14 @@
                 #5e4b35 100%);
   }
 
-  /* Smooth image transitions on hover (used by feature/small/category cards). */
-  .sb-card-img {
+  .card-img {
     transition: transform 300ms ease;
   }
-  .group:hover .sb-card-img {
+  .group:hover .card-img {
     transform: scale(1.02);
   }
 
-  /* Hairline rule color matched to the sepia accent. */
-  .sb-rule {
+  .hairline-rule {
     border-color: rgb(217 196 166 / 0.4);
   }
 }
-
-/* NOTE — separate, optional cleanup for edo-cms.css:
-   In app/assets/stylesheets/edo-cms.css, around line 41, the variable
-   `--color-acccent` (three c's) is referenced but never defined. Change:
-       --color-gray-700: var(--color-acccent);
-   to:
-       --color-gray-700: var(--color-accent);
-   This fixes a subtle paragraph color bug in dark mode. */

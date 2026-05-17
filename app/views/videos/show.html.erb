@@ -19,11 +19,11 @@
         "publisher"    => schema_publisher
       } %>
 <% end %>
-<div class="w-full movie-theatre">
+<div class="w-full container mx-auto px-4 md:px-16 py-12">
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
-  <div class="youtube-video">
-  <%= render @video %>
+  <div class="max-w-4xl mx-auto">
+    <%= render @video %>
   </div>
 </div>

@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" class="edo-cms">
+<html lang="en" class="brand-theme">
   <head>
     <%= display_meta_tags(
-          site:        "Edo CMS",
+          site:        site_name,
           separator:   "|",
-          description: MetaTagsHelper::DEFAULT_DESC,
-          og:      { site_name: "Edo CMS", type: "website" },
-          twitter: { site: "@edo-cms", card: "summary_large_image" }
+          description: default_meta_description,
+          og:      { site_name: site_name, type: "website" },
+          twitter: { site: cms_setting.social_links["twitter"].presence, card: "summary_large_image" }.compact
         ) %>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= cms_theme_style_tag %>
     <%= yield :head %>
     <link rel="sitemap" type="application/xml" href="/sitemaps/sitemap.xml.gz" />
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
@@ -21,6 +22,7 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icon.png" />
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "theme", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "lexxy" %>
     <%= javascript_importmap_tags %>
     <script>
@@ -38,32 +40,32 @@
       applyTheme();
       document.addEventListener('turbo:load', applyTheme);
     </script>
-    <%= auto_discovery_link_tag :rss, feed_url(format: :rss), title: "Edo CMS RSS Feed" %>
-    <% if Rails.env.production? && ENV["UMAMI_WEBSITE_ID"].present? %>
-      <script defer src="https://analytics.example.com/script.js"
-              data-website-id="<%= ENV['UMAMI_WEBSITE_ID'] %>"></script>
+    <%= auto_discovery_link_tag :rss, feed_url(format: :rss), title: "#{site_name} RSS Feed" %>
+    <% if Rails.env.production? && cms_setting.analytics_provider == "umami" && cms_setting.analytics_website_id.present? && cms_setting.analytics_host.present? %>
+      <script defer src="https://<%= cms_setting.analytics_host %>/script.js"
+              data-website-id="<%= cms_setting.analytics_website_id %>"></script>
     <% end %>
   </head>
 
-  <body class="edo-cms h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200" data-controller="dark-mode">
-    <header class="bg-gray-200 text-amber-900 dark:bg-slate-800 dark:text-[var(--color-accent)] hidden sm:block sticky top-0 z-50 lora ">      
+  <body class="brand-theme h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200" data-controller="dark-mode">
+    <header class="bg-gray-200 text-amber-900 dark:bg-slate-800 dark:text-[var(--color-accent)] hidden sm:block sticky top-0 z-50 lora">
       <nav aria-label="Main navigation" class="container px-16 mx-auto flex items-center justify-between">
-        <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center">
-          <%= image_tag "edo-cms.svg", alt: "Edo CMS", width: 80, height: 80, class: "w-20 h-20", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo" %>
-          <%= image_tag "sepia-clear.svg", alt: "Edo CMS", width: 80, height: 80, class: "w-20 h-20", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo-dark" %>
-          <span class="ml-2 ">Edo CMS</span>
+        <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center gap-2 py-4">
+          <% if cms_setting.logo_light.attached? %>
+            <%= image_tag cms_setting.logo_light, alt: site_name, class: "h-16 w-auto block dark:hidden" %>
+          <% end %>
+          <% if cms_setting.logo_dark.attached? %>
+            <%= image_tag cms_setting.logo_dark, alt: site_name, class: "h-16 w-auto hidden dark:block" %>
+          <% end %>
+          <span><%= site_name %></span>
         </a>
 
-        <ul class="flex gap-8">
-          <li class="p-6">
-            <%= link_to "Stories", articles_path, class: "hover:text-amber-300 #{articles_section? ? 'text-amber-600' : ''}" %>
-          </li>
-          <li class="p-6">
-            <%= link_to "Motion Pictures", videos_path, class: "hover:text-amber-300 #{current_page?(videos_path) ? 'text-amber-600' : ''}" %>
-          </li>
-          <li class="p-6">
-            <a href="/about" class="hover:text-amber-300">About</a>
-          </li>
+        <ul class="flex gap-8 items-center">
+          <% cms_setting.primary_nav.each do |item| %>
+            <li class="p-6">
+              <%= link_to item["label"], item["path"], class: "hover:text-amber-300 #{current_page?(item['path']) ? 'text-amber-600' : ''}" %>
+            </li>
+          <% end %>
           <li class="p-4">
             <%= render "common/darkmode_toggle" %>
           </li>
@@ -75,10 +77,14 @@
     <div role="none" class="bg-gray-200 text-amber-900 dark:bg-slate-800 dark:text-[var(--color-accent)] block sm:hidden sticky top-0 z-50">
       <div class="flex items-center justify-between p-4">
         <div>
-          <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center">
-            <%= image_tag "edo-cms.svg", alt: "Edo CMS", width: 40, height: 40, class: "w-10 h-10", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo-mobile" %>
-            <%= image_tag "sepia-clear.svg", alt: "Edo CMS", width: 40, height: 40, class: "w-10 h-10", style: "transform: scale(1.3);transform-origin: 50% 50%;transition: transform 0.3s ease;", id: "logo-mobile-dark" %>
-            <span class="ml-2 ">Edo CMS</span>
+          <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center gap-2">
+            <% if cms_setting.logo_light.attached? %>
+              <%= image_tag cms_setting.logo_light, alt: site_name, class: "h-10 w-auto block dark:hidden" %>
+            <% end %>
+            <% if cms_setting.logo_dark.attached? %>
+              <%= image_tag cms_setting.logo_dark, alt: site_name, class: "h-10 w-auto hidden dark:block" %>
+            <% end %>
+            <span><%= site_name %></span>
           </a>
         </div>
         <div class="flex items-center gap-2">
@@ -91,16 +97,12 @@
         </div>
       </div>
       <nav id="mobile-menu" aria-label="Mobile navigation" class="hidden">
-        <ul class="flex gap-8">
-          <li class="p-6">
-            <%= link_to "Stories", articles_path, class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(articles_path) ? 'text-amber-900 dark:text-[var(--color-accent)]' : 'text-amber-600'}" %>
-          </li>
-          <li class="p-6">
-            <%= link_to "Motion Pictures", videos_path, class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(videos_path) ? 'text-amber-900 dark:text-[var(--color-accent)]' : 'text-amber-600'}" %>
-          </li>
-          <li class="p-6">
-            <a href="/about" class="text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300">About</a>
-          </li>
+        <ul class="flex flex-col">
+          <% cms_setting.primary_nav.each do |item| %>
+            <li class="p-6">
+              <%= link_to item["label"], item["path"], class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(item['path']) ? 'text-amber-600' : ''}" %>
+            </li>
+          <% end %>
         </ul>
       </nav>
     </div>
@@ -109,32 +111,26 @@
     </main>
     <footer class="mt-24 lora border-t border-[#D9C4A6] dark:border-[#52300f] dark:bg-slate-800">
       <div class="container mx-auto px-6 py-12">
-
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-
           <!-- Brand + copyright -->
           <div class="space-y-1">
-            <p class="font-serif text-[#704214] dark:text-gray-300 tracking-wide">Edo CMS</p>
-            <p class="text-sm text-gray-500 dark:text-gray-300 italic">We have good taste, we are not uncertain ;-)</p>
-            <p class="text-sm text-gray-500 dark:text-gray-300">&copy; 2025&ndash;<%= Time.current.year %></p>
+            <p class="font-serif text-[#704214] dark:text-gray-300 tracking-wide"><%= site_name %></p>
+            <% if cms_setting.tagline.present? %>
+              <p class="text-sm text-gray-500 dark:text-gray-300 italic"><%= cms_setting.tagline %></p>
+            <% end %>
+            <p class="text-sm text-gray-500 dark:text-gray-300">&copy; <%= Time.current.year %></p>
           </div>
 
           <!-- Navigation links -->
           <nav aria-label="Footer navigation" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-300">
-            <%= link_to "Stories", articles_path,
-                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
-            <%= link_to "Motion Pictures", videos_path,
-                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
-            <%= link_to "About", about_path,
-                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
-            <%= link_to "Colophon", colophon_path,
-                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
+            <% cms_setting.footer_nav.each do |item| %>
+              <%= link_to item["label"], item["path"],
+                    class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
+            <% end %>
             <%= link_to "RSS", feed_path(format: :rss),
                 class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
           </nav>
-
         </div>
-
       </div>
     </footer>
     <script>
