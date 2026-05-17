@@ -1,32 +1,30 @@
-# README
+# EDO CMS
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A Rails 8 content publishing template. Articles, videos, authors, categories, tags — with a polymorphic `Story` wrapper driving a magazine-style homepage. Brand-agnostic: site name, tagline, logo, colors, navigation, and social links are configured at `/admin/settings`. Infrastructure (hosts, storage, DB) is configured via ENV.
 
-Things you may want to cover:
+## Stack
 
-* Ruby version
+- Rails 8 (Solid Cache / Queue / Cable — no Redis)
+- PostgreSQL
+- Hotwire (Turbo + Stimulus)
+- Tailwind CSS
+- ViewComponent
+- Active Storage + Action Text (rich text via Lexxy editor)
+- Kamal for deployment
 
-* System dependencies
+## Getting started
 
-* Configuration
+```bash
+bin/setup
+bin/dev                  # http://localhost:3001
+```
 
-* Database creation
+Then log in at `/admin` and configure your site at `/admin/settings`.
 
-* Database initialization
-
-* How to run the test suite
-
-To run the test suite, use the following command:
+## Tests
 
 ```bash
 bin/rails test
+bin/rubocop
+bin/brakeman --no-pager
 ```
-
-This will execute all the tests in the application. Ensure that the test database is set up and migrations are applied before running the tests.
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
