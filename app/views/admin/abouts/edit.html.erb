@@ -1,9 +1,9 @@
 <div class="mb-6">
-  <h1 class="text-2xl font-serif text-[#704214] dark:text-amber-200">About</h1>
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">About</h1>
   <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Displayed at <a href="/about" target="_blank" class="underline">/about</a></p>
 </div>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+<div class="bg-white dark:bg-ink rounded-lg shadow p-6">
   <%= form_with model: @about, url: admin_about_path, method: :patch do |f| %>
     <% if @about.errors.any? %>
       <div class="bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4 mb-6">
@@ -15,11 +15,16 @@
       </div>
     <% end %>
 
-    <div class="mb-6">
-      <%= f.lexxy_rich_text_area :content %>
-    </div>
+    <% I18n.available_locales.each do |loc| %>
+      <fieldset class="mb-8 pb-6 border-b border-rule dark:border-ink-soft last:border-b-0 last:pb-0">
+        <legend class="font-mono text-[11px] tracking-[0.18em] uppercase text-sage-deep dark:text-peach mb-3">
+          <%= t("locale_name", locale: loc) %> (<%= loc %>)
+        </legend>
+        <%= f.lexxy_rich_text_area :"content_#{loc}" %>
+      </fieldset>
+    <% end %>
 
     <%= f.submit "Save",
-        class: "px-5 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors cursor-pointer" %>
+        class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
   <% end %>
 </div>

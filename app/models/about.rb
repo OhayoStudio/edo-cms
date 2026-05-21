@@ -1,5 +1,6 @@
 class About < ApplicationRecord
-  has_rich_text :content
+  include LocalizedContent
+  has_localized_content :content
 
   def self.instance
     first_or_create!

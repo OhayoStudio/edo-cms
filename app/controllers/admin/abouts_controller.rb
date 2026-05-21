@@ -15,6 +15,6 @@ class Admin::AboutsController < Admin::BaseController
   private
 
   def about_params
-    params.require(:about).permit(:content)
+    params.require(:about).permit(*I18n.available_locales.map { |loc| :"content_#{loc}" })
   end
 end

@@ -6,22 +6,22 @@
  */
 
 :root {
-  --color-gray-200: var(--cms-background, #F9F7F0);
-  --color-slate-800: var(--cms-text, #5e4b35);
+  --color-gray-200: var(--cms-background, #f5ede0);
+  --color-slate-800: var(--cms-text, #2b2620);
 }
 
 .brand-theme {
-  --color-primary:         var(--cms-primary,       #704214);
-  --color-primary-header:  var(--cms-primary,       #704214);
-  --color-primary-darker:  var(--cms-primary-dark,  #52300f);
-  --color-primary-darkest: #2c1808;
+  --color-primary:         var(--cms-primary,       #6e8c75);
+  --color-primary-header:  var(--cms-primary,       #6e8c75);
+  --color-primary-darker:  var(--cms-primary-dark,  #4a4239);
+  --color-primary-darkest: #1c1813;
 
-  --color-secondary: var(--cms-secondary,    #A67B5B);
-  --color-accent:    var(--cms-accent,       #D9C4A6);
-  --color-background: var(--cms-background,  #F9F7F0);
+  --color-secondary: var(--cms-secondary,    #d9a17f);
+  --color-accent:    var(--cms-accent,       #e6dccb);
+  --color-background: var(--cms-background,  #f5ede0);
 
   --color-text-primary: var(--cms-text-primary, var(--color-primary));
-  --color-text:         var(--cms-text,         #423525);
+  --color-text:         var(--cms-text,         #2b2620);
 
   --color-slate-900: var(--color-primary-header);
   --color-slate-800: var(--color-primary-darkest);

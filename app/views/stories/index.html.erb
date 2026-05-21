@@ -36,13 +36,13 @@
 
   <%# ─── RECENTLY PUBLISHED ────────────────────────────── %>
   <section id="recent_stories" class="container mx-auto px-5 md:px-20 pt-10 md:pt-24">
-    <header class="flex items-baseline justify-between mb-6 md:mb-12 pb-3 md:pb-4 border-b border-[var(--color-accent)]/40">
+    <header class="flex items-baseline justify-between mb-6 md:mb-12 pb-3 md:pb-4 border-b border-peach/40">
       <h2 class="lora font-medium text-[22px] md:text-[32px] tracking-tight text-[var(--color-text)] dark:text-gray-200 m-0">
         Recently published
       </h2>
       <%= link_to "All →".html_safe,
             articles_path,
-            class: "text-[9px] md:text-[11px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-[var(--color-accent)] hover:underline" %>
+            class: "text-[9px] md:text-[11px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-peach hover:underline" %>
     </header>
 
     <% if @recent_stories.any? %>
@@ -73,11 +73,11 @@
 
   <%# ─── MOTION PICTURES (dark band) ──────────────────── %>
   <% if @videos.any? %>
-    <section id="videos" class="bg-[var(--color-primary-darkest)] dark:bg-slate-800 text-gray-200 lora py-10 md:py-22 mt-10 md:mt-0">
+    <section id="videos" class="bg-[var(--color-primary-darkest)] dark:bg-ink text-gray-200 lora py-10 md:py-22 mt-10 md:mt-0">
       <div class="container mx-auto px-5 md:px-20">
         <header class="flex items-baseline justify-between mb-6 md:mb-14">
           <div>
-            <div class="text-[9px] md:text-[11px] tracking-[0.18em] uppercase font-mono text-[var(--color-accent)] mb-2 md:mb-3">
+            <div class="text-[9px] md:text-[11px] tracking-[0.18em] uppercase font-mono text-peach mb-2 md:mb-3">
               Now showing
             </div>
             <h2 class="lora font-medium text-[26px] md:text-5xl leading-none tracking-tight text-balance m-0">
@@ -86,7 +86,7 @@
           </div>
           <%= link_to "All videos →",
                 videos_path,
-                class: "hidden md:inline-block text-[11px] tracking-[0.18em] uppercase font-mono text-[var(--color-accent)] hover:underline shrink-0 ml-6" %>
+                class: "hidden md:inline-block text-[11px] tracking-[0.18em] uppercase font-mono text-peach hover:underline shrink-0 ml-6" %>
         </header>
 
         <%= render VideosComponent.new(videos: @videos) %>
@@ -94,7 +94,7 @@
         <div class="md:hidden mt-6 text-right">
           <%= link_to "All videos →",
                 videos_path,
-                class: "text-[9px] tracking-[0.18em] uppercase font-mono text-[var(--color-accent)] hover:underline" %>
+                class: "text-[9px] tracking-[0.18em] uppercase font-mono text-peach hover:underline" %>
         </div>
       </div>
     </section>
@@ -103,13 +103,13 @@
   <%# ─── ACROSS THE ROOMS ─────────────────────────────── %>
   <% if @latest_stories_by_category.any? %>
     <section id="latest_stories_by_category" class="container mx-auto px-5 md:px-20 pt-10 md:pt-24 pb-12 md:pb-20">
-      <header class="flex items-baseline justify-between mb-6 md:mb-12 pb-3 md:pb-4 border-b border-[var(--color-accent)]/40">
+      <header class="flex items-baseline justify-between mb-6 md:mb-12 pb-3 md:pb-4 border-b border-peach/40">
         <h2 class="lora font-medium text-[22px] md:text-[32px] tracking-tight text-[var(--color-text)] dark:text-gray-200 m-0">
           Across the rooms
         </h2>
         <%= link_to "All →".html_safe,
               articles_path,
-              class: "text-[9px] md:text-[11px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-[var(--color-accent)] hover:underline" %>
+              class: "text-[9px] md:text-[11px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-peach hover:underline" %>
       </header>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-10">

@@ -11,7 +11,7 @@
   <%# Eyebrow row: No. ### · date %>
   <div class="flex justify-between items-baseline mb-2.5 font-mono text-[10px] uppercase tracking-[0.18em]">
     <% if catalogue_number %>
-      <span class="text-[#704214]">No. <%= catalogue_number.to_s.rjust(3, "0") %></span>
+      <span class="text-sage-deep">No. <%= catalogue_number.to_s.rjust(3, "0") %></span>
     <% else %>
       <span></span>
     <% end %>
@@ -21,13 +21,13 @@
   </div>
 
   <%# Thumbnail with play overlay %>
-  <div class="relative aspect-video overflow-hidden bg-[#F5EFE6] mb-3.5">
+  <div class="relative aspect-video overflow-hidden bg-cream-soft mb-3.5">
     <img src="<%= video.thumbnail_url %>" alt="<%= video.title %>"
          class="w-full h-full object-cover group-hover:opacity-90 transition-opacity duration-200"
          loading="lazy" decoding="async">
     <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-      <div class="w-12 h-12 rounded-full grid place-items-center bg-[#F9F7F0] shadow-[0_4px_16px_rgba(0,0,0,0.2)]">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#704214]" viewBox="0 0 24 24" fill="currentColor">
+      <div class="w-12 h-12 rounded-full grid place-items-center bg-cream-soft shadow-[0_4px_16px_rgba(0,0,0,0.2)]">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-sage-deep" viewBox="0 0 24 24" fill="currentColor">
           <path d="M8 5v14l11-7z"/>
         </svg>
       </div>
@@ -35,7 +35,7 @@
   </div>
 
   <%# Title + description %>
-  <h3 class="font-serif font-medium text-[22px] leading-[1.18] tracking-[-0.01em] text-[#423525] m-0 mb-2 text-balance group-hover:text-[#704214] transition-colors">
+  <h3 class="font-serif font-medium text-[22px] leading-[1.18] tracking-[-0.01em] text-ink m-0 mb-2 text-balance group-hover:text-sage-deep transition-colors">
     <%= video.title %>
   </h3>
   <% if video.description.present? %>

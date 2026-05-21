@@ -1,12 +1,12 @@
 <div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-serif text-[#704214] dark:text-amber-200">Authors</h1>
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Authors</h1>
   <%= link_to "New Author", new_admin_author_path,
-      class: "px-4 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors" %>
+      class: "px-4 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors" %>
 </div>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+<div class="bg-white dark:bg-ink rounded-lg shadow overflow-hidden">
   <table class="w-full text-sm">
-    <thead class="bg-[#F9F7F0] dark:bg-gray-700 text-[#704214] dark:text-amber-300">
+    <thead class="bg-cream-soft dark:bg-ink-soft text-sage-deep dark:text-peach">
       <tr>
         <th class="text-left px-4 py-3 font-semibold">Author</th>
         <th class="text-left px-4 py-3 font-semibold">Email</th>
@@ -25,7 +25,7 @@
                 <img src="<%= url_for(author.avatar.variant(:thumb)) %>"
                      class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-600" />
               <% else %>
-                <div class="w-8 h-8 rounded-full bg-[#D9C4A6] dark:bg-gray-600 flex items-center justify-center text-xs font-semibold text-[#704214] dark:text-amber-300">
+                <div class="w-8 h-8 rounded-full bg-rule dark:bg-ink-soft flex items-center justify-center text-xs font-semibold text-sage-deep dark:text-peach">
                   <%= author.first_name[0] %><%= author.last_name[0] %>
                 </div>
               <% end %>
@@ -36,14 +36,14 @@
             <%= author.email %>
           </td>
           <td class="px-4 py-3">
-            <span class="px-2 py-0.5 rounded text-xs font-medium bg-[#f5efe6] text-[#704214] dark:bg-amber-900/30 dark:text-amber-300">
+            <span class="px-2 py-0.5 rounded text-xs font-medium bg-peach-tint text-sage-deep dark:bg-sage-deep/30 dark:text-peach">
               <%= author.role.humanize %>
             </span>
           </td>
           <td class="px-4 py-3">
             <span class="px-2 py-0.5 rounded text-xs font-medium
               <%= author.active? ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
-                                 : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400' %>">
+                                 : 'bg-gray-100 text-gray-500 dark:bg-ink-soft dark:text-gray-400' %>">
               <%= author.status.humanize %>
             </span>
           </td>
@@ -53,9 +53,9 @@
           <td class="px-4 py-3 text-right">
             <div class="flex items-center justify-end gap-2">
               <%= link_to "Edit", edit_admin_author_path(author),
-                  class: "px-2 py-1 text-xs border border-[#704214] text-[#704214]
-                          dark:border-amber-400 dark:text-amber-400 rounded hover:bg-amber-50
-                          dark:hover:bg-amber-900/20 transition-colors" %>
+                  class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
+                          dark:border-peach dark:text-peach rounded hover:bg-peach-tint
+                          dark:hover:bg-sage-deep/20 transition-colors" %>
               <button type="button"
                       class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors cursor-pointer"
                       data-controller="admin-modal"

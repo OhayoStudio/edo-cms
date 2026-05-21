@@ -1,7 +1,7 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-200 dark:bg-gray-800">
+<div class="min-h-screen flex items-center justify-center bg-cream dark:bg-ink">
   <div class="w-full max-w-sm">
-    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8">
-      <h1 class="font-serif text-2xl text-[#704214] dark:text-amber-200 mb-6 text-center">
+    <div class="bg-white dark:bg-ink rounded-lg shadow-lg p-8">
+      <h1 class="font-serif text-2xl text-sage-deep dark:text-peach mb-6 text-center">
         <%= site_name %> — Admin
       </h1>
 
@@ -21,8 +21,8 @@
               placeholder: "",
               value: params[:email_address],
               class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm
-                      bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
-                      focus:outline-[#704214] dark:focus:outline-amber-400" %>
+                      bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100
+                      focus:outline-sage-deep dark:focus:outline-peach" %>
         </div>
 
         <div>
@@ -33,13 +33,13 @@
               placeholder: "••••••••",
               maxlength: 72,
               class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm
-                      bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100
-                      focus:outline-[#704214] dark:focus:outline-amber-400" %>
+                      bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100
+                      focus:outline-sage-deep dark:focus:outline-peach" %>
         </div>
 
         <div class="pt-2">
           <%= form.submit "Sign in",
-              class: "w-full rounded px-4 py-2.5 bg-[#704214] hover:bg-[#52300f] text-white
+              class: "w-full rounded px-4 py-2.5 bg-sage-deep hover:bg-ink-soft text-white
                       text-sm font-medium cursor-pointer transition-colors" %>
         </div>
       <% end %>

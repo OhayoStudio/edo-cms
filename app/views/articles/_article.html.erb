@@ -8,11 +8,11 @@
       5. Byline (kept as-is)
 %>
 
-<article class="lora dark:bg-gray-800">
+<article class="lora dark:bg-ink">
 
   <%# ─── 1. Full-bleed hero ──────────────────────────────────────── %>
   <% if article.featured_image.attached? %>
-    <div class="w-full h-[280px] md:h-[400px] lg:h-[540px] overflow-hidden bg-[#D9C4A6] dark:bg-[#52300f]">
+    <div class="w-full h-[280px] md:h-[400px] lg:h-[540px] overflow-hidden bg-rule dark:bg-ink-soft">
       <%= image_tag article.featured_image,
             alt: article.title,
             fetchpriority: "high",
@@ -25,20 +25,20 @@
   <header class="max-w-[980px] mx-auto px-6 md:px-8 pt-12 md:pt-16 pb-10 md:pb-14 text-center">
 
     <%# Eyebrow row: Category · Date · No. ### %>
-    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-mono text-[11px] tracking-[0.18em] uppercase text-[#704214] dark:text-[#D9C4A6] mb-7">
+    <div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-mono text-[11px] tracking-[0.18em] uppercase text-sage-deep dark:text-rule mb-7">
       <%= link_to article.category.name,
             category_path(article.category.slug),
             class: "hover:underline" %>
-      <span class="w-1 h-1 rounded-full bg-[#704214]/50 dark:bg-[#D9C4A6]/50"></span>
+      <span class="w-1 h-1 rounded-full bg-sage-deep/50 dark:bg-rule/50"></span>
       <span><%= article.published_at.strftime("%b %-d, %Y") if article.published_at %></span>
       <% if article.respond_to?(:catalogue_number) && article.catalogue_number %>
-        <span class="w-1 h-1 rounded-full bg-[#704214]/50 dark:bg-[#D9C4A6]/50"></span>
+        <span class="w-1 h-1 rounded-full bg-sage-deep/50 dark:bg-rule/50"></span>
         <span>No. <%= article.catalogue_number.to_s.rjust(3, "0") %></span>
       <% end %>
     </div>
 
     <%# Big serif title %>
-    <h1 class="lora font-medium text-4xl md:text-6xl lg:text-[80px] leading-[1.05] tracking-[-0.025em] text-[#423525] dark:text-gray-200 mb-7 text-balance">
+    <h1 class="lora font-medium text-4xl md:text-6xl lg:text-[80px] leading-[1.05] tracking-[-0.025em] text-ink dark:text-gray-200 mb-7 text-balance">
       <%= article.title %>
     </h1>
 
@@ -60,13 +60,13 @@
   <%# ─── 4. Tags ─────────────────────────────────────────────────── %>
   <% if article.tags.any? %>
     <div class="max-w-[720px] mx-auto px-6 md:px-8 pb-12">
-      <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-[#704214] dark:text-[#D9C4A6] mb-2.5">Tags</div>
+      <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-sage-deep dark:text-rule mb-2.5">Tags</div>
       <div class="flex flex-wrap items-baseline">
         <% article.tags.each_with_index do |tag, j| %>
           <%= link_to tag.name, tag_path(tag.slug),
-                class: "font-mono text-[10px] tracking-[0.18em] uppercase py-1 text-[#704214] dark:text-[#D9C4A6] hover:underline" %>
+                class: "font-mono text-[10px] tracking-[0.18em] uppercase py-1 text-sage-deep dark:text-rule hover:underline" %>
           <% if j < article.tags.size - 1 %>
-            <span class="font-mono text-[10px] text-[#D9C4A6] dark:text-[#52300f] px-1.5 py-1">/</span>
+            <span class="font-mono text-[10px] text-rule dark:text-ink-soft px-1.5 py-1">/</span>
           <% end %>
         <% end %>
       </div>
@@ -75,7 +75,7 @@
 
   <%# ─── 5. Byline ───────────────────────────────────────────────── %>
   <div class="max-w-[720px] mx-auto px-6 md:px-8 pb-16 md:pb-20">
-    <p class="pt-6 border-t border-[#D9C4A6] dark:border-[#52300f] lora text-base text-gray-500 dark:text-gray-400">
+    <p class="pt-6 border-t border-rule dark:border-ink-soft lora text-base text-gray-500 dark:text-gray-400">
       Written by Jérôme, with the little help of Claude.
     </p>
   </div>
