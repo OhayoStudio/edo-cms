@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="brand-theme">
+<html lang="<%= I18n.locale %>" class="brand-theme">
   <head>
     <%= display_meta_tags(
           site:        site_name,
@@ -8,6 +8,10 @@
           og:      { site_name: site_name, type: "website" },
           twitter: { site: cms_setting.social_links["twitter"].presence, card: "summary_large_image" }.compact
         ) %>
+    <% I18n.available_locales.each do |loc| %>
+      <link rel="alternate" hreflang="<%= loc %>" href="<%= url_for(locale: loc, only_path: false) %>">
+    <% end %>
+    <link rel="alternate" hreflang="x-default" href="<%= url_for(locale: I18n.default_locale, only_path: false) %>">
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -49,7 +53,7 @@
 
   <body class="brand-theme h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200" data-controller="dark-mode">
     <header class="bg-gray-200 text-amber-900 dark:bg-slate-800 dark:text-[var(--color-accent)] hidden sm:block sticky top-0 z-50 lora">
-      <nav aria-label="Main navigation" class="container px-16 mx-auto flex items-center justify-between">
+      <nav aria-label="<%= t("nav.a11y.main_nav") %>" class="container px-16 mx-auto flex items-center justify-between">
         <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center gap-2 py-4">
           <% if cms_setting.logo_light.attached? %>
             <%= image_tag cms_setting.logo_light, alt: site_name, class: "h-16 w-auto block dark:hidden" %>
@@ -66,6 +70,9 @@
               <%= link_to item["label"], item["path"], class: "hover:text-amber-300 #{current_page?(item['path']) ? 'text-amber-600' : ''}" %>
             </li>
           <% end %>
+          <li class="p-2">
+            <%= render "common/locale_switcher" %>
+          </li>
           <li class="p-4">
             <%= render "common/darkmode_toggle" %>
           </li>
@@ -88,15 +95,16 @@
           </a>
         </div>
         <div class="flex items-center gap-2">
+          <%= render "common/locale_switcher" %>
           <%= render "common/darkmode_toggle" %>
-          <button id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" class="text-amber-900 dark:text-[var(--color-accent)] focus:outline-none">
+          <button id="hamburger" aria-label="<%= t("nav.a11y.open_menu") %>" aria-expanded="false" aria-controls="mobile-menu" class="text-amber-900 dark:text-[var(--color-accent)] focus:outline-none">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
           </button>
         </div>
       </div>
-      <nav id="mobile-menu" aria-label="Mobile navigation" class="hidden">
+      <nav id="mobile-menu" aria-label="<%= t("nav.a11y.mobile_nav") %>" class="hidden">
         <ul class="flex flex-col">
           <% cms_setting.primary_nav.each do |item| %>
             <li class="p-6">
@@ -122,25 +130,29 @@
           </div>
 
           <!-- Navigation links -->
-          <nav aria-label="Footer navigation" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-300">
+          <nav aria-label="<%= t("nav.a11y.footer_nav") %>" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-300">
             <% cms_setting.footer_nav.each do |item| %>
               <%= link_to item["label"], item["path"],
                     class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
             <% end %>
-            <%= link_to "RSS", feed_path(format: :rss),
+            <%= link_to t("nav.footer.rss"), feed_path(format: :rss),
                 class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
           </nav>
         </div>
       </div>
     </footer>
     <script>
-      document.getElementById('hamburger').addEventListener('click', function() {
-      var menu = document.getElementById('mobile-menu');
-      var expanded = !menu.classList.contains('hidden');
-      menu.classList.toggle('hidden');
-      this.setAttribute('aria-expanded', String(!expanded));
-      this.setAttribute('aria-label', expanded ? 'Open menu' : 'Close menu');
-    });
+      (function() {
+        var labels = { open: <%= raw t("nav.a11y.open_menu").to_json %>,
+                       close: <%= raw t("nav.a11y.close_menu").to_json %> };
+        document.getElementById('hamburger').addEventListener('click', function() {
+          var menu = document.getElementById('mobile-menu');
+          var expanded = !menu.classList.contains('hidden');
+          menu.classList.toggle('hidden');
+          this.setAttribute('aria-expanded', String(!expanded));
+          this.setAttribute('aria-label', expanded ? labels.open : labels.close);
+        });
+      })();
     </script>
   </body>
 </html>
