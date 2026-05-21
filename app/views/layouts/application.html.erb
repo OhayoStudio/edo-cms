@@ -124,12 +124,17 @@
       <div class="container mx-auto px-6 py-12">
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
           <!-- Brand + copyright -->
-          <div class="space-y-1">
+          <div class="space-y-2">
+            <% if cms_setting.og_default_image.attached? %>
+              <%= image_tag cms_setting.og_default_image.variant(resize_to_limit: [96, 96]),
+                    alt: site_name,
+                    class: "h-12 w-12 rounded object-cover mb-1" %>
+            <% end %>
             <p class="font-serif text-sage-deep dark:text-gray-300 tracking-wide"><%= site_name %></p>
             <% if cms_setting.tagline.present? %>
               <p class="text-sm text-gray-500 dark:text-gray-300 italic"><%= cms_setting.tagline %></p>
             <% end %>
-            <p class="text-sm text-gray-500 dark:text-gray-300">&copy; <%= Time.current.year %></p>
+            <p class="text-sm text-gray-500 dark:text-gray-300"><%= t("nav.footer.copyright", year: Time.current.year, site: site_name) %></p>
           </div>
 
           <!-- Navigation links -->
