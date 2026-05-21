@@ -86,3 +86,6 @@ script/setup_production.sh
 config/edo-cms*.json
 iroiro.md
 public/placeholder.ark
+
+
+TODO.md
