@@ -16,27 +16,27 @@
     <div>
       <%= f.label :name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_field :name,
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100
-                  #{tag.errors[:name].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-[#704214]'}" %>
+                  #{tag.errors[:name].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-sage-deep'}" %>
     </div>
 
     <div>
       <%= f.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_area :description, rows: 3,
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
-                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
     </div>
 
     <div class="flex items-center gap-2">
-      <%= f.check_box :featured, class: "rounded border-gray-300 text-[#704214]" %>
+      <%= f.check_box :featured, class: "rounded border-gray-300 text-sage-deep" %>
       <%= f.label :featured, "Featured tag", class: "text-sm text-gray-700 dark:text-gray-300" %>
     </div>
   </div>
 
   <div class="flex items-center gap-4 pt-2">
     <%= f.submit tag.persisted? ? "Update Tag" : "Create Tag",
-        class: "px-5 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors cursor-pointer" %>
+        class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
     <%= link_to "Cancel", admin_tags_path,
         class: "px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
                 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" %>

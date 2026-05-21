@@ -2,17 +2,17 @@
 
 <% if @videos.any? %>
   <%# ── DARK CINEMATIC HERO BAND ───────────────────────────────── %>
-  <div id="videos" class="bg-[#423525] text-[#F9F7F0] lora">
+  <div id="videos" class="bg-ink text-cream-soft lora">
     <div class="max-w-[1320px] mx-auto px-5 md:px-16 pt-10 md:pt-16 pb-12 md:pb-[88px]">
 
       <%# Page header — preserved title, on the dark band %>
-      <div class="flex items-baseline justify-between pb-4 md:pb-[22px] mb-7 md:mb-11 border-b border-[#D9C4A6]/20">
-        <h1 class="font-serif font-medium text-2xl md:text-[44px] tracking-[-0.02em] text-[#F9F7F0] m-0">
+      <div class="flex items-baseline justify-between pb-4 md:pb-[22px] mb-7 md:mb-11 border-b border-rule/20">
+        <h1 class="font-serif font-medium text-2xl md:text-[44px] tracking-[-0.02em] text-cream-soft m-0">
           Videos<span class="font-serif italic text-sm md:text-lg text-[#A67B5B] ml-2 md:ml-3.5">we liked</span>
         </h1>
         <div class="text-right leading-[1.7]">
           <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#A67B5B]">The screening room</div>
-          <div class="hidden md:block font-serif text-sm text-[#F9F7F0]">
+          <div class="hidden md:block font-serif text-sm text-cream-soft">
             <%= pluralize(@total_video_count || (@videos.count + @archive_videos.total_count), "piece") %>
           </div>
         </div>
@@ -26,17 +26,17 @@
   <%# ── PAPER FILMSTRIP ARCHIVE ────────────────────────────────── %>
   <% if @archive_videos.any? %>
     <turbo-frame id="videos-archive" data-turbo-action="advance">
-      <div class="bg-[#F9F7F0]">
+      <div class="bg-cream-soft">
         <div class="max-w-[1320px] mx-auto px-5 md:px-16 pt-10 md:pt-20 pb-14 md:pb-24">
 
           <%# Archive header %>
-          <div class="flex items-baseline justify-between pb-3 md:pb-[18px] mb-7 md:mb-10 border-b-2 border-[#423525]">
-            <h2 class="font-serif font-medium text-xl md:text-[32px] tracking-[-0.015em] text-[#423525] m-0">
+          <div class="flex items-baseline justify-between pb-3 md:pb-[18px] mb-7 md:mb-10 border-b-2 border-ink">
+            <h2 class="font-serif font-medium text-xl md:text-[32px] tracking-[-0.015em] text-ink m-0">
               Previous videos
             </h2>
             <div class="flex gap-3 md:gap-4 font-mono text-[9px] md:text-[11px] uppercase tracking-[0.18em]">
               <span class="hidden md:inline text-gray-500">The archive</span>
-              <span class="text-[#704214]"><%= pluralize(@archive_videos.total_count, "entry", plural: "entries") %></span>
+              <span class="text-sage-deep"><%= pluralize(@archive_videos.total_count, "entry", plural: "entries") %></span>
             </div>
           </div>
 
@@ -49,7 +49,7 @@
           </div>
 
           <%# Pagination %>
-          <div class="mt-10 md:mt-16 pt-6 border-t-2 border-[#423525] flex justify-center pagination">
+          <div class="mt-10 md:mt-16 pt-6 border-t-2 border-ink flex justify-center pagination">
             <%= paginate @archive_videos, param_name: :archive_page %>
           </div>
         </div>

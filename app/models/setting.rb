@@ -9,14 +9,16 @@ class Setting < ApplicationRecord
   store_accessor :theme_colors,
     :primary, :primary_dark, :secondary, :accent, :background, :text_primary, :text
 
+  # "Pokeibo" calm-morning palette — sage / ink / peach / cream / rule.
+  # Editors can override any of these via Settings → Theme colors.
   THEME_DEFAULTS = {
-    "primary"      => "#704214",
-    "primary_dark" => "#52300f",
-    "secondary"    => "#A67B5B",
-    "accent"       => "#D9C4A6",
-    "background"   => "#F9F7F0",
-    "text_primary" => "#704214",
-    "text"         => "#423525"
+    "primary"      => "#6e8c75",   # sage-deep — headings, CTAs
+    "primary_dark" => "#4a4239",   # ink-soft — hover state
+    "secondary"    => "#d9a17f",   # peach-deep — secondary accent
+    "accent"       => "#e6dccb",   # rule — borders, dividers
+    "background"   => "#f5ede0",   # cream — page background
+    "text_primary" => "#6e8c75",   # sage-deep — primary text color
+    "text"         => "#2b2620"    # ink — body text
   }.freeze
 
   CACHE_KEY = "setting/instance"

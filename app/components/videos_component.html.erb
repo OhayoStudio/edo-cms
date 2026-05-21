@@ -12,7 +12,7 @@
     <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#A67B5B] mb-2.5 md:mb-3.5">
       Now showing<% if main_date %>&nbsp;·&nbsp; <%= main_date %><% end %>
     </div>
-    <h2 class="font-serif font-medium text-[26px] md:text-[38px] leading-[1.12] tracking-[-0.02em] text-[#F9F7F0] m-0 mb-4 md:mb-6 text-balance"
+    <h2 class="font-serif font-medium text-[26px] md:text-[38px] leading-[1.12] tracking-[-0.02em] text-cream-soft m-0 mb-4 md:mb-6 text-balance"
         data-video-player-target="mainTitle">
       <%= @main_video.title %>
     </h2>
@@ -28,15 +28,15 @@
         data-video-id="<%= main_youtube_id %>">
 
       <%# Corner labels (mix-blend so they read on any image) %>
-      <div class="absolute top-3.5 right-4 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#F9F7F0]/80 mix-blend-difference pointer-events-none">
+      <div class="absolute top-3.5 right-4 font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-cream-soft/80 mix-blend-difference pointer-events-none">
         Featured
       </div>
 
       <%# Play button — paper inverted (matches Tweaks final state) %>
       <div class="absolute inset-0 flex items-center justify-center pointer-events-none"
            data-video-player-target="mainPlayButton">
-        <div class="w-16 h-16 md:w-[88px] md:h-[88px] rounded-full grid place-items-center bg-[#F9F7F0] shadow-[0_6px_24px_rgba(0,0,0,0.4)]">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-7 md:w-7 text-[#704214]" viewBox="0 0 24 24" fill="currentColor">
+        <div class="w-16 h-16 md:w-[88px] md:h-[88px] rounded-full grid place-items-center bg-cream-soft shadow-[0_6px_24px_rgba(0,0,0,0.4)]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 md:h-7 md:w-7 text-sage-deep" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8 5v14l11-7z"/>
           </svg>
         </div>
@@ -45,7 +45,7 @@
       <div class="hidden w-full h-full" data-video-player-target="videoFrame"></div>
     </div>
 
-    <p class="mt-4 md:mt-5 font-serif text-[14px] md:text-[17px] leading-[1.55] text-[#F9F7F0]/75 max-w-[64ch] m-0"
+    <p class="mt-4 md:mt-5 font-serif text-[14px] md:text-[17px] leading-[1.55] text-cream-soft/75 max-w-[64ch] m-0"
        data-video-player-target="mainDescription"
        data-controller="description-expand">
       <%= @main_video.description %>
@@ -69,8 +69,8 @@
                alt="<%= video.title %>"
                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]">
           <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div class="w-11 h-11 rounded-full grid place-items-center bg-[#F9F7F0] shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-[#704214]" viewBox="0 0 24 24" fill="currentColor">
+            <div class="w-11 h-11 rounded-full grid place-items-center bg-cream-soft shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-sage-deep" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z"/>
               </svg>
             </div>
@@ -83,11 +83,11 @@
             <%= small_date %>
           </div>
         <% end %>
-        <h4 class="font-serif font-semibold text-[16px] md:text-[18px] leading-[1.25] mt-1.5 text-balance text-[#F9F7F0] group-hover:underline decoration-[#A67B5B]/40 underline-offset-4">
+        <h4 class="font-serif font-semibold text-[16px] md:text-[18px] leading-[1.25] mt-1.5 text-balance text-cream-soft group-hover:underline decoration-[#A67B5B]/40 underline-offset-4">
           <%= video.title %>
         </h4>
         <% if video.description.present? %>
-          <p class="mt-1.5 font-serif text-[12.5px] md:text-[13.5px] leading-[1.5] text-[#F9F7F0]/65 line-clamp-2">
+          <p class="mt-1.5 font-serif text-[12.5px] md:text-[13.5px] leading-[1.5] text-cream-soft/65 line-clamp-2">
             <%= truncate(strip_tags(video.description), length: 110) %>
           </p>
         <% end %>

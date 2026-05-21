@@ -25,7 +25,10 @@
     <link rel="icon" href="/icon.png" type="image/png" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/icon.png" />
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "theme", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "lexxy" %>
     <%= javascript_importmap_tags %>
@@ -51,10 +54,10 @@
     <% end %>
   </head>
 
-  <body class="brand-theme h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200" data-controller="dark-mode">
-    <header class="bg-gray-200 text-amber-900 dark:bg-slate-800 dark:text-[var(--color-accent)] hidden sm:block sticky top-0 z-50 lora">
+  <body class="brand-theme h-full bg-cream dark:bg-ink transition-colors duration-200" data-controller="dark-mode">
+    <header class="bg-cream text-sage-deep dark:bg-ink dark:text-peach hidden sm:block sticky top-0 z-50 lora">
       <nav aria-label="<%= t("nav.a11y.main_nav") %>" class="container px-16 mx-auto flex items-center justify-between">
-        <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center gap-2 py-4">
+        <a href="/" class="text-sage-deep dark:text-peach text-lg font-serif flex items-center gap-2 py-4">
           <% if cms_setting.logo_light.attached? %>
             <%= image_tag cms_setting.logo_light, alt: site_name, class: "h-16 w-auto block dark:hidden" %>
           <% end %>
@@ -67,7 +70,7 @@
         <ul class="flex gap-8 items-center">
           <% cms_setting.primary_nav.each do |item| %>
             <li class="p-6">
-              <%= link_to item["label"], item["path"], class: "hover:text-amber-300 #{current_page?(item['path']) ? 'text-amber-600' : ''}" %>
+              <%= link_to item["label"], item["path"], class: "hover:text-peach #{current_page?(item['path']) ? 'text-sage-deep' : ''}" %>
             </li>
           <% end %>
           <li class="p-2">
@@ -81,10 +84,10 @@
     </header>
 
     <!-- Mobile Header -->
-    <div role="none" class="bg-gray-200 text-amber-900 dark:bg-slate-800 dark:text-[var(--color-accent)] block sm:hidden sticky top-0 z-50">
+    <div role="none" class="bg-cream text-sage-deep dark:bg-ink dark:text-peach block sm:hidden sticky top-0 z-50">
       <div class="flex items-center justify-between p-4">
         <div>
-          <a href="/" class="text-amber-900 dark:text-[var(--color-accent)] text-lg font-serif flex items-center gap-2">
+          <a href="/" class="text-sage-deep dark:text-peach text-lg font-serif flex items-center gap-2">
             <% if cms_setting.logo_light.attached? %>
               <%= image_tag cms_setting.logo_light, alt: site_name, class: "h-10 w-auto block dark:hidden" %>
             <% end %>
@@ -97,7 +100,7 @@
         <div class="flex items-center gap-2">
           <%= render "common/locale_switcher" %>
           <%= render "common/darkmode_toggle" %>
-          <button id="hamburger" aria-label="<%= t("nav.a11y.open_menu") %>" aria-expanded="false" aria-controls="mobile-menu" class="text-amber-900 dark:text-[var(--color-accent)] focus:outline-none">
+          <button id="hamburger" aria-label="<%= t("nav.a11y.open_menu") %>" aria-expanded="false" aria-controls="mobile-menu" class="text-sage-deep dark:text-peach focus:outline-none">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
@@ -108,21 +111,21 @@
         <ul class="flex flex-col">
           <% cms_setting.primary_nav.each do |item| %>
             <li class="p-6">
-              <%= link_to item["label"], item["path"], class: "text-amber-900 dark:text-[var(--color-accent)] hover:text-yellow-300 #{current_page?(item['path']) ? 'text-amber-600' : ''}" %>
+              <%= link_to item["label"], item["path"], class: "text-sage-deep dark:text-peach hover:text-yellow-300 #{current_page?(item['path']) ? 'text-sage-deep' : ''}" %>
             </li>
           <% end %>
         </ul>
       </nav>
     </div>
-    <main class="dark:bg-gray-800">
+    <main class="dark:bg-ink">
       <%= yield %>
     </main>
-    <footer class="mt-24 lora border-t border-[#D9C4A6] dark:border-[#52300f] dark:bg-slate-800">
+    <footer class="mt-24 lora border-t border-rule dark:border-ink-soft dark:bg-ink">
       <div class="container mx-auto px-6 py-12">
         <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
           <!-- Brand + copyright -->
           <div class="space-y-1">
-            <p class="font-serif text-[#704214] dark:text-gray-300 tracking-wide"><%= site_name %></p>
+            <p class="font-serif text-sage-deep dark:text-gray-300 tracking-wide"><%= site_name %></p>
             <% if cms_setting.tagline.present? %>
               <p class="text-sm text-gray-500 dark:text-gray-300 italic"><%= cms_setting.tagline %></p>
             <% end %>
@@ -133,10 +136,10 @@
           <nav aria-label="<%= t("nav.a11y.footer_nav") %>" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-300">
             <% cms_setting.footer_nav.each do |item| %>
               <%= link_to item["label"], item["path"],
-                    class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
+                    class: "hover:text-sage-deep dark:hover:text-peach transition-colors" %>
             <% end %>
             <%= link_to t("nav.footer.rss"), feed_path(format: :rss),
-                class: "hover:text-[#704214] dark:hover:text-amber-200 transition-colors" %>
+                class: "hover:text-sage-deep dark:hover:text-peach transition-colors" %>
           </nav>
         </div>
       </div>

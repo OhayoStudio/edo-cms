@@ -1,12 +1,12 @@
 <div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-serif text-[#704214] dark:text-amber-200">Videos</h1>
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Videos</h1>
   <%= link_to "New Video", new_admin_video_path,
-      class: "px-4 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors" %>
+      class: "px-4 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors" %>
 </div>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+<div class="bg-white dark:bg-ink rounded-lg shadow overflow-hidden">
   <table class="w-full text-sm">
-    <thead class="bg-[#F9F7F0] dark:bg-gray-700 text-[#704214] dark:text-amber-300">
+    <thead class="bg-cream-soft dark:bg-ink-soft text-sage-deep dark:text-peach">
       <tr>
         <th class="text-left px-4 py-3 font-semibold">Title</th>
         <th class="text-left px-4 py-3 font-semibold">
@@ -16,7 +16,7 @@
                   params[:status].presence || ""
                 ),
                 onchange: "window.location = '#{admin_videos_path}?status=' + this.value",
-                class: "text-xs font-semibold bg-transparent border-0 text-[#704214] dark:text-amber-300
+                class: "text-xs font-semibold bg-transparent border-0 text-sage-deep dark:text-peach
                         cursor-pointer focus:outline-none pr-1 -ml-1" %>
         </th>
         <th class="text-left px-4 py-3 font-semibold">Created</th>
@@ -34,7 +34,7 @@
             <% published = video.story&.is_published %>
             <span class="px-2 py-0.5 rounded text-xs font-medium
               <%= published ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
-                            : 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' %>">
+                            : 'bg-peach-soft text-sage-deep dark:bg-sage-deep/40 dark:text-peach' %>">
               <%= published ? "Published" : "Unpublished" %>
             </span>
           </td>
@@ -47,9 +47,9 @@
           <td class="px-4 py-3 text-right">
             <div class="flex items-center justify-end gap-2">
               <%= link_to "Edit", edit_admin_video_path(video),
-                  class: "px-2 py-1 text-xs border border-[#704214] text-[#704214]
-                          dark:border-amber-400 dark:text-amber-400 rounded hover:bg-amber-50
-                          dark:hover:bg-amber-900/20 transition-colors" %>
+                  class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
+                          dark:border-peach dark:text-peach rounded hover:bg-peach-tint
+                          dark:hover:bg-sage-deep/20 transition-colors" %>
 
               <% if video.story&.is_published %>
                 <%= button_to "Unpublish", unpublish_admin_video_path(video), method: :patch,

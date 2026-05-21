@@ -9,7 +9,7 @@
       - number:  Integer (catalogue number, e.g. 146 for the most recent of 146)
 %>
 
-<article class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-8 pt-7 pb-8 border-t border-[#D9C4A6] dark:border-[#52300f]">
+<article class="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-8 pt-7 pb-8 border-t border-rule dark:border-ink-soft">
 
   <%# ─── Content column ──────────────────────────────────────────── %>
   <div class="min-w-0">
@@ -19,13 +19,13 @@
     </div>
 
     <%# Serif title %>
-    <h2 class="lora font-medium text-2xl md:text-[30px] leading-[1.14] tracking-tight mb-3 text-[#423525] dark:text-gray-200 text-balance">
-      <%= link_to article.title, article_path(article.slug), class: "hover:text-[#704214] dark:hover:text-[#D9C4A6] transition-colors" %>
+    <h2 class="lora font-medium text-2xl md:text-[30px] leading-[1.14] tracking-tight mb-3 text-ink dark:text-gray-200 text-balance">
+      <%= link_to article.title, article_path(article.slug), class: "hover:text-sage-deep dark:hover:text-rule transition-colors" %>
     </h2>
 
     <%# Excerpt %>
     <p class="lora text-base leading-[1.55] text-gray-500 dark:text-gray-400 mb-4 max-w-[52ch]">
-      <%= link_to article_path(article.slug), class: "hover:text-[#423525] dark:hover:text-gray-300" do %>
+      <%= link_to article_path(article.slug), class: "hover:text-ink dark:hover:text-gray-300" do %>
         <%= article.excerpt %><%= "…" if article.excerpt.present? %>
       <% end %>
     </p>
@@ -36,9 +36,9 @@
         <% article.tags.each_with_index do |tag, j| %>
           <% is_current = tag.slug == params[:id] %>
           <%= link_to tag.name, tag_path(tag.slug),
-                class: "font-mono text-[9px] tracking-[0.18em] uppercase py-0.5 #{is_current ? 'text-red-600' : 'text-[#704214] dark:text-[#D9C4A6]'} hover:underline" %>
+                class: "font-mono text-[9px] tracking-[0.18em] uppercase py-0.5 #{is_current ? 'text-red-600' : 'text-sage-deep dark:text-rule'} hover:underline" %>
           <% if j < article.tags.size - 1 %>
-            <span class="font-mono text-[9px] text-[#D9C4A6] dark:text-[#52300f] px-1">/</span>
+            <span class="font-mono text-[9px] text-rule dark:text-ink-soft px-1">/</span>
           <% end %>
         <% end %>
       </div>
@@ -47,7 +47,7 @@
 
   <%# ─── Image column (with No. ### eyebrow) ─────────────────────── %>
   <div>
-    <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-[#704214] text-right mb-2.5">
+    <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-sage-deep text-right mb-2.5">
       No. <%= number.to_s.rjust(3, "0") %>
     </div>
     <%= link_to article_path(article.slug) do %>

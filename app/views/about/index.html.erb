@@ -17,17 +17,17 @@
 <%# ─── HERO BAND: tagline ─────────────────────────────────────── %>
 <% if cms_setting.tagline.present? %>
   <section class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-14 md:pt-24 pb-10 md:pb-14 lora">
-    <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#704214] mb-7 md:mb-9">
+    <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-sage-deep mb-7 md:mb-9">
       About
     </div>
 
-    <p class="font-serif italic font-normal text-[34px] sm:text-[48px] md:text-[68px] lg:text-[80px] leading-[1.06] tracking-[-0.02em] text-[#423525] m-0 max-w-[1080px] text-balance">
+    <p class="font-serif italic font-normal text-[34px] sm:text-[48px] md:text-[68px] lg:text-[80px] leading-[1.06] tracking-[-0.02em] text-ink m-0 max-w-[1080px] text-balance">
       <%= cms_setting.tagline %>
     </p>
   </section>
 
   <div class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20">
-    <hr class="border-0 border-t-2 border-[#423525] m-0">
+    <hr class="border-0 border-t-2 border-ink m-0">
   </div>
 <% end %>
 
@@ -35,7 +35,7 @@
 <section class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-12 md:pt-16 pb-16 md:pb-24 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-24 items-start lora">
 
   <%# Editor-controlled prose %>
-  <article class="lexxy-content article-body about-body max-w-[660px] text-[#423525]">
+  <article class="lexxy-content article-body about-body max-w-[660px] text-ink">
     <%= @about.content %>
   </article>
 
@@ -45,9 +45,9 @@
   <% if show_newsletter || show_contact %>
     <aside class="lg:sticky lg:top-8">
       <% if show_newsletter %>
-        <div class="border border-[#D9C4A6] p-7">
-          <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#704214] mb-3.5">By post</div>
-          <h3 class="font-serif font-medium text-[22px] leading-[1.2] tracking-[-0.01em] text-[#423525] m-0 mb-3 text-balance">
+        <div class="border border-rule p-7">
+          <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-sage-deep mb-3.5">By post</div>
+          <h3 class="font-serif font-medium text-[22px] leading-[1.2] tracking-[-0.01em] text-ink m-0 mb-3 text-balance">
             One letter, when something new goes up.
           </h3>
 
@@ -56,23 +56,23 @@
             <input type="email" name="email" id="newsletter-email"
                    placeholder="your@email.com"
                    required
-                   class="px-3 py-2.5 border border-[#D9C4A6] bg-transparent font-serif text-sm text-[#423525] placeholder:text-[#A67B5B] placeholder:italic focus:outline-none focus:border-[#A67B5B]">
+                   class="px-3 py-2.5 border border-rule bg-transparent font-serif text-sm text-ink placeholder:text-[#A67B5B] placeholder:italic focus:outline-none focus:border-[#A67B5B]">
             <input type="submit" value="Notify me"
-                   class="-mt-px py-3 px-3.5 bg-[#704214] text-[#F9F7F0] border border-[#704214] font-mono text-[11px] uppercase tracking-[0.16em] cursor-pointer hover:bg-[#52300f] transition-colors">
+                   class="-mt-px py-3 px-3.5 bg-sage-deep text-cream-soft border border-sage-deep font-mono text-[11px] uppercase tracking-[0.16em] cursor-pointer hover:bg-ink-soft transition-colors">
           </form>
         </div>
       <% end %>
 
       <% if show_contact %>
-        <div class="<%= 'mt-7 pt-7 border-t border-[#D9C4A6]' if show_newsletter %>">
-          <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-[#704214] mb-3.5">Otherwise</div>
+        <div class="<%= 'mt-7 pt-7 border-t border-rule' if show_newsletter %>">
+          <div class="font-mono text-[10px] uppercase tracking-[0.2em] text-sage-deep mb-3.5">Otherwise</div>
           <% [
             [ "Email", cms_setting.contact_email, "mailto:#{cms_setting.contact_email}" ],
             [ "RSS",   "/feed", "/feed" ]
           ].each_with_index do |(label, value, href), i| %>
-            <a href="<%= href %>" class="flex justify-between py-2.5 font-mono text-[11px] <%= 'border-t border-[#D9C4A6]' if i > 0 %> hover:text-[#704214] transition-colors group">
+            <a href="<%= href %>" class="flex justify-between py-2.5 font-mono text-[11px] <%= 'border-t border-rule' if i > 0 %> hover:text-sage-deep transition-colors group">
               <span class="text-gray-500"><%= label %></span>
-              <span class="text-[#423525] group-hover:text-[#704214]"><%= value %></span>
+              <span class="text-ink group-hover:text-sage-deep"><%= value %></span>
             </a>
           <% end %>
         </div>
@@ -84,14 +84,14 @@
 <%# ─── LATEST STORIES FOOTER ───────────────────────────────────── %>
 <% if defined?(@recent_articles) && @recent_articles.present? %>
   <% recent_total = Article.published.count rescue nil %>
-  <section class="bg-[#F5EFE6] border-t border-[#D9C4A6] lora">
+  <section class="bg-cream-soft border-t border-rule lora">
     <div class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-14 md:pt-16 pb-16 md:pb-20">
 
-      <div class="flex items-baseline justify-between mb-9 pb-[18px] border-b-2 border-[#423525]">
-        <h2 class="font-serif font-medium text-2xl md:text-[30px] tracking-[-0.015em] text-[#423525] m-0">
+      <div class="flex items-baseline justify-between mb-9 pb-[18px] border-b-2 border-ink">
+        <h2 class="font-serif font-medium text-2xl md:text-[30px] tracking-[-0.015em] text-ink m-0">
           Latest stories
         </h2>
-        <%= link_to articles_path, class: "font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#704214] hover:underline" do %>
+        <%= link_to articles_path, class: "font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-sage-deep hover:underline" do %>
           The archive →
         <% end %>
       </div>
@@ -102,7 +102,7 @@
           <%= link_to article_path(article), class: "block group" do %>
             <div class="flex justify-between items-baseline mb-3 font-mono text-[10px] uppercase tracking-[0.18em]">
               <% if catalogue_number %>
-                <span class="text-[#704214]">No. <%= catalogue_number.to_s.rjust(3, "0") %></span>
+                <span class="text-sage-deep">No. <%= catalogue_number.to_s.rjust(3, "0") %></span>
               <% else %>
                 <span></span>
               <% end %>
@@ -113,22 +113,22 @@
 
             <% if article.featured_image.attached? %>
               <%= image_tag article.featured_image.variant(:thumb),
-                    class: "w-full aspect-[16/10] object-cover mb-3.5 bg-[#D9C4A6]",
+                    class: "w-full aspect-[16/10] object-cover mb-3.5 bg-rule",
                     loading: "lazy", alt: article.title %>
             <% end %>
 
             <% if article.category.present? %>
-              <div class="font-mono text-[10px] uppercase tracking-[0.18em] text-[#704214] mb-2">
+              <div class="font-mono text-[10px] uppercase tracking-[0.18em] text-sage-deep mb-2">
                 <%= article.category.name %>
               </div>
             <% end %>
 
-            <h3 class="font-serif font-medium text-[20px] md:text-[22px] leading-[1.18] tracking-[-0.01em] text-[#423525] m-0 mb-2.5 text-balance group-hover:text-[#704214] transition-colors">
+            <h3 class="font-serif font-medium text-[20px] md:text-[22px] leading-[1.18] tracking-[-0.01em] text-ink m-0 mb-2.5 text-balance group-hover:text-sage-deep transition-colors">
               <%= article.title %>
             </h3>
 
             <% if article.tags.any? %>
-              <div class="font-mono text-[10px] text-[#704214]">
+              <div class="font-mono text-[10px] text-sage-deep">
                 <%= article.tags.first(3).map { |t| t.name }.join(' / ').html_safe %>
               </div>
             <% end %>

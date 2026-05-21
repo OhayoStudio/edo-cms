@@ -7,7 +7,7 @@
     <% if s.respond_to?(:category) && s.category %>
       <%= link_to s.category.name,
             category_path(s.category),
-            class: "inline-block mb-2 md:mb-3 text-[9px] md:text-[10px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-[var(--color-accent)] hover:underline" %>
+            class: "inline-block mb-2 md:mb-3 text-[9px] md:text-[10px] tracking-[0.16em] uppercase font-mono text-[var(--color-primary)] dark:text-peach hover:underline" %>
     <% end %>
 
     <%= link_to s, class: "block group" do %>

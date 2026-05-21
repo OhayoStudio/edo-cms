@@ -1,7 +1,7 @@
 <% content_for :title, "Settings — Admin" %>
 
 <div class="mb-6">
-  <h1 class="text-2xl font-serif text-[#704214] dark:text-amber-200">Site Settings</h1>
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Site Settings</h1>
   <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Branding, theme, navigation, social, analytics, and newsletter.</p>
 </div>
 
@@ -19,32 +19,32 @@
   <% end %>
 
   <%# ─── Branding ──────────────────────────────────────────────────── %>
-  <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-[#704214] dark:text-amber-200 border-b border-gray-200 dark:border-gray-700 pb-2">Branding</h2>
+  <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Branding</h2>
 
     <div>
       <%= f.label :site_name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_field :site_name,
-            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
 
     <div>
       <%= f.label :tagline, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_field :tagline, placeholder: "Short one-liner shown beside the site name",
-            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
 
     <div>
       <%= f.label :meta_description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_area :meta_description, rows: 2,
             placeholder: "Default site meta description for SEO / social previews",
-            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
 
     <div>
       <%= f.label :contact_email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.email_field :contact_email,
-            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -53,19 +53,19 @@
           <%= f.label field, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
           <% if @setting.public_send(field).attached? %>
             <div class="mb-2">
-              <%= image_tag @setting.public_send(field), class: "h-12 w-auto bg-gray-100 dark:bg-gray-700 rounded p-1" %>
+              <%= image_tag @setting.public_send(field), class: "h-12 w-auto bg-gray-100 dark:bg-ink-soft rounded p-1" %>
             </div>
           <% end %>
           <%= f.file_field field, accept: "image/*",
-                class: "block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:bg-[#704214] file:text-white hover:file:bg-[#52300f]" %>
+                class: "block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:bg-sage-deep file:text-white hover:file:bg-ink-soft" %>
         </div>
       <% end %>
     </div>
   </section>
 
   <%# ─── Theme ────────────────────────────────────────────────────── %>
-  <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-[#704214] dark:text-amber-200 border-b border-gray-200 dark:border-gray-700 pb-2">Theme colors</h2>
+  <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Theme colors</h2>
     <p class="text-xs text-gray-500 dark:text-gray-400">Drive the CSS custom properties used across the site. Leave empty to fall back to defaults.</p>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -81,7 +81,7 @@
                    name="setting[theme_colors][<%= name %>]"
                    value="<%= @setting.theme_color(name) %>"
                    placeholder="<%= default %>"
-                   class="flex-1 rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm font-mono bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                   class="flex-1 rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm font-mono bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100">
           </div>
         </div>
       <% end %>
@@ -89,8 +89,8 @@
   </section>
 
   <%# ─── Navigation ──────────────────────────────────────────────── %>
-  <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-[#704214] dark:text-amber-200 border-b border-gray-200 dark:border-gray-700 pb-2">Navigation</h2>
+  <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Navigation</h2>
     <p class="text-xs text-gray-500 dark:text-gray-400">One item per line, format <code>Label | /path</code>. Blank to omit a section.</p>
 
     <div>
@@ -98,7 +98,7 @@
       <%= text_area_tag "setting[nav_items_primary]",
             @setting.primary_nav.map { |i| "#{i['label']} | #{i['path']}" }.join("\n"),
             rows: 5,
-            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm font-mono bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm font-mono bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
 
     <div>
@@ -106,13 +106,13 @@
       <%= text_area_tag "setting[nav_items_footer]",
             @setting.footer_nav.map { |i| "#{i['label']} | #{i['path']}" }.join("\n"),
             rows: 5,
-            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm font-mono bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm font-mono bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
   </section>
 
   <%# ─── Social ─────────────────────────────────────────────────── %>
-  <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-[#704214] dark:text-amber-200 border-b border-gray-200 dark:border-gray-700 pb-2">Social</h2>
+  <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Social</h2>
     <p class="text-xs text-gray-500 dark:text-gray-400">Handle or full URL. Blank to hide.</p>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -120,56 +120,56 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><%= key.to_s.humanize %></label>
           <%= text_field_tag "setting[social_links][#{key}]", @setting.social_links[key.to_s],
-                class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+                class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
         </div>
       <% end %>
     </div>
   </section>
 
   <%# ─── Analytics ──────────────────────────────────────────────── %>
-  <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-[#704214] dark:text-amber-200 border-b border-gray-200 dark:border-gray-700 pb-2">Analytics</h2>
+  <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Analytics</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
       <div>
         <%= f.label :analytics_provider, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.select :analytics_provider, [ [ "None", "" ], [ "Umami", "umami" ] ], {},
-              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
       <div>
         <%= f.label :analytics_website_id, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.text_field :analytics_website_id,
-              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
       <div>
         <%= f.label :analytics_host, "Analytics host", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.text_field :analytics_host, placeholder: "e.g. analytics.example.com",
-              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
     </div>
   </section>
 
   <%# ─── Newsletter ─────────────────────────────────────────────── %>
-  <section class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-[#704214] dark:text-amber-200 border-b border-gray-200 dark:border-gray-700 pb-2">Newsletter</h2>
+  <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Newsletter</h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <%= f.label :newsletter_provider, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.select :newsletter_provider,
               [ [ "None", "" ], [ "Buttondown", "buttondown" ], [ "Mailchimp", "mailchimp" ], [ "Custom", "custom" ] ], {},
-              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
       <div>
         <%= f.label :newsletter_form_action, "Form action URL", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.url_field :newsletter_form_action, placeholder: "https://buttondown.com/api/emails/embed-subscribe/your-slug",
-              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" %>
+              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
     </div>
   </section>
 
   <div class="flex items-center gap-4 pt-2">
     <%= f.submit "Save settings",
-          class: "px-5 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors cursor-pointer" %>
+          class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
   </div>
 <% end %>
