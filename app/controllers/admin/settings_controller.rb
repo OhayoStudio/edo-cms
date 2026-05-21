@@ -8,6 +8,7 @@ class Admin::SettingsController < Admin::BaseController
 
     apply_nav_textareas
     apply_theme_colors
+    apply_translation_overrides
 
     if @setting.update(setting_params)
       redirect_to edit_admin_setting_path, notice: "Settings updated."
@@ -48,5 +49,16 @@ class Admin::SettingsController < Admin::BaseController
       acc[name] = value if value.present?
     end
     @setting.theme_colors = cleaned
+  end
+
+  # Editor-overridable i18n strings. Form shape:
+  #   setting[translation_overrides][<locale>][<key>] = "..."
+  # Setting#translation_overrides= drops blanks and any keys not in the
+  # EDITABLE_TRANSLATION_KEYS whitelist before persisting.
+  def apply_translation_overrides
+    incoming = params.dig(:setting, :translation_overrides)
+    return if incoming.blank?
+
+    @setting.translation_overrides = incoming.to_unsafe_h
   end
 end

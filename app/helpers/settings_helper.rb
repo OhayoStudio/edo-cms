@@ -47,6 +47,19 @@ module SettingsHelper
     end
   end
 
+  # Look up the YAML-only value for a key, bypassing the
+  # Setting::OverridesBackend. Used in the admin form to show the
+  # baseline value as a placeholder under the editor's input. Falls
+  # back to the bare backend if the Chain hasn't been wired yet (e.g.
+  # dev server started before the initializer landed).
+  def yaml_default_translation(key, locale)
+    yaml_backend = I18n.backend.respond_to?(:backends) ? I18n.backend.backends.last : I18n.backend
+    parts = key.to_s.split(".")
+    yaml_backend.translate(locale.to_sym, parts.last.to_sym, scope: parts[0..-2], default: nil)
+  rescue I18n::MissingTranslation
+    nil
+  end
+
   def cms_setting
     @_cms_setting ||= Setting.instance
   end
