@@ -44,6 +44,13 @@ Rails.application.routes.draw do
     get "colophon" => "colophons#show"
     get "about" => "about#index", as: :about
 
+    # Static markdown pages served by PagesController — slug whitelist
+    # lives in PagesController::SLUGS. Add a new page by appending here
+    # AND to that whitelist AND dropping the .md files into
+    # db/seeds/pages/.
+    get "terms"   => "pages#show", defaults: { slug: "terms" },   as: :terms
+    get "privacy" => "pages#show", defaults: { slug: "privacy" }, as: :privacy
+
     # Defines the root path route ("/")
     root "stories#index"
   end
