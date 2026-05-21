@@ -55,6 +55,10 @@ gem "lexxy", "~> 0.9.3.beta"
 gem "sentry-ruby"
 gem "sentry-rails"
 
+# i18n: ships date/number/pluralization formats for every locale rails-i18n
+# supports (we use Japanese era markers, JP date formats, etc.).
+gem "rails-i18n", "~> 8.0"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -64,6 +68,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Find missing/unused translation keys (bin/i18n-tasks missing | unused).
+  gem "i18n-tasks", "~> 1.0", require: false
 end
 
 group :development do

@@ -1,0 +1,14 @@
+en:
+  nav:
+    footer:
+      rss: RSS
+      copyright: "© %{year} · %{site}"
+    a11y:
+      main_nav: Main navigation
+      mobile_nav: Mobile navigation
+      footer_nav: Footer navigation
+      open_menu: Open menu
+      close_menu: Close menu
+      toggle_dark: Toggle dark mode
+      switch_to_japanese: 日本語で読む
+      switch_to_english: Read in English

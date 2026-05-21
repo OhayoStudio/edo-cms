@@ -1,0 +1,29 @@
+<%# Language switcher — swaps the leading /<locale> path segment so the
+    user lands on the same page in a different language.
+
+    Path-based swap (rather than url_for(locale: loc)) so we don't depend
+    on Rails being able to disambiguate the current route. When several
+    routes share a controller#action, url_for picks the first match and
+    sends the user to the wrong page; rewriting request.path is robust.
+
+    Colors inherit from the parent via currentColor + opacity so the same
+    partial works on a light public header AND a dark admin header. %>
+<%
+  available_paths = I18n.available_locales.map(&:to_s)
+  current_path = request.path.sub(%r{\A/(?:#{available_paths.join('|')})(?=/|\z)}, "")
+%>
+<div class="flex items-center font-mono text-[11px] tracking-[0.18em] uppercase">
+  <% I18n.available_locales.each_with_index do |loc, i| %>
+    <% is_current = (loc == I18n.locale) %>
+    <% target = current_path.empty? ? "/#{loc}" : "/#{loc}#{current_path}" %>
+    <% target += "?#{request.query_string}" if request.query_string.present? %>
+    <%= link_to t("locale_name_short", locale: loc),
+          target,
+          aria: { current: (is_current ? "true" : nil),
+                  label: t("nav.a11y.#{loc == :ja ? 'switch_to_japanese' : 'switch_to_english'}") },
+          class: "px-2.5 py-1 transition-opacity #{is_current ? 'opacity-100 font-medium' : 'opacity-60 hover:opacity-100'}" %>
+    <% if i < I18n.available_locales.size - 1 %>
+      <span aria-hidden="true" class="opacity-40">·</span>
+    <% end %>
+  <% end %>
+</div>

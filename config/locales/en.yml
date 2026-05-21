@@ -1,31 +1,26 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
+# Top-level English keys.
+# View-scoped strings live under config/locales/views/, shared chrome
+# (nav, footer, meta) under config/locales/shared/. Add a new locale by:
+#   1. Creating a sibling <code>config/locales/<locale>.yml</code>
+#   2. Appending it to config.i18n.available_locales in application.rb
+#   3. Extending the regex on the locale: scope in config/routes.rb
 en:
-  hello: "Hello world"
+  locale_name: English
+  locale_name_short: EN
+
+  date:
+    formats:
+      short_month: "%d %b %Y"   # "01 Apr 2026"
+      long_month:  "%B %d, %Y"  # "April 01, 2026"
+  time:
+    formats:
+      short_month: "%d %b %Y"
+      long_month:  "%B %d, %Y"
+
+  views:
+    pagination:
+      first: "« First"
+      last: "Last »"
+      previous: "‹ Prev"
+      next: "Next ›"
+      truncate: "…"
