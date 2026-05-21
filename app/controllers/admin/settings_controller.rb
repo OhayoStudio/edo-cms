@@ -28,17 +28,15 @@ class Admin::SettingsController < Admin::BaseController
     )
   end
 
-  # Nav items are entered as YAML in two textareas (primary, footer).
-  # Each line: "Label | /path"
+  # Nav items are stored as arrays of registry keys (one per line in the
+  # textarea). The renderer (SettingsHelper#nav_registry) maps each key
+  # to a translated label + locale-aware path, so editors don't worry
+  # about i18n or URL prefixing.
   def apply_nav_textareas
     nav = {}
     %i[primary footer].each do |key|
       raw = params.dig(:setting, :"nav_items_#{key}").to_s
-      nav[key.to_s] = raw.lines.filter_map do |line|
-        label, path = line.split("|", 2).map(&:strip)
-        next nil if label.blank? || path.blank?
-        { "label" => label, "path" => path }
-      end
+      nav[key.to_s] = raw.lines.map(&:strip).reject(&:blank?)
     end
     @setting.nav_items = nav
   end
