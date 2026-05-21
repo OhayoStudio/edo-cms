@@ -15,6 +15,6 @@ class Admin::ColophonsController < Admin::BaseController
   private
 
   def colophon_params
-    params.require(:colophon).permit(:content)
+    params.require(:colophon).permit(*I18n.available_locales.map { |loc| :"content_#{loc}" })
   end
 end
