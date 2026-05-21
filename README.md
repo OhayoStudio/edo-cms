@@ -21,7 +21,7 @@ git clone https://github.com/<you>/<your-repo>.git
 cd <your-repo>
 
 bin/setup                    # bundle, install JS, create + migrate + seed databases
-bin/dev                      # http://localhost:3001
+bin/dev                      # http://localhost:3005
 ```
 
 If you'd rather track upstream and pull future template updates, clone directly and rewire remotes:

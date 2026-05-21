@@ -86,3 +86,6 @@ script/setup_production.sh
 config/sepiabraun*.json
 iroiro.md
 public/placeholder.ark
+
+
+TODO.md
