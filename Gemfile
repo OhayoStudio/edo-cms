@@ -63,6 +63,10 @@ gem "rails-i18n", "~> 8.0"
 # and any per-site additions). Pure Ruby — no system deps.
 gem "kramdown", "~> 2.4"
 
+# Leaving default gems in Ruby 3.5 — declared so mini_magick (and others
+# that `require "benchmark"`) don't emit deprecation warnings on 3.4.
+gem "benchmark"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

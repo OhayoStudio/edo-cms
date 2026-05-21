@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-# Development server (port 3001) + CSS watcher
+# Development server (port 3005) + CSS watcher
 bin/dev
 
 # Tests
