@@ -21,6 +21,22 @@ class Setting < ApplicationRecord
     "text"         => "#2b2620"    # ink — body text
   }.freeze
 
+  # i18n keys editors can override from /admin/settings → Translations.
+  # Anything outside this list is silently dropped by the writer below.
+  # Extend in your fork to expose more keys (e.g. landing-page eyebrows)
+  # — but keep `_html` keys and large copy blocks OUT; editors typing
+  # raw markup is a footgun, and the form scales poorly past ~30 rows.
+  EDITABLE_TRANSLATION_KEYS = %w[
+    nav.primary.stories
+    nav.primary.articles
+    nav.primary.videos
+    nav.primary.categories
+    nav.primary.tags
+    nav.primary.about
+    nav.primary.colophon
+    nav.footer.rss
+  ].freeze
+
   CACHE_KEY = "setting/instance"
 
   def self.instance
@@ -45,5 +61,28 @@ class Setting < ApplicationRecord
 
   def footer_nav_keys
     Array(nav_items["footer"]).filter_map { |item| item.is_a?(String) ? item : nil }
+  end
+
+  # Reader used by Setting::OverridesBackend AND the admin form. Defaults
+  # to an empty hash so callers never have to nil-check.
+  def translation_overrides
+    self[:translation_overrides] || {}
+  end
+
+  # Drop anything not in the whitelist and any blank values so the JSON
+  # column stays clean. Called from the admin controller.
+  def translation_overrides=(value)
+    cleaned = (value || {}).each_with_object({}) do |(locale, keys), acc|
+      locale_str = locale.to_s
+      next unless I18n.available_locales.map(&:to_s).include?(locale_str)
+
+      filtered = (keys || {}).each_with_object({}) do |(k, v), inner|
+        next unless EDITABLE_TRANSLATION_KEYS.include?(k.to_s)
+        next if v.to_s.strip.blank?
+        inner[k.to_s] = v.to_s.strip
+      end
+      acc[locale_str] = filtered if filtered.any?
+    end
+    self[:translation_overrides] = cleaned
   end
 end
