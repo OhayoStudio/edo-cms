@@ -1,5 +1,13 @@
 ja:
   nav:
+    primary:
+      stories: ストーリー
+      articles: 記事
+      videos: ビデオ
+      categories: カテゴリー
+      tags: タグ
+      about: 私たちについて
+      colophon: 奥付
     footer:
       rss: RSS
       copyright: "© %{year} · %{site}"

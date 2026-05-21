@@ -1,5 +1,13 @@
 en:
   nav:
+    primary:
+      stories: Stories
+      articles: Articles
+      videos: Videos
+      categories: Categories
+      tags: Tags
+      about: About
+      colophon: Colophon
     footer:
       rss: RSS
       copyright: "© %{year} · %{site}"
