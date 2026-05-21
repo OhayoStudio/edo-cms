@@ -1,12 +1,12 @@
 <div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-serif text-[#704214] dark:text-amber-200">Articles</h1>
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Articles</h1>
   <%= link_to "New Article", new_admin_article_path,
-      class: "px-4 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors" %>
+      class: "px-4 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors" %>
 </div>
 
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+<div class="bg-white dark:bg-ink rounded-lg shadow overflow-hidden">
   <table class="w-full text-sm">
-    <thead class="bg-[#F9F7F0] dark:bg-gray-700 text-[#704214] dark:text-amber-300">
+    <thead class="bg-cream-soft dark:bg-ink-soft text-sage-deep dark:text-peach">
       <tr>
         <th class="text-left px-4 py-3 font-semibold">Title</th>
         <th class="text-left px-4 py-3 font-semibold">Author</th>
@@ -18,7 +18,7 @@
                   params[:category_id].presence || ""
                 ),
                 onchange: "window.location = '#{admin_articles_path}?category_id=' + this.value",
-                class: "text-xs font-semibold bg-transparent border-0 text-[#704214] dark:text-amber-300
+                class: "text-xs font-semibold bg-transparent border-0 text-sage-deep dark:text-peach
                         cursor-pointer focus:outline-none pr-1 -ml-1" %>
         </th>
         <th class="text-left px-4 py-3 font-semibold">
@@ -28,7 +28,7 @@
                   params[:status].presence || ""
                 ),
                 onchange: "window.location = '#{admin_articles_path}?category_id=#{params[:category_id]}&status=' + this.value",
-                class: "text-xs font-semibold bg-transparent border-0 text-[#704214] dark:text-amber-300
+                class: "text-xs font-semibold bg-transparent border-0 text-sage-deep dark:text-peach
                         cursor-pointer focus:outline-none pr-1 -ml-1" %>
         </th>
         <th class="text-center px-4 py-3 font-semibold">Priority</th>
@@ -52,13 +52,13 @@
               data-inline-field-field-value="category_id">
             <span data-inline-field-target="label"
                   data-action="click->inline-field#show"
-                  class="text-gray-500 dark:text-gray-400 cursor-pointer hover:text-[#704214] dark:hover:text-amber-300 hover:underline">
+                  class="text-gray-500 dark:text-gray-400 cursor-pointer hover:text-sage-deep dark:hover:text-peach hover:underline">
               <%= article.category&.name || "—" %>
             </span>
             <select data-inline-field-target="select"
                     data-action="change->inline-field#change keydown->inline-field#keydown blur->inline-field#hide"
-                    class="hidden text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600
-                           text-gray-900 dark:text-gray-100 rounded px-1 py-0.5 focus:outline-[#704214]">
+                    class="hidden text-xs bg-white dark:bg-ink-soft border border-gray-300 dark:border-gray-600
+                           text-gray-900 dark:text-gray-100 rounded px-1 py-0.5 focus:outline-sage-deep">
               <% @categories.each do |cat| %>
                 <option value="<%= cat.id %>" <%= "selected" if article.category_id == cat.id %>>
                   <%= cat.name %>
@@ -69,7 +69,7 @@
           <td class="px-4 py-3">
             <span class="px-2 py-0.5 rounded text-xs font-medium
               <%= article.published? ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
-                                     : 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' %>">
+                                     : 'bg-peach-soft text-sage-deep dark:bg-sage-deep/40 dark:text-peach' %>">
               <%= article.status.humanize %>
             </span>
           </td>
@@ -80,17 +80,17 @@
             <span data-inline-number-target="label"
                   data-action="click->inline-number#show"
                   class="cursor-pointer font-mono text-sm font-semibold
-                         <%= article.priority > 0 ? 'text-[#704214] dark:text-amber-300' : 'text-gray-400 dark:text-gray-600' %>
-                         hover:text-[#704214] dark:hover:text-amber-300">
+                         <%= article.priority > 0 ? 'text-sage-deep dark:text-peach' : 'text-gray-400 dark:text-gray-600' %>
+                         hover:text-sage-deep dark:hover:text-peach">
               <%= article.priority %>
             </span>
             <input type="number" min="0"
                    data-inline-number-target="input"
                    data-action="blur->inline-number#save keydown->inline-number#keydown"
                    value="<%= article.priority %>"
-                   class="hidden w-14 text-center text-sm font-mono rounded border border-[#704214]
-                          dark:border-amber-400 bg-white dark:bg-gray-700
-                          text-gray-900 dark:text-gray-100 px-1 py-0.5 focus:outline-[#704214]">
+                   class="hidden w-14 text-center text-sm font-mono rounded border border-sage-deep
+                          dark:border-peach bg-white dark:bg-ink-soft
+                          text-gray-900 dark:text-gray-100 px-1 py-0.5 focus:outline-sage-deep">
           </td>
           <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
             <%= article.created_at.strftime("%b %-d, %Y") %>
@@ -101,9 +101,9 @@
           <td class="px-4 py-3 text-right">
             <div class="flex items-center justify-end gap-2 flex-wrap">
               <%= link_to "Edit", edit_admin_article_path(article),
-                  class: "px-2 py-1 text-xs border border-[#704214] text-[#704214]
-                          dark:border-amber-400 dark:text-amber-400 rounded hover:bg-amber-50
-                          dark:hover:bg-amber-900/20 transition-colors" %>
+                  class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
+                          dark:border-peach dark:text-peach rounded hover:bg-peach-tint
+                          dark:hover:bg-sage-deep/20 transition-colors" %>
 
               <% if article.published? %>
                 <%= button_to "Unpublish", unpublish_admin_article_path(article), method: :patch,

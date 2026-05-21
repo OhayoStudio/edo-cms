@@ -1,6 +1,51 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Tailwind v4 design tokens — calm-morning palette + fonts.
+   Editors can override the brand-mapped CMS colors at runtime via
+   Settings → Theme colors (see theme.css); these @theme values are
+   the base set Tailwind emits as utilities (bg-cream, text-ink,
+   text-sage-deep, font-display, etc.). */
+@theme {
+  --color-cream: #f5ede0;
+  --color-cream-soft: #faf4ea;
+  --color-paper: #fdf9f1;
+
+  --color-ink: #2b2620;
+  --color-ink-soft: #4a4239;
+  --color-ink-muted: #8a8175;
+  --color-ink-faint: #b8b0a3;
+
+  --color-sage: #8aa68d;
+  --color-sage-deep: #6e8c75;
+  --color-sage-soft: #d8e2d6;
+  --color-sage-tint: #ecf1ea;
+
+  --color-peach: #f0c2a3;
+  --color-peach-deep: #d9a17f;
+  --color-peach-soft: #fbe2cf;
+  --color-peach-tint: #fdf0e5;
+
+  --color-rule: #e6dccb;
+  --color-rule-soft: #efe7d6;
+
+  --font-display: "Plus Jakarta Sans", -apple-system, system-ui, sans-serif;
+  --font-jp: "Noto Sans JP", -apple-system, system-ui, sans-serif;
+  --font-serif: "Newsreader", Georgia, serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
+
+  --spacing-22: 88px;
+}
+
+/* Italic Latin works as a design accent; italic Mincho / Noto Sans JP
+   doesn't read the same way for CJK audiences. Strip italic from <em>
+   and Tailwind's .italic when the page is in Japanese — color carries
+   the accent signal alone. */
+[lang="ja"] em,
+[lang="ja"] .italic {
+  font-style: normal;
+}
+
 @layer base {
   .lora {
     font-family: "Lora", serif;
