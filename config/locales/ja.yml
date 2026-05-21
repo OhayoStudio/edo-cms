@@ -1,0 +1,20 @@
+ja:
+  locale_name: 日本語
+  locale_name_short: JA
+
+  date:
+    formats:
+      short_month: "%Y年%-m月%-d日"   # 2026年4月1日
+      long_month:  "%Y年%-m月%-d日"
+  time:
+    formats:
+      short_month: "%Y年%-m月%-d日"
+      long_month:  "%Y年%-m月%-d日"
+
+  views:
+    pagination:
+      first: "« 最初"
+      last: "最後 »"
+      previous: "‹ 前へ"
+      next: "次へ ›"
+      truncate: "…"
