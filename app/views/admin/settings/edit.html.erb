@@ -91,21 +91,28 @@
   <%# ─── Navigation ──────────────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
     <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Navigation</h2>
-    <p class="text-xs text-gray-500 dark:text-gray-400">One item per line, format <code>Label | /path</code>. Blank to omit a section.</p>
+    <p class="text-xs text-gray-500 dark:text-gray-400">One <em>key</em> per line. Labels and URLs come from the registry below, so they stay translated and locale-prefixed automatically.</p>
+
+    <p class="text-xs text-gray-500 dark:text-gray-400">
+      <span class="font-medium text-gray-700 dark:text-gray-300">Available keys:</span>
+      <code class="font-mono text-[11px] break-words"><%= nav_registry_keys.join(" · ") %></code>
+    </p>
 
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary nav</label>
       <%= text_area_tag "setting[nav_items_primary]",
-            @setting.primary_nav.map { |i| "#{i['label']} | #{i['path']}" }.join("\n"),
-            rows: 5,
+            @setting.primary_nav_keys.join("\n"),
+            rows: 6,
+            placeholder: "stories\narticles\nabout",
             class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm font-mono bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Footer nav</label>
       <%= text_area_tag "setting[nav_items_footer]",
-            @setting.footer_nav.map { |i| "#{i['label']} | #{i['path']}" }.join("\n"),
-            rows: 5,
+            @setting.footer_nav_keys.join("\n"),
+            rows: 6,
+            placeholder: "about\ncolophon\nfeed",
             class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm font-mono bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
   </section>
