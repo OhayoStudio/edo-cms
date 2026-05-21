@@ -15,9 +15,14 @@
       </div>
     <% end %>
 
-    <div class="mb-6">
-      <%= f.lexxy_rich_text_area :content %>
-    </div>
+    <% I18n.available_locales.each do |loc| %>
+      <fieldset class="mb-8 pb-6 border-b border-[#D9C4A6] dark:border-[#52300f] last:border-b-0 last:pb-0">
+        <legend class="font-mono text-[11px] tracking-[0.18em] uppercase text-[#704214] dark:text-amber-200 mb-3">
+          <%= t("locale_name", locale: loc) %> (<%= loc %>)
+        </legend>
+        <%= f.lexxy_rich_text_area :"content_#{loc}" %>
+      </fieldset>
+    <% end %>
 
     <%= f.submit "Save",
         class: "px-5 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors cursor-pointer" %>
