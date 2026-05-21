@@ -68,9 +68,9 @@
         </a>
 
         <ul class="flex gap-8 items-center">
-          <% cms_setting.primary_nav.each do |item| %>
+          <% primary_nav_items.each do |item| %>
             <li class="p-6">
-              <%= link_to item["label"], item["path"], class: "hover:text-peach #{current_page?(item['path']) ? 'text-sage-deep' : ''}" %>
+              <%= link_to item[:label], item[:path], class: "hover:text-peach #{current_page?(item[:path]) ? 'text-sage-deep' : ''}" %>
             </li>
           <% end %>
           <li class="p-2">
@@ -109,9 +109,9 @@
       </div>
       <nav id="mobile-menu" aria-label="<%= t("nav.a11y.mobile_nav") %>" class="hidden">
         <ul class="flex flex-col">
-          <% cms_setting.primary_nav.each do |item| %>
+          <% primary_nav_items.each do |item| %>
             <li class="p-6">
-              <%= link_to item["label"], item["path"], class: "text-sage-deep dark:text-peach hover:text-yellow-300 #{current_page?(item['path']) ? 'text-sage-deep' : ''}" %>
+              <%= link_to item[:label], item[:path], class: "text-sage-deep dark:text-peach hover:text-yellow-300 #{current_page?(item[:path]) ? 'text-sage-deep' : ''}" %>
             </li>
           <% end %>
         </ul>
@@ -134,12 +134,10 @@
 
           <!-- Navigation links -->
           <nav aria-label="<%= t("nav.a11y.footer_nav") %>" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-300">
-            <% cms_setting.footer_nav.each do |item| %>
-              <%= link_to item["label"], item["path"],
+            <% footer_nav_items.each do |item| %>
+              <%= link_to item[:label], item[:path],
                     class: "hover:text-sage-deep dark:hover:text-peach transition-colors" %>
             <% end %>
-            <%= link_to t("nav.footer.rss"), feed_path(format: :rss),
-                class: "hover:text-sage-deep dark:hover:text-peach transition-colors" %>
           </nav>
         </div>
       </div>

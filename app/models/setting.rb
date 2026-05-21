@@ -34,11 +34,16 @@ class Setting < ApplicationRecord
     theme_colors.presence&.dig(name.to_s).presence || THEME_DEFAULTS[name.to_s]
   end
 
-  def primary_nav
-    Array(nav_items["primary"]).select { |item| item.is_a?(Hash) && item["label"].present? && item["path"].present? }
+  # Nav items are stored as arrays of *registry keys* (strings). The
+  # renderer (SettingsHelper#nav_registry) maps each key to a translated
+  # label + locale-aware path, so editors don't worry about i18n or URL
+  # prefixing. Filters non-string entries so any leftover hashes from
+  # the previous {label, path} format are silently ignored.
+  def primary_nav_keys
+    Array(nav_items["primary"]).filter_map { |item| item.is_a?(String) ? item : nil }
   end
 
-  def footer_nav
-    Array(nav_items["footer"]).select { |item| item.is_a?(Hash) && item["label"].present? && item["path"].present? }
+  def footer_nav_keys
+    Array(nav_items["footer"]).filter_map { |item| item.is_a?(String) ? item : nil }
   end
 end
