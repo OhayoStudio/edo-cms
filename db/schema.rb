@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_21_114902) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_21_122156) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -143,6 +143,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_114902) do
     t.jsonb "social_links", default: {}, null: false
     t.string "tagline"
     t.jsonb "theme_colors", default: {}, null: false
+    t.jsonb "translation_overrides", default: {}, null: false
     t.datetime "updated_at", null: false
   end
 
