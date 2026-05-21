@@ -2,11 +2,11 @@
 
 <%# /articles index — magazine archive layout
     Mock: design tokens map directly to the brand theme palette:
-      - bg              → bg-gray-200          (--color-background #F9F7F0)
-      - ink             → text-[#423525]       (--color-text)
+      - bg              → bg-cream          (--color-background #F9F7F0)
+      - ink             → text-ink       (--color-text)
       - ink-soft        → text-gray-500
-      - brand           → text-[#704214]       (--color-primary)
-      - rule            → border-[#D9C4A6]     (--color-accent)
+      - brand           → text-sage-deep       (--color-primary)
+      - rule            → border-rule     (--color-accent)
 %>
 
 <div class="w-full container mx-auto px-4 md:px-16 pt-8 md:pt-14 pb-16 md:pb-20 lora">
@@ -15,13 +15,13 @@
   <% end %>
 
   <%# ─ Big header: "Stories" wordmark + meta ───────────────────────── %>
-  <header class="flex items-end justify-between pb-6 md:pb-7 mb-10 md:mb-14 border-b-2 border-[#423525] dark:border-[#D9C4A6]">
-    <h1 class="font-serif font-medium text-5xl md:text-7xl lg:text-[96px] leading-none tracking-tight m-0 text-[#423525] dark:text-gray-300">
+  <header class="flex items-end justify-between pb-6 md:pb-7 mb-10 md:mb-14 border-b-2 border-ink dark:border-rule">
+    <h1 class="font-serif font-medium text-5xl md:text-7xl lg:text-[96px] leading-none tracking-tight m-0 text-ink dark:text-gray-300">
       <%= @category ? @category.name : "Stories" %>
     </h1>
     <div class="hidden sm:block text-right pb-1.5">
-      <div class="font-mono text-[11px] tracking-[0.18em] uppercase text-[#704214] mb-1">The archive</div>
-      <div class="font-serif text-sm text-[#423525] dark:text-gray-300">
+      <div class="font-mono text-[11px] tracking-[0.18em] uppercase text-sage-deep mb-1">The archive</div>
+      <div class="font-serif text-sm text-ink dark:text-gray-300">
         <%= @articles.total_count %> entries
       </div>
     </div>
@@ -29,7 +29,7 @@
 
   <%# ─ Mobile category dropdown (kept as-is) ───────────────────────── %>
   <div class="flex md:hidden mb-6 relative" data-controller="dropdown">
-    <button data-action="click->dropdown#toggle" class="w-full pl-3 pr-10 py-2 text-base border border-[#D9C4A6] focus:outline-none focus:ring-1 focus:ring-[#704214] focus:border-[#704214] sm:text-sm rounded-md bg-white flex items-center">
+    <button data-action="click->dropdown#toggle" class="w-full pl-3 pr-10 py-2 text-base border border-rule focus:outline-none focus:ring-1 focus:ring-sage-deep focus:border-sage-deep sm:text-sm rounded-md bg-white flex items-center">
       <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
       </svg>
@@ -60,7 +60,7 @@
       <% end %>
 
       <%# Pagination — kaminari, restyled to match the magazine feel %>
-      <div class="mt-4 pt-7 border-t-2 border-[#423525] dark:border-[#D9C4A6] dark:text-gray-300 flex justify-between items-center font-mono text-[10px] tracking-[0.18em] uppercase pagination">
+      <div class="mt-4 pt-7 border-t-2 border-ink dark:border-rule dark:text-gray-300 flex justify-between items-center font-mono text-[10px] tracking-[0.18em] uppercase pagination">
         <%= paginate @articles %>
       </div>
     </div>
@@ -68,22 +68,22 @@
     <%# ─── Sidebar: search + categories ─────────────────────────────── %>
     <aside class="pt-1">
       <%# Search %>
-      <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-[#704214] mb-2.5">Search</div>
+      <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-sage-deep mb-2.5">Search</div>
       <%= form_with url: articles_path, method: :get, class: "flex mb-9" do |f| %>
         <%= f.text_field :search,
               value: params[:search],
               placeholder: "Search stories",
-              class: "flex-1 px-3.5 py-2.5 lora text-sm bg-white border border-[#D9C4A6] border-r-0 outline-none focus:border-[#704214] dark:bg-[#52300f] dark:border-[#52300f] dark:text-gray-200" %>
+              class: "flex-1 px-3.5 py-2.5 lora text-sm bg-white border border-rule border-r-0 outline-none focus:border-sage-deep dark:bg-ink-soft dark:border-ink-soft dark:text-gray-200" %>
         <%= f.submit "Go",
-              class: "px-4 font-mono text-[10px] tracking-[0.18em] uppercase bg-[#704214] text-[#F9F7F0] border border-[#704214] hover:bg-[#52300f] cursor-pointer" %>
+              class: "px-4 font-mono text-[10px] tracking-[0.18em] uppercase bg-sage-deep text-cream-soft border border-sage-deep hover:bg-ink-soft cursor-pointer" %>
       <% end %>
 
       <%# Categories list %>
-      <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-[#704214] mb-2.5">Categories</div>
+      <div class="font-mono text-[10px] tracking-[0.18em] uppercase text-sage-deep mb-2.5">Categories</div>
       <div class="flex flex-col">
         <% @categories.each do |category| %>
           <%= link_to category_path(category.slug),
-                class: "flex justify-between items-baseline py-3 border-b border-[#D9C4A6] dark:border-[#52300f] lora text-base text-[#423525] dark:text-gray-300 hover:text-[#704214] dark:hover:text-[#D9C4A6] transition-colors" do %>
+                class: "flex justify-between items-baseline py-3 border-b border-rule dark:border-ink-soft lora text-base text-ink dark:text-gray-300 hover:text-sage-deep dark:hover:text-rule transition-colors" do %>
             <span><%= category.name %></span>
             <span class="font-mono text-[11px] text-gray-500 dark:text-gray-400">
               <%= category.articles.published.count.to_s.rjust(2, "0") %>

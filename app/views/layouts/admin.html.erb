@@ -8,7 +8,7 @@
     <link rel="apple-touch-icon" href="/icon.png" />
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "theme", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "lexxy" %>
     <%= javascript_importmap_tags %>
@@ -28,7 +28,7 @@
     </script>
   </head>
 
-  <body class="brand-theme h-full bg-gray-200 dark:bg-gray-800 transition-colors duration-200"
+  <body class="brand-theme h-full bg-cream dark:bg-ink transition-colors duration-200"
         data-controller="dark-mode">
 
     <% if notice.present? %>
@@ -46,43 +46,43 @@
       </div>
     <% end %>
 
-    <header class="bg-[#704214] dark:bg-[#281506] sticky top-0 z-40 shadow-md lora">
+    <header class="bg-sage-deep dark:bg-ink sticky top-0 z-40 shadow-md lora">
       <nav class="container mx-auto px-6 flex items-center justify-between h-14">
         <%= link_to "Admin", admin_root_path,
-            class: "font-serif text-lg font-semibold tracking-wide text-white hover:text-amber-200 transition-colors" %>
+            class: "font-serif text-lg font-semibold tracking-wide text-white hover:text-peach transition-colors" %>
 
         <ul class="flex items-center gap-1 text-sm font-medium">
           <li>
             <%= link_to "Articles", admin_articles_path,
-                class: "px-3 py-2 rounded transition-colors #{controller_name == 'articles' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'articles' ? 'bg-ink-soft text-peach' : 'text-white hover:bg-ink-soft'}" %>
           </li>
           <li>
             <%= link_to "Videos", admin_videos_path,
-                class: "px-3 py-2 rounded transition-colors #{controller_name == 'videos' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'videos' ? 'bg-ink-soft text-peach' : 'text-white hover:bg-ink-soft'}" %>
           </li>
           <li>
             <%= link_to "Authors", admin_authors_path,
-                class: "px-3 py-2 rounded transition-colors #{controller_name == 'authors' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'authors' ? 'bg-ink-soft text-peach' : 'text-white hover:bg-ink-soft'}" %>
           </li>
           <li>
             <%= link_to "Categories", admin_categories_path,
-                class: "px-3 py-2 rounded transition-colors #{controller_name == 'categories' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'categories' ? 'bg-ink-soft text-peach' : 'text-white hover:bg-ink-soft'}" %>
           </li>
           <li>
             <%= link_to "Tags", admin_tags_path,
-                class: "px-3 py-2 rounded transition-colors #{controller_name == 'tags' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'tags' ? 'bg-ink-soft text-peach' : 'text-white hover:bg-ink-soft'}" %>
           </li>
           <li>
             <%= link_to "Colophon", edit_admin_colophon_path,
-                class: "px-3 py-2 rounded transition-colors #{controller_name == 'colophons' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'colophons' ? 'bg-ink-soft text-peach' : 'text-white hover:bg-ink-soft'}" %>
           </li>
           <li>
             <%= link_to "About", edit_admin_about_path,
-                class: "px-3 py-2 rounded transition-colors #{controller_name == 'abouts' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'abouts' ? 'bg-ink-soft text-peach' : 'text-white hover:bg-ink-soft'}" %>
           </li>
           <li>
             <%= link_to "Settings", edit_admin_setting_path,
-                class: "px-3 py-2 rounded transition-colors #{controller_name == 'settings' ? 'bg-[#52300f] text-amber-200' : 'text-white hover:bg-[#52300f]'}" %>
+                class: "px-3 py-2 rounded transition-colors #{controller_name == 'settings' ? 'bg-ink-soft text-peach' : 'text-white hover:bg-ink-soft'}" %>
           </li>
           <li class="ml-2">
             <%= render "common/darkmode_toggle" %>

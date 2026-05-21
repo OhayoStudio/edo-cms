@@ -19,9 +19,9 @@
       <%= f.label :title, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_field :title,
           data: { "youtube-thumbnail-target": "titleInput" },
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100
-                  #{video.errors[:title].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-[#704214]'}" %>
+                  #{video.errors[:title].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-sage-deep'}" %>
     </div>
 
     <div>
@@ -29,18 +29,18 @@
       <%= f.url_field :url,
           placeholder: "https://www.youtube.com/watch?v=...",
           data: { "youtube-thumbnail-target": "urlInput" },
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100
-                  #{video.errors[:url].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-[#704214]'}" %>
+                  #{video.errors[:url].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-sage-deep'}" %>
     </div>
 
     <div>
       <%= f.label :description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_area :description, rows: 4,
           data: { "youtube-thumbnail-target": "descriptionInput" },
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100
-                  #{video.errors[:description].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-[#704214]'}" %>
+                  #{video.errors[:description].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-sage-deep'}" %>
     </div>
 
     <div>
@@ -62,13 +62,13 @@
             data: { "youtube-thumbnail-target": "fileInput" },
             class: "block w-full text-sm text-gray-500 dark:text-gray-400
                     file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0
-                    file:text-xs file:bg-[#704214] file:text-white hover:file:bg-[#52300f]" %>
+                    file:text-xs file:bg-sage-deep file:text-white hover:file:bg-ink-soft" %>
         <button type="button"
             data-youtube-thumbnail-target="useButton"
             data-action="click->youtube-thumbnail#use"
-            class="hidden mt-2 px-3 py-1.5 text-xs rounded border border-[#704214] text-[#704214]
-                   dark:text-[#D9C4A6] dark:border-[#D9C4A6] hover:bg-[#704214] hover:text-white
-                   dark:hover:bg-[#704214] transition-colors">
+            class="hidden mt-2 px-3 py-1.5 text-xs rounded border border-sage-deep text-sage-deep
+                   dark:text-rule dark:border-rule hover:bg-sage-deep hover:text-white
+                   dark:hover:bg-sage-deep transition-colors">
           Use YouTube thumbnail
         </button>
         <img src="" alt="YouTube thumbnail preview"
@@ -80,7 +80,7 @@
 
   <div class="flex items-center gap-4 pt-2">
     <%= f.submit video.persisted? ? "Update Video" : "Create Video",
-        class: "px-5 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors cursor-pointer" %>
+        class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
     <%= link_to "Cancel", admin_videos_path,
         class: "px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
                 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" %>

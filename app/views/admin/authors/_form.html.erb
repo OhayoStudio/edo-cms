@@ -16,39 +16,39 @@
     <div>
       <%= f.label :first_name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_field :first_name,
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100
-                  #{author.errors[:first_name].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-[#704214]'}" %>
+                  #{author.errors[:first_name].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-sage-deep'}" %>
     </div>
 
     <div>
       <%= f.label :last_name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_field :last_name,
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100
-                  #{author.errors[:last_name].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-[#704214]'}" %>
+                  #{author.errors[:last_name].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-sage-deep'}" %>
     </div>
 
     <div>
       <%= f.label :email, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.email_field :email,
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100
-                  #{author.errors[:email].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-[#704214]'}" %>
+                  #{author.errors[:email].any? ? 'border-red-400 focus:outline-red-500' : 'border-gray-300 dark:border-gray-600 focus:outline-sage-deep'}" %>
     </div>
 
     <div>
       <%= f.label :website, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.url_field :website, placeholder: "https://",
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
-                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
     </div>
 
     <div>
       <%= f.label :role, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.select :role, Author.roles.keys.map { |r| [ r.humanize, r ] },
           { include_blank: false },
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600" %>
     </div>
 
@@ -56,36 +56,36 @@
       <%= f.label :status, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.select :status, Author.statuses.keys.map { |s| [ s.humanize, s ] },
           { include_blank: false },
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600" %>
     </div>
 
     <div>
       <%= f.label :twitter_handle, "Twitter / X", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_field :twitter_handle, placeholder: "@handle",
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
-                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
     </div>
 
     <div>
       <%= f.label :github_username, "GitHub", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_field :github_username, placeholder: "username",
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
-                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
     </div>
 
     <div class="md:col-span-2">
       <%= f.label :linkedin_url, "LinkedIn", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.url_field :linkedin_url, placeholder: "https://linkedin.com/in/",
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
-                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
     </div>
 
     <div class="md:col-span-2">
       <%= f.label :bio, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_area :bio, rows: 4,
-          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-gray-700
-                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-[#704214]" %>
+          class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
+                  text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
     </div>
 
     <div>
@@ -97,13 +97,13 @@
       <%= f.file_field :avatar, accept: "image/*",
           class: "block w-full text-sm text-gray-500 dark:text-gray-400
                   file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0
-                  file:text-xs file:bg-[#704214] file:text-white hover:file:bg-[#52300f]" %>
+                  file:text-xs file:bg-sage-deep file:text-white hover:file:bg-ink-soft" %>
     </div>
   </div>
 
   <div class="flex items-center gap-4 pt-2">
     <%= f.submit author.persisted? ? "Update Author" : "Create Author",
-        class: "px-5 py-2 bg-[#704214] hover:bg-[#52300f] text-white rounded text-sm transition-colors cursor-pointer" %>
+        class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
     <%= link_to "Cancel", admin_authors_path,
         class: "px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
                 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" %>
