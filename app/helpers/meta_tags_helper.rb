@@ -53,13 +53,35 @@ module MetaTagsHelper
 
   # Reusable schema.org Organization fragment (site publisher)
   def schema_publisher
+    logo_url = cms_logo_or_favicon_url(absolute: true)
     {
       "@type" => "Organization",
       "@id"   => "#{site_url}/#organization",
       "name"  => site_name,
       "url"   => site_url,
-      "logo"  => { "@type" => "ImageObject", "url" => "#{site_url}/icon.png" }
+      "logo"  => { "@type" => "ImageObject", "url" => logo_url }
     }
+  end
+
+  # Logo for structured data + admin/applications layouts. Prefers
+  # Setting#logo_light, then Setting#favicon, then the static
+  # public/icon.png fallback. `absolute:` controls host prefixing.
+  def cms_logo_or_favicon_url(absolute: false)
+    if cms_setting.logo_light.attached?
+      rails_representation_url(cms_setting.logo_light, host: (absolute ? site_url : nil))
+    elsif cms_setting.favicon.attached?
+      rails_representation_url(cms_setting.favicon, host: (absolute ? site_url : nil))
+    else
+      absolute ? "#{site_url}/icon.png" : "/icon.png"
+    end
+  end
+
+  # Favicon-shaped URL for <link rel="icon"> tags. Prefers Setting#favicon,
+  # falls back to the static public/ files. Pass format: :svg to prefer the
+  # SVG fallback when no upload is set.
+  def cms_favicon_url(format: :png)
+    return rails_representation_url(cms_setting.favicon, only_path: true) if cms_setting.favicon.attached?
+    format == :svg ? "/icon.svg" : "/icon.png"
   end
 
   # Reusable schema.org Person fragment for an article author

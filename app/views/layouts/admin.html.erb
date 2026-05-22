@@ -3,9 +3,14 @@
   <head>
     <title><%= content_for(:title) || "Admin — #{site_name}" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="icon" href="/icon.png" type="image/png" />
-    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/icon.png" />
+    <% if cms_setting.favicon.attached? %>
+      <%= favicon_link_tag cms_setting.favicon %>
+      <link rel="apple-touch-icon" href="<%= cms_favicon_url %>" />
+    <% else %>
+      <link rel="icon" href="/icon.png" type="image/png" />
+      <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+      <link rel="apple-touch-icon" href="/icon.png" />
+    <% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
