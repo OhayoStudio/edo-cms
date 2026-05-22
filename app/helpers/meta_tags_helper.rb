@@ -66,21 +66,31 @@ module MetaTagsHelper
   # Logo for structured data + admin/applications layouts. Prefers
   # Setting#logo_light, then Setting#favicon, then the static
   # public/icon.png fallback. `absolute:` controls host prefixing.
+  #
+  # Uses url_for, NOT rails_representation_url — the latter silently
+  # produces an empty string for un-variant'd attachments which then
+  # propagates as a Propshaft "asset '' not found" crash inside view
+  # helpers like favicon_link_tag.
   def cms_logo_or_favicon_url(absolute: false)
-    if cms_setting.logo_light.attached?
-      rails_representation_url(cms_setting.logo_light, host: (absolute ? site_url : nil))
-    elsif cms_setting.favicon.attached?
-      rails_representation_url(cms_setting.favicon, host: (absolute ? site_url : nil))
+    attachment = if cms_setting.logo_light.attached?
+                   cms_setting.logo_light
+                 elsif cms_setting.favicon.attached?
+                   cms_setting.favicon
+                 end
+
+    if attachment
+      path = url_for(attachment)
+      absolute && !path.start_with?("http") ? "#{site_url}#{path}" : path
     else
       absolute ? "#{site_url}/icon.png" : "/icon.png"
     end
   end
 
   # Favicon-shaped URL for <link rel="icon"> tags. Prefers Setting#favicon,
-  # falls back to the static public/ files. Pass format: :svg to prefer the
-  # SVG fallback when no upload is set.
+  # falls back to the static public/ files. Pass format: :svg to prefer
+  # the SVG fallback when no upload is set.
   def cms_favicon_url(format: :png)
-    return rails_representation_url(cms_setting.favicon, only_path: true) if cms_setting.favicon.attached?
+    return url_for(cms_setting.favicon) if cms_setting.favicon.attached?
     format == :svg ? "/icon.svg" : "/icon.png"
   end
 
