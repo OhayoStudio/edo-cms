@@ -89,3 +89,5 @@ public/placeholder.ark
 
 
 TODO.md
+# Local-only writing notes — kept on disk, not in git.
+docs/writing_guide.md
