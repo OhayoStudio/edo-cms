@@ -4,7 +4,7 @@
 <% tiny = local_assigns[:tiny] %>
 <% s = story.storyable %>
 <% if s.respond_to?(:featured_image) && s.featured_image.attached? %>
-  <%= link_to s, class: "block group" do %>
+  <%= link_to s, class: "block group", data: { "umami-event": "story_click", "umami-event-position": (tiny ? "small_tiny" : "small"), "umami-event-title": s.title } do %>
     <div class="overflow-hidden mb-3 md:mb-4 aspect-[16/9] <#%= tiny ? 'aspect-[4/3]' : 'aspect-[16/9]' %>">
       <%= image_tag s.featured_image.variant(:thumb),
             alt: s.title,

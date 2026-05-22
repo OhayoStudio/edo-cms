@@ -1,7 +1,7 @@
 <!-- filepath: app/views/stories/_top_story.html.erb -->
 <% if story.storyable.respond_to?(:featured_image) && story.storyable.featured_image.attached? %>
 <div class="border-b-2 border-gray-600 pb-4 mb-4">
-  <%= link_to story.storyable, class:"group" do %>
+  <%= link_to story.storyable, class: "group", data: { "umami-event": "story_click", "umami-event-position": "top", "umami-event-title": story.storyable.title } do %>
     <%= image_tag story.storyable.featured_image, alt: story.storyable.title, fetchpriority: "high", decoding: "async", class: "w-full h-96 object-cover md:rounded-sm sm:px-4" %>
     <div  class="container md:mx-auto md:mt-2 md:px-5">
       <h2 class="text-4xl font-bold text-red-400 dark:text-peach group-hover:text-red-400 m-4 mb-0 lora ">

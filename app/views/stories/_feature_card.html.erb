@@ -3,7 +3,7 @@
 <%# Locals: story. %>
 <% s = story.storyable %>
 <% if s.respond_to?(:featured_image) && s.featured_image.attached? %>
-  <%= link_to s, class: "block group" do %>
+  <%= link_to s, class: "block group", data: { "umami-event": "story_click", "umami-event-position": "feature", "umami-event-title": s.title } do %>
     <div class="overflow-hidden mb-4 md:mb-5 aspect-[16/9]">
       <%= image_tag s.featured_image,
             alt: s.title,

@@ -48,9 +48,10 @@
       document.addEventListener('turbo:load', applyTheme);
     </script>
     <%= auto_discovery_link_tag :rss, feed_url(format: :rss), title: "#{site_name} RSS Feed" %>
-    <% if Rails.env.production? && cms_setting.analytics_provider == "umami" && cms_setting.analytics_website_id.present? && cms_setting.analytics_host.present? %>
-      <script defer src="https://<%= cms_setting.analytics_host %>/script.js"
-              data-website-id="<%= cms_setting.analytics_website_id %>"></script>
+    <% if analytics_enabled? %>
+      <script defer src="<%= analytics_script_url %>"
+              data-website-id="<%= cms_setting.analytics_website_id %>"
+              <%= "data-domains=\"#{ENV["APPLICATION_HOST"]}\"".html_safe if ENV["APPLICATION_HOST"].present? %>></script>
     <% end %>
   </head>
 

@@ -137,14 +137,15 @@
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
     <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Analytics</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
       <div>
-        <%= f.label :analytics_provider, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-        <%= f.select :analytics_provider, [ [ "None", "" ], [ "Umami", "umami" ] ], {},
-              class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
+        <label class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <%= f.check_box :analytics_provider, { class: "rounded border-gray-300 dark:border-gray-600" }, "umami", "" %>
+          Enable Umami
+        </label>
       </div>
       <div>
-        <%= f.label :analytics_website_id, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.label :analytics_website_id, "Website ID", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.text_field :analytics_website_id,
               class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
