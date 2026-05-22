@@ -22,9 +22,14 @@
     <link rel="sitemap" type="application/xml" href="/sitemaps/sitemap.xml.gz" />
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%= tag.link rel: "manifest" , href: pwa_manifest_path(format: :json) %>
-    <link rel="icon" href="/icon.png" type="image/png" />
-    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/icon.png" />
+    <% if cms_setting.favicon.attached? %>
+      <%= favicon_link_tag cms_setting.favicon %>
+      <link rel="apple-touch-icon" href="<%= cms_favicon_url %>" />
+    <% else %>
+      <link rel="icon" href="/icon.png" type="image/png" />
+      <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+      <link rel="apple-touch-icon" href="/icon.png" />
+    <% end %>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">

@@ -3,16 +3,17 @@
   description = default_meta_description
   theme = cms_color(:primary)
   background = cms_color(:background)
+  icon_url = cms_favicon_url
 %>{
   "name": <%= name.to_json %>,
   "icons": [
     {
-      "src": "/icon.png",
+      "src": <%= icon_url.to_json %>,
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "/icon.png",
+      "src": <%= icon_url.to_json %>,
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "maskable"
