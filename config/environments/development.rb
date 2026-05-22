@@ -75,4 +75,6 @@ Rails.application.configure do
   # allow access from mobile devices using my ip address
   config.hosts << "192.168.3.255:3001"
   config.hosts << ENV["APPLICATION_HOST"]
+  # Allow browser-MCP / Docker-based tools to reach the dev server.
+  config.hosts << "host.docker.internal"
 end

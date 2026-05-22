@@ -74,4 +74,22 @@ module SettingsHelper
     }.join(" ")
     content_tag(:style, ":root { #{css} }".html_safe)
   end
+
+  # Returns true when the Umami snippet should render: feature is enabled,
+  # required fields are present, and we're not in the test env. Dev gets
+  # the snippet so the local docker-compose stack is testable end-to-end.
+  def analytics_enabled?
+    return false if Rails.env.test?
+    cms_setting.analytics_provider == "umami" &&
+      cms_setting.analytics_website_id.present? &&
+      cms_setting.analytics_host.present?
+  end
+
+  # Pick http for local hosts (so docker-compose Umami works in dev),
+  # https for everything else.
+  def analytics_script_url
+    host = cms_setting.analytics_host
+    scheme = host.match?(/\A(localhost|127\.|192\.168\.|10\.)|:\d+\z/) ? "http" : "https"
+    "#{scheme}://#{host}/script.js"
+  end
 end

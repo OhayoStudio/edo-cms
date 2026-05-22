@@ -50,6 +50,44 @@ volumes:
 
 asset_path: /rails/public/assets
 
+# Self-hosted Umami analytics. Two accessories: a dedicated Postgres for
+# Umami's events, and the Umami app itself routed through Kamal's proxy on
+# a subdomain (e.g. analytics.example.com).
+#
+# Required deploy-host env vars:
+#   UMAMI_HOST            e.g. analytics.example.com (matches Setting "Analytics host")
+#   UMAMI_DB_PASSWORD     password for the umami postgres role
+#   UMAMI_APP_SECRET      Umami's session secret (32+ random chars)
+#
+# After first `bin/kamal deploy`, open https://$UMAMI_HOST and log in with
+# the default admin user (admin / umami), change the password, create a
+# website, and paste its website-id + host into /admin/settings.
+accessories:
+  umami-db:
+    image: postgres:15
+    host: <%= ENV.fetch("DEPLOY_HOST", "your.production.host") %>
+    env:
+      clear:
+        POSTGRES_DB: umami
+        POSTGRES_USER: umami
+        POSTGRES_PASSWORD: <%= ENV.fetch("UMAMI_DB_PASSWORD", "") %>
+    directories:
+      - umami-db-data:/var/lib/postgresql/data
+
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    host: <%= ENV.fetch("DEPLOY_HOST", "your.production.host") %>
+    port: 3000
+    proxy:
+      ssl: true
+      host: <%= ENV.fetch("UMAMI_HOST", "analytics.your-domain.example") %>
+      app_port: 3000
+    env:
+      clear:
+        DATABASE_TYPE: postgresql
+        DATABASE_URL: postgresql://umami:<%= ENV.fetch("UMAMI_DB_PASSWORD", "") %>@edo-cms-umami-db:5432/umami
+        APP_SECRET: <%= ENV.fetch("UMAMI_APP_SECRET", "") %>
+
 ssh:
   user: deploy
 
