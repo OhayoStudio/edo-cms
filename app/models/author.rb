@@ -29,6 +29,7 @@ class Author < ApplicationRecord
 
   # Callbacks
   before_validation :generate_slug
+  after_initialize :set_default_status, if: :new_record?
 
   # Scopes
   scope :active, -> { where(status: :active) }
@@ -55,5 +56,9 @@ class Author < ApplicationRecord
 
   def generate_slug
     self.slug = full_name.parameterize if first_name_changed? || last_name_changed?
+  end
+
+  def set_default_status
+    self.status ||= :active
   end
 end
