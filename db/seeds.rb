@@ -14,3 +14,8 @@ if User.count.zero?
   puts "Admin user created: #{email}"
   puts "Password: #{password}" if ENV["ADMIN_PASSWORD"].blank?
 end
+
+# Optional demo content — set SEED_DEMO_CONTENT=1 to plant a handful of
+# articles, videos, an author, and a category so a fresh install has
+# something visible on the homepage. Production should leave this off.
+load Rails.root.join("db/seeds/demo.rb") if ENV["SEED_DEMO_CONTENT"].present?
