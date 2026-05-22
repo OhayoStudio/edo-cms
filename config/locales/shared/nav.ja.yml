@@ -10,6 +10,8 @@ ja:
       colophon: 奥付
     footer:
       rss: RSS
+      terms: 利用規約
+      privacy: プライバシー
       copyright: "© %{year} · %{site}"
     a11y:
       main_nav: メインナビゲーション
