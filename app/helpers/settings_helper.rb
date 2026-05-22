@@ -23,7 +23,9 @@ module SettingsHelper
       tags:       { label: t("nav.primary.tags"),       path: tags_path },
       about:      { label: t("nav.primary.about"),      path: about_path },
       colophon:   { label: t("nav.primary.colophon"),   path: colophon_path },
-      feed:       { label: t("nav.footer.rss"),         path: feed_path(format: :rss) }
+      feed:       { label: t("nav.footer.rss"),         path: feed_path(format: :rss) },
+      terms:      { label: t("nav.footer.terms"),       path: terms_path },
+      privacy:    { label: t("nav.footer.privacy"),     path: privacy_path }
     }
   end
 

@@ -85,14 +85,14 @@
 <%# ─── LATEST STORIES FOOTER ───────────────────────────────────── %>
 <% if defined?(@recent_articles) && @recent_articles.present? %>
   <% recent_total = Article.published.count rescue nil %>
-  <section class="bg-cream-soft border-t border-rule lora">
+  <section class="bg-cream-soft dark:bg-ink border-t border-rule dark:border-ink-soft lora">
     <div class="max-w-[1280px] mx-auto px-5 md:px-16 lg:px-20 pt-14 md:pt-16 pb-16 md:pb-20">
 
-      <div class="flex items-baseline justify-between mb-9 pb-[18px] border-b-2 border-ink">
-        <h2 class="font-serif font-medium text-2xl md:text-[30px] tracking-[-0.015em] text-ink m-0">
+      <div class="flex items-baseline justify-between mb-9 pb-[18px] border-b-2 border-ink dark:border-ink-soft">
+        <h2 class="font-serif font-medium text-2xl md:text-[30px] tracking-[-0.015em] text-ink dark:text-peach m-0">
           Latest stories
         </h2>
-        <%= link_to articles_path, class: "font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-sage-deep hover:underline" do %>
+        <%= link_to articles_path, class: "font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-sage-deep dark:text-peach hover:underline" do %>
           The archive →
         <% end %>
       </div>
@@ -103,33 +103,33 @@
           <%= link_to article_path(article), class: "block group" do %>
             <div class="flex justify-between items-baseline mb-3 font-mono text-[10px] uppercase tracking-[0.18em]">
               <% if catalogue_number %>
-                <span class="text-sage-deep">No. <%= catalogue_number.to_s.rjust(3, "0") %></span>
+                <span class="text-sage-deep dark:text-peach">No. <%= catalogue_number.to_s.rjust(3, "0") %></span>
               <% else %>
                 <span></span>
               <% end %>
               <% if article.published_at %>
-                <span class="text-gray-500"><%= article.published_at.strftime("%d %b %Y") %></span>
+                <span class="text-gray-500 dark:text-gray-400"><%= article.published_at.strftime("%d %b %Y") %></span>
               <% end %>
             </div>
 
             <% if article.featured_image.attached? %>
               <%= image_tag article.featured_image.variant(:thumb),
-                    class: "w-full aspect-[16/10] object-cover mb-3.5 bg-rule",
+                    class: "w-full aspect-[16/10] object-cover mb-3.5 bg-rule dark:bg-ink-soft",
                     loading: "lazy", alt: article.title %>
             <% end %>
 
             <% if article.category.present? %>
-              <div class="font-mono text-[10px] uppercase tracking-[0.18em] text-sage-deep mb-2">
+              <div class="font-mono text-[10px] uppercase tracking-[0.18em] text-sage-deep dark:text-peach mb-2">
                 <%= article.category.name %>
               </div>
             <% end %>
 
-            <h3 class="font-serif font-medium text-[20px] md:text-[22px] leading-[1.18] tracking-[-0.01em] text-ink m-0 mb-2.5 text-balance group-hover:text-sage-deep transition-colors">
+            <h3 class="font-serif font-medium text-[20px] md:text-[22px] leading-[1.18] tracking-[-0.01em] text-ink dark:text-gray-200 m-0 mb-2.5 text-balance group-hover:text-sage-deep dark:group-hover:text-peach transition-colors">
               <%= article.title %>
             </h3>
 
             <% if article.tags.any? %>
-              <div class="font-mono text-[10px] text-sage-deep">
+              <div class="font-mono text-[10px] text-sage-deep dark:text-peach">
                 <%= article.tags.first(3).map { |t| t.name }.join(' / ').html_safe %>
               </div>
             <% end %>

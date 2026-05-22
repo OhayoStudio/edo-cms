@@ -10,6 +10,8 @@ en:
       colophon: Colophon
     footer:
       rss: RSS
+      terms: Terms
+      privacy: Privacy
       copyright: "© %{year} · %{site}"
     a11y:
       main_nav: Main navigation
