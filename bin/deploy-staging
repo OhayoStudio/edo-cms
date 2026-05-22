@@ -1,19 +1,24 @@
 #!/bin/bash
+# Staging deploy. See bin/deploy-production for env var contract — this
+# script uses .env.staging and a -d staging Kamal destination.
 set -e
 
 set -a && source .env.staging && set +a
+
+: "${REGISTRY_IMAGE:?set REGISTRY_IMAGE in .env.staging}"
+: "${DEPLOY_HOST:?set DEPLOY_HOST in .env.staging}"
+: "${APPLICATION_HOST:?set APPLICATION_HOST in .env.staging}"
 
 SHA=$(git rev-parse HEAD)
 
 echo "==> Building image for linux/amd64 ($SHA)..."
 docker buildx build --platform linux/amd64 \
-  --label "service=edo-staging" \
-  -t "ghcr.io/ohayostudio/edo:$SHA" \
-  -t "ghcr.io/ohayostudio/edo:latest-staging" \
+  -t "${REGISTRY_IMAGE}:$SHA" \
+  -t "${REGISTRY_IMAGE}:latest-staging" \
   --push .
 
 echo "==> Freeing space on staging server..."
-ssh deploy@152.42.197.168 "docker system prune -af"
+ssh "deploy@${DEPLOY_HOST}" "docker system prune -af"
 
 echo "==> Deploying to staging..."
 bin/kamal deploy --skip-push -d staging
@@ -21,4 +26,4 @@ bin/kamal deploy --skip-push -d staging
 echo "==> Running migrations..."
 bin/kamal app exec -d staging --reuse "bin/rails db:migrate"
 
-echo "==> Done. https://stg.sepiabraun.com"
+echo "==> Done. https://${APPLICATION_HOST}"

@@ -1,48 +1,23 @@
 name: "📝 Article"
-description: "Track a SepiaBraun article from idea to publication"
+description: "Track an article from idea to publication"
 title: "[Article] "
 labels: ["article"]
-assignees:
-  - jeromesadou
 body:
-  - type: dropdown
+  - type: input
     id: category
     attributes:
       label: Category
-      description: Which SepiaBraun category does this article belong to?
-      options:
-        - Sartorial
-        - Technology
-        - Mobility
-        - Watches
-        - Audiophile
-        - Music
-        - Arranged Sounds
-        - Beverages
-        - Furnitures
-        - Books
-        - Health / Wellness
-        - Cities / Travel
+      description: "Which category does this article belong to? (matches a Category record in the CMS)"
+      placeholder: "e.g. Stories, Reviews, Field Notes"
     validations:
-      required: true
-
-  - type: dropdown
-    id: japan-related
-    attributes:
-      label: Japan-related?
-      description: Is this article part of the Japan lens?
-      options:
-        - "Yes 🇯🇵"
-        - "No"
-    validations:
-      required: true
+      required: false
 
   - type: input
     id: month
     attributes:
       label: Scheduled Month
-      description: "Which month is this scheduled for? (e.g., Month 1, Month 5)"
-      placeholder: "Month X"
+      description: "When is this scheduled for?"
+      placeholder: "e.g. April 2027"
     validations:
       required: false
 

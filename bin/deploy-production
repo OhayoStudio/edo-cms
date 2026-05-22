@@ -1,19 +1,30 @@
 #!/bin/bash
+# Production deploy: builds linux/amd64 image, pushes to your registry,
+# frees space on the server, runs `kamal deploy`, then migrates.
+#
+# Fill in your own values:
+#   - REGISTRY_IMAGE: e.g. ghcr.io/<your-org>/<your-service>
+#   - DEPLOY_HOST:    your production host (IP or FQDN) for the prune step
+#   - APPLICATION_HOST: the URL printed at the end
+# All three can also come from .env.production.
 set -e
 
 set -a && source .env.production && set +a
+
+: "${REGISTRY_IMAGE:?set REGISTRY_IMAGE in .env.production}"
+: "${DEPLOY_HOST:?set DEPLOY_HOST in .env.production}"
+: "${APPLICATION_HOST:?set APPLICATION_HOST in .env.production}"
 
 SHA=$(git rev-parse HEAD)
 
 echo "==> Building image for linux/amd64 ($SHA)..."
 docker buildx build --platform linux/amd64 \
-  --label "service=edo" \
-  -t "ghcr.io/ohayostudio/edo:$SHA" \
-  -t "ghcr.io/ohayostudio/edo:latest" \
+  -t "${REGISTRY_IMAGE}:$SHA" \
+  -t "${REGISTRY_IMAGE}:latest" \
   --push .
 
 echo "==> Freeing space on production server..."
-ssh deploy@167.99.120.27 "docker system prune -af"
+ssh "deploy@${DEPLOY_HOST}" "docker system prune -af"
 
 echo "==> Deploying to production..."
 bin/kamal deploy --skip-push
@@ -21,4 +32,4 @@ bin/kamal deploy --skip-push
 echo "==> Running migrations..."
 bin/kamal app exec --reuse "bin/rails db:migrate"
 
-echo "==> Done. https://sepiabraun.com"
+echo "==> Done. https://${APPLICATION_HOST}"
