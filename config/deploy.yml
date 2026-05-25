@@ -19,6 +19,11 @@ servers:
 
 proxy:
   ssl: true
+  # Apex only by default. To also serve www, point a `www` CNAME at the apex
+  # (so it resolves to this host for Let's Encrypt's HTTP-01 challenge) and use:
+  #   host: <%%= h = ENV.fetch("APPLICATION_HOST", "your-domain.example"); "#{h},www.#{h}" %>
+  # Don't add www without the CNAME — a failed challenge for one SAN fails the
+  # whole cert and leaves the site without TLS.
   host: <%= ENV.fetch("APPLICATION_HOST", "your-domain.example") %>
 
 registry:
@@ -62,6 +67,12 @@ asset_path: /rails/public/assets
 # After first `bin/kamal deploy`, open https://$UMAMI_HOST and log in with
 # the default admin user (admin / umami), change the password, create a
 # website, and paste its website-id + host into /admin/settings.
+#
+# Guarded so the block only renders when Umami is configured. Without this,
+# an unset UMAMI_DB_PASSWORD makes POSTGRES_PASSWORD render empty, YAML reads
+# it as nil, and `kamal setup`/`config` fails with
+# "accessories/umami-db/env/clear/POSTGRES_PASSWORD: should be a string".
+<% if ENV["UMAMI_DB_PASSWORD"].to_s != "" %>
 accessories:
   umami-db:
     image: postgres:15
@@ -87,6 +98,7 @@ accessories:
         DATABASE_TYPE: postgresql
         DATABASE_URL: postgresql://umami:<%= ENV.fetch("UMAMI_DB_PASSWORD", "") %>@edo-cms-umami-db:5432/umami
         APP_SECRET: <%= ENV.fetch("UMAMI_APP_SECRET", "") %>
+<% end %>
 
 ssh:
   user: deploy
