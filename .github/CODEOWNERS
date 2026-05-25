@@ -1,0 +1,9 @@
+# CODEOWNERS
+#
+# Every PR auto-requests a review from the listed owner(s). External PRs
+# can still be opened, but `main`'s branch protection won't merge without
+# the requested review.
+#
+# Reminder: this template doesn't accept external PRs — see CONTRIBUTING.md.
+
+* @JeromeSadou
