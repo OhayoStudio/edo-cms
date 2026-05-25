@@ -30,8 +30,7 @@ jobs:
         id: claude-review
         uses: anthropics/claude-code-action@787c5a0ce96a9a6cfb050ea0c8f4c05f2447c251 # v1.0.133
         with:
-          # zizmor: ignore[secrets-outside-env] -- single scoped OAuth token consumed by the official action; job permissions are already minimal; a dedicated GitHub Environment adds operational overhead without meaningful gain.
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }} # zizmor: ignore[secrets-outside-env] -- scoped OAuth token, official action, minimal job perms; GitHub Environment overhead unwarranted
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
           plugins: 'code-review@claude-code-plugins'
           prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.issue.number }}'
