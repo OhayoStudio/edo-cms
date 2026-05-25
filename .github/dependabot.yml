@@ -8,16 +8,29 @@ updates:
   groups:
     bundler-non-major:
       update-types: [ "patch", "minor" ]
+  cooldown:
+    semver-major-days: 7
+    semver-minor-days: 3
+    semver-patch-days: 2
+    default-days: 7
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
     interval: weekly
   open-pull-requests-limit: 5
   groups:
-    actions-non-major:
-      update-types: [ "patch", "minor" ]
+    github-actions:
+      patterns:
+        - "*"
+  cooldown:
+    default-days: 7
 - package-ecosystem: docker
   directory: "/"
   schedule:
     interval: weekly
   open-pull-requests-limit: 3
+  cooldown:
+    semver-major-days: 7
+    semver-minor-days: 3
+    semver-patch-days: 2
+    default-days: 7
