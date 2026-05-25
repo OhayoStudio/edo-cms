@@ -72,11 +72,12 @@ module MetaTagsHelper
   # propagates as a Propshaft "asset '' not found" crash inside view
   # helpers like favicon_link_tag.
   def cms_logo_or_favicon_url(absolute: false)
-    attachment = if cms_setting.logo_light.attached?
-                   cms_setting.logo_light
-                 elsif cms_setting.favicon.attached?
-                   cms_setting.favicon
-                 end
+    attachment =
+      if cms_setting.logo_light.attached?
+        cms_setting.logo_light
+      elsif cms_setting.favicon.attached?
+        cms_setting.favicon
+      end
 
     if attachment
       path = url_for(attachment)
