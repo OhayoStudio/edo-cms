@@ -545,7 +545,7 @@ DEPENDENCIES
   kamal
   kaminari
   kramdown (~> 2.4)
-  lexxy (~> 0.9.12.beta)
+  lexxy (~> 0.9.3.beta)
   meta-tags (~> 2.22)
   mini_magick
   pg (~> 1.1)
