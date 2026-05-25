@@ -13,6 +13,13 @@
 #   - 5 Articles with solid-color featured images
 #   - 5 Videos with real YouTube thumbnails from the official Beatles channel
 #   - Story rows for each so they appear on the homepage
+#
+# Note on the Beatles videos: they're linked from the official channel's
+# public RSS feed and we attach the YouTube-hosted thumbnail (img.youtube.com)
+# as the featured image — same as embedding the video would. Fair-use linking
+# for a demo, but swap these out for your own content before going to
+# production: edit the `videos` array below, or delete the Video.create loop
+# and seed your own.
 
 require "open-uri"
 require "mini_magick"
