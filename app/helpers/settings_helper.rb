@@ -62,6 +62,42 @@ module SettingsHelper
     nil
   end
 
+  # Social services rendered in the footer, in display order. Each entry
+  # carries a human label and the base URL used to expand a bare handle
+  # (e.g. "ohayo" → "https://x.com/ohayo"). RSS is host-relative, so it
+  # has no base. Add a service here AND to Setting#social_links's
+  # store_accessor + the admin form loop to expose a new icon.
+  SOCIAL_SERVICES = {
+    twitter:   { label: "X / Twitter", base: "https://x.com/" },
+    instagram: { label: "Instagram",   base: "https://instagram.com/" },
+    github:    { label: "GitHub",      base: "https://github.com/" },
+    mastodon:  { label: "Mastodon",    base: nil },
+    rss:       { label: "RSS",         base: nil }
+  }.freeze
+
+  # Present social links as [{ key:, label:, url: }], skipping blanks.
+  # A value that already looks like a URL is used as-is; otherwise it's
+  # treated as a handle and expanded against the service's base URL.
+  def social_links
+    SOCIAL_SERVICES.filter_map do |key, meta|
+      value = cms_setting.social_links[key.to_s].to_s.strip
+      next if value.blank?
+
+      url =
+        if value.match?(%r{\A(https?:)?//}) || value.start_with?("/")
+          value
+        elsif key == :rss
+          feed_path(format: :rss)
+        elsif meta[:base]
+          "#{meta[:base]}#{value.delete_prefix('@')}"
+        else
+          value
+        end
+
+      { key: key, label: meta[:label], url: url }
+    end
+  end
+
   def cms_setting
     @_cms_setting ||= Setting.instance
   end
