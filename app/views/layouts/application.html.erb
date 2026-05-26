@@ -144,13 +144,30 @@
             <p class="text-sm text-gray-500 dark:text-gray-300"><%= t("nav.footer.copyright", year: Time.current.year, site: site_name) %></p>
           </div>
 
-          <!-- Navigation links -->
-          <nav aria-label="<%= t("nav.a11y.footer_nav") %>" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-300">
-            <% footer_nav_items.each do |item| %>
-              <%= link_to item[:label], item[:path],
-                    class: "hover:text-sage-deep dark:hover:text-peach transition-colors" %>
+          <div class="flex flex-col gap-6 md:items-end">
+            <!-- Navigation links -->
+            <nav aria-label="<%= t("nav.a11y.footer_nav") %>" class="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-gray-600 dark:text-gray-300">
+              <% footer_nav_items.each do |item| %>
+                <%= link_to item[:label], item[:path],
+                      class: "hover:text-sage-deep dark:hover:text-peach transition-colors" %>
+              <% end %>
+            </nav>
+
+            <!-- Social links -->
+            <% if social_links.any? %>
+              <ul class="flex items-center gap-4">
+                <% social_links.each do |link| %>
+                  <li>
+                    <%= link_to link[:url], rel: "noopener", target: "_blank",
+                          "aria-label": link[:label], title: link[:label],
+                          class: "text-gray-500 dark:text-gray-400 hover:text-sage-deep dark:hover:text-peach transition-colors" do %>
+                      <%= render "common/social_icon", key: link[:key] %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
             <% end %>
-          </nav>
+          </div>
         </div>
       </div>
     </footer>
