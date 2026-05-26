@@ -51,7 +51,7 @@ class InstagramStoryVideoService
     geo = offset_geometry(pos_x, pos_y)
 
     # 1. Composite still (canvas + positioned image, no text/gradient)
-    MiniMagick::Tool::Convert.new do |c|
+    imagemagick_convert do |c|
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
       c << "xc:#{canvas_color}"
       c << "("
@@ -64,7 +64,7 @@ class InstagramStoryVideoService
     end
 
     # 2. Gradient overlay image
-    MiniMagick::Tool::Convert.new do |c|
+    imagemagick_convert do |c|
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
       c << "gradient:rgba(0,0,0,#{@gradient_opacity})-rgba(0,0,0,0)"
       c << gradient_file.path

@@ -32,7 +32,7 @@ class InstagramStoryService
     final_w, final_h, pos_x, pos_y = image_placement(source.width, source.height)
     geo = offset_geometry(pos_x, pos_y)
 
-    MiniMagick::Tool::Convert.new do |c|
+    imagemagick_convert do |c|
       # 1. Base canvas
       c << "-size" << "#{STORY_WIDTH}x#{STORY_HEIGHT}"
       c << "xc:#{canvas_color}"

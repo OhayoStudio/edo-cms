@@ -30,6 +30,18 @@ module InstagramStoryAssets
   def font_serif = @font_serif ||= resolve_font(FONT_SERIF_CANDIDATES)
   def font_sans  = @font_sans  ||= resolve_font(FONT_SANS_CANDIDATES)
 
+  # Runs an ImageMagick `convert` invocation, yielding the command builder.
+  # mini_magick 5 dropped MiniMagick::Tool::Convert.new in favour of
+  # MiniMagick.convert; this picks whichever the installed gem provides so
+  # the same code works on forks pinned to either major version.
+  def imagemagick_convert(&block)
+    if MiniMagick.respond_to?(:convert)
+      MiniMagick.convert(&block)
+    else
+      MiniMagick::Tool::Convert.new(&block)
+    end
+  end
+
   # ── Brand (Setting-driven) ──────────────────────────────────────────────
 
   # Dark story canvas — the theme's body-ink color reads well behind a
@@ -59,7 +71,7 @@ module InstagramStoryAssets
     src.flush
 
     out = Tempfile.new([ "story_logo", ".png" ])
-    MiniMagick::Tool::Convert.new do |c|
+    imagemagick_convert do |c|
       c << "-background" << "none"
       c << "-resize"     << "#{LOGO_SIZE}x#{LOGO_SIZE}"
       c << src.path
