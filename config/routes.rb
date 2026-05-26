@@ -10,6 +10,9 @@ Rails.application.routes.draw do
         patch :unpublish
         patch :patch_field
         get   :preview
+        get   :story_card
+        get   :story_video
+        post  :share_instagram
       end
     end
     resources :videos do
