@@ -1,5 +1,5 @@
 class Admin::ArticlesController < Admin::BaseController
-  before_action :set_article, only: %i[edit update destroy publish unpublish patch_field preview]
+  before_action :set_article, only: %i[edit update destroy publish unpublish patch_field preview story_card story_video share_instagram]
 
   def index
     @categories = Category.not_deleted.order(:name)
@@ -84,6 +84,58 @@ class Admin::ArticlesController < Admin::BaseController
     render template: "articles/show", layout: "application"
   end
 
+  # GET /admin/articles/:id/story_card — download a 1080×1920 PNG story card
+  def story_card
+    image_data = InstagramStoryService.new(@article, **story_params).generate
+    if image_data
+      send_data image_data, type: "image/png",
+                filename: "#{@article.slug}-story.png", disposition: "attachment"
+    else
+      redirect_to edit_admin_article_path(@article), alert: "No image found to generate story card."
+    end
+  end
+
+  # GET /admin/articles/:id/story_video — download an animated MP4 story
+  def story_video
+    video_data = InstagramStoryVideoService.new(@article, **story_params).generate
+    if video_data
+      send_data video_data, type: "video/mp4",
+                filename: "#{@article.slug}-story.mp4", disposition: "attachment"
+    else
+      redirect_to edit_admin_article_path(@article), alert: "No image found to generate story video."
+    end
+  end
+
+  # POST /admin/articles/:id/share_instagram — generate the export, expose it
+  # at a public URL, and publish it as an Instagram story via the Graph API.
+  def share_instagram
+    unless ENV["APPLICATION_HOST"].present?
+      return render json: { error: "Set APPLICATION_HOST to a publicly reachable hostname (e.g. via ngrok in dev). Instagram must be able to download the exported file." }, status: :unprocessable_entity
+    end
+
+    media_type = params[:media_type].to_s # "image" or "video"
+
+    export_path, _content_type, _ext =
+      if media_type == "video"
+        [ write_instagram_export(InstagramStoryVideoService.new(@article, **story_params).generate, "mp4"), "video/mp4", "mp4" ]
+      else
+        [ write_instagram_export(InstagramStoryService.new(@article, **story_params).generate, "png"), "image/png", "png" ]
+      end
+
+    return render json: { error: "No image found for this article." }, status: :unprocessable_entity unless export_path
+
+    public_url = instagram_export_url(export_path)
+    ig         = InstagramService.new
+    media_id   = media_type == "video" ? ig.publish_video_story(media_url: public_url) : ig.publish_image_story(media_url: public_url)
+
+    render json: { success: true, media_id: media_id }
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  ensure
+    File.delete(export_path) if export_path && File.exist?(export_path)
+    purge_old_instagram_exports
+  end
+
   # PATCH /admin/articles/:id/patch_field — lightweight single-field inline update
   def patch_field
     allowed = %w[category_id status featured priority]
@@ -125,6 +177,40 @@ class Admin::ArticlesController < Admin::BaseController
       :author_id, :category_id,
       :reading_time, :status, :slug, :published_at
     )
+  end
+
+  # Crop/overlay params sent by the story-preview Stimulus controller.
+  def story_params
+    {
+      img_x: params[:img_x], img_y: params[:img_y],
+      img_w: params[:img_w], img_h: params[:img_h],
+      gradient_opacity: params[:gradient_opacity]
+    }
+  end
+
+  INSTAGRAM_EXPORT_DIR = Rails.root.join("public", "instagram_exports")
+  INSTAGRAM_EXPORT_TTL = 3600 # seconds — files older than this are purged
+
+  def write_instagram_export(data, ext)
+    return nil unless data
+    FileUtils.mkdir_p(INSTAGRAM_EXPORT_DIR)
+    path = INSTAGRAM_EXPORT_DIR.join("#{SecureRandom.uuid}.#{ext}")
+    File.binwrite(path, data)
+    path
+  end
+
+  def instagram_export_url(path)
+    filename = File.basename(path)
+    host     = ENV.fetch("APPLICATION_HOST")
+    scheme   = Rails.env.production? ? "https" : request.protocol.delete_suffix("://")
+    "#{scheme}://#{host}/instagram_exports/#{filename}"
+  end
+
+  def purge_old_instagram_exports
+    return unless Dir.exist?(INSTAGRAM_EXPORT_DIR)
+    Dir.glob(INSTAGRAM_EXPORT_DIR.join("*")).each do |f|
+      File.delete(f) if File.mtime(f) < Time.current - INSTAGRAM_EXPORT_TTL
+    end
   end
 
   def generate_tags(article)
