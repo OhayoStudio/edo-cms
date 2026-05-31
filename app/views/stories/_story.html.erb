@@ -1,3 +1,7 @@
+<%# Cache key includes the storyable so edits to the underlying Article/Video
+   bust the fragment (Story#updated_at is not touched by storyable changes),
+   and I18n.locale so locale-specific chrome is not cross-served. %>
+<% cache [ story, story.storyable, I18n.locale ] do %>
 <div class="h-full rounded-sm overflow-hidden dark:bg-ink dark:text-gray-300 relative mt-2 mb-2">
   <% if story.storyable.respond_to?(:featured_image) && story.storyable.featured_image.attached? %>
     <% if story.storyable.is_a?(Video) %>
@@ -21,3 +25,4 @@
     <% end %>
   <% end %>
 </div>
+<% end %>
