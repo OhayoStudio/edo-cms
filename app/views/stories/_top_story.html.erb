@@ -1,4 +1,5 @@
 <!-- filepath: app/views/stories/_top_story.html.erb -->
+<% cache [ story, story.storyable, I18n.locale ] do %>
 <% if story.storyable.respond_to?(:featured_image) && story.storyable.featured_image.attached? %>
 <div class="border-b-2 border-gray-600 pb-4 mb-4">
   <%= link_to story.storyable, class: "group", data: { "umami-event": "story_click", "umami-event-position": "top", "umami-event-title": story.storyable.title } do %>
@@ -17,4 +18,5 @@
     </div>
   <% end %>
 </div>
+<% end %>
 <% end %>

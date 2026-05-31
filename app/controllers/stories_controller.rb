@@ -1,23 +1,25 @@
 class StoriesController < ApplicationController
   # GET / (root)
   def index
-    @top_story = Story.published.recent.with_slug.top.first
-    @recent_stories = Story.published.recent.with_slug
+    # preload(:storyable) avoids an N+1 when the story partials read
+    # story.storyable for both rendering and the fragment cache key.
+    @top_story = Story.published.recent.with_slug.top.preload(:storyable).first
+    @recent_stories = Story.published.recent.with_slug.preload(:storyable).to_a
     @recent_stories = (@recent_stories - [ @top_story ]).first(6) if @top_story.present?
     @videos = Video.joins(:story).where(stories: { is_published: true }).order("stories.published_at desc").limit(3)
-    categories_with_articles = Category.joins(:articles).distinct
-    @latest_stories_by_category = []
 
-    categories_with_articles.each do |category|
-      latest_story = Story.joins("INNER JOIN articles ON stories.storyable_id = articles.id")
-                          .where(storyable_type: "Article",
-                                is_published: true,
-                                articles: { category_id: category.id })
-                          .order(published_at: :desc)
-                          .first
-
-      @latest_stories_by_category << latest_story if latest_story
-    end
+    # Most-recent published Article-story per category in a single query
+    # (Postgres DISTINCT ON), replacing the previous query-per-category loop.
+    @latest_stories_by_category =
+      Story.published
+           .joins("INNER JOIN articles ON stories.storyable_type = 'Article' AND stories.storyable_id = articles.id")
+           .where.not("articles.category_id" => nil)
+           .select("DISTINCT ON (articles.category_id) stories.*")
+           .order(Arel.sql("articles.category_id, stories.published_at DESC"))
+           .preload(:storyable)
+           .to_a
+           .sort_by { |s| s.published_at || Time.at(0) }
+           .reverse
   end
 
   # GET /stories/:id

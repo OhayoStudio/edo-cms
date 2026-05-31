@@ -23,5 +23,9 @@ class ArticlesController < ApplicationController
   # GET /articles/:id
   def show
     @article = Article.published.friendly.find(params[:id])
+    # Conditional GET: unchanged articles return 304. Action Text touches
+    # the article on content edits, so updated_at is a reliable validator;
+    # locale is mixed into the ETag so en/ja pages are not cross-served.
+    fresh_when(etag: [ @article, I18n.locale ], last_modified: @article.updated_at)
   end
 end
