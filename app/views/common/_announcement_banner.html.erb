@@ -1,0 +1,30 @@
+<%# Site-wide announcement strip. Renders only when an admin has enabled it
+    (Setting#banner_visible?). The label/message/CTA-label copy is editable
+    from /admin/settings → Translations (banner.message / banner.cta); the
+    CTA link shows only when a URL is configured. Dismissible — the Stimulus
+    controller remembers the choice in localStorage and re-hides on Turbo
+    navigations. %>
+<% if cms_setting.banner_visible? %>
+  <div data-controller="announcement-banner"
+       data-announcement-banner-target="root"
+       class="hidden bg-sage-deep dark:bg-peach text-cream dark:text-ink">
+    <div class="mx-auto max-w-[1180px] px-5 md:px-8 py-2.5 flex items-center justify-center gap-x-4 gap-y-1 flex-wrap text-center">
+      <p class="font-mono text-[11px] md:text-[12px] uppercase tracking-[0.14em]">
+        <span class="font-semibold"><%= t("banner.label") %></span>
+        <span class="opacity-80"><%= t("banner.message") %></span>
+      </p>
+      <% if cms_setting.banner_cta_url.present? %>
+        <%= link_to t("banner.cta"), cms_setting.banner_cta_url,
+              class: "font-mono text-[11px] md:text-[12px] uppercase tracking-[0.14em] underline underline-offset-4 hover:opacity-80 whitespace-nowrap" %>
+      <% end %>
+      <button type="button"
+              data-action="announcement-banner#dismiss"
+              aria-label="<%= t("banner.dismiss") %>"
+              class="ml-auto md:ml-2 flex-none p-1 hover:opacity-70 transition-opacity">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+<% end %>

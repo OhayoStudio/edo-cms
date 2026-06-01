@@ -24,6 +24,7 @@ class Admin::SettingsController < Admin::BaseController
       :site_name, :tagline, :meta_description, :contact_email,
       :analytics_provider, :analytics_website_id, :analytics_host,
       :newsletter_provider, :newsletter_form_action,
+      :banner_enabled, :banner_cta_url,
       :logo_light, :logo_dark, :favicon, :og_default_image,
       social_links: %i[twitter instagram github mastodon rss]
     )

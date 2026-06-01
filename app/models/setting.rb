@@ -35,6 +35,8 @@ class Setting < ApplicationRecord
     nav.primary.about
     nav.primary.colophon
     nav.footer.rss
+    banner.message
+    banner.cta
   ].freeze
 
   CACHE_KEY = "setting/instance"
@@ -48,6 +50,14 @@ class Setting < ApplicationRecord
 
   def theme_color(name)
     theme_colors.presence&.dig(name.to_s).presence || THEME_DEFAULTS[name.to_s]
+  end
+
+  # The site-wide announcement banner shows only when an admin flips it on.
+  # The message/CTA copy comes from i18n (banner.message / banner.cta), which
+  # always has a YAML fallback, so the toggle alone gates visibility. The CTA
+  # link renders only when a URL is set (see common/_announcement_banner).
+  def banner_visible?
+    banner_enabled?
   end
 
   # Nav items are stored as arrays of *registry keys* (strings). The

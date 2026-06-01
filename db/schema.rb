@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_21_122156) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_01_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -133,6 +133,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_21_122156) do
     t.string "analytics_host"
     t.string "analytics_provider"
     t.string "analytics_website_id"
+    t.string "banner_cta_url"
+    t.boolean "banner_enabled", default: false, null: false
     t.string "contact_email"
     t.datetime "created_at", null: false
     t.text "meta_description"

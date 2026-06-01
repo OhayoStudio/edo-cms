@@ -176,6 +176,23 @@
     </div>
   </section>
 
+  <%# ─── Announcement banner ──────────────────────────────────────── %>
+  <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Announcement banner</h2>
+    <p class="text-xs text-gray-500 dark:text-gray-400">A dismissible strip shown site-wide above the header. Edit the message and link label per language in the Translations section below (<code class="font-mono text-[11px]">banner.message</code>, <code class="font-mono text-[11px]">banner.cta</code>).</p>
+
+    <label class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+      <%= f.check_box :banner_enabled, class: "rounded border-gray-300 dark:border-gray-600" %>
+      Show the announcement banner
+    </label>
+
+    <div>
+      <%= f.label :banner_cta_url, "Link URL", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.url_field :banner_cta_url, placeholder: "https://example.com/news — leave blank for a text-only banner",
+            class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
+    </div>
+  </section>
+
   <%# ─── Translations ──────────────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
     <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Translations</h2>
