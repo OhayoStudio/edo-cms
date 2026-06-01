@@ -1,0 +1,9 @@
+en:
+  banner:
+    # Site-wide announcement strip. label/message/cta are editor-overridable
+    # from /admin/settings → Translations; the defaults below are neutral
+    # placeholders each fork replaces with its own copy.
+    label: News
+    message: We have an announcement.
+    cta: Learn more
+    dismiss: Dismiss
