@@ -41,7 +41,12 @@
       <% @articles.each do |article| %>
         <tr id="article-row-<%= article.id %>" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
           <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 max-w-xs truncate">
-            <%= article.title %>
+            <% if article.published? %>
+              <%= link_to article.title, article_path(article), target: "_blank", rel: "noopener",
+                    class: "hover:underline", title: "Open the published article in a new tab" %>
+            <% else %>
+              <%= article.title %>
+            <% end %>
           </td>
           <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs">
             <%= article.author&.display_name %>
