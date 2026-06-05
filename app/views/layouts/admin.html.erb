@@ -54,8 +54,16 @@
 
     <header class="bg-sage-deep dark:bg-ink sticky top-0 z-40 shadow-md lora">
       <nav class="container mx-auto px-6 flex items-center justify-between h-14">
-        <%= link_to "Admin", admin_root_path,
-            class: "font-serif text-lg font-semibold tracking-wide text-white hover:text-peach transition-colors" %>
+        <div class="flex items-center gap-3">
+          <%= link_to "Admin", admin_root_path,
+              class: "font-serif text-lg font-semibold tracking-wide text-white hover:text-peach transition-colors" %>
+          <%= link_to root_path, target: "_blank", rel: "noopener",
+              title: "Open the site in a new tab",
+              class: "inline-flex items-center gap-1 text-xs font-medium text-white/75 hover:text-peach transition-colors" do %>
+            Open
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 11 L11 5 M6 5 H11 V10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <% end %>
+        </div>
 
         <ul class="flex items-center gap-1 text-sm font-medium">
           <li>
