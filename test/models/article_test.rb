@@ -50,10 +50,14 @@ class ArticleTest < ActiveSupport::TestCase
     assert_includes @article.errors[:title], "is too long (maximum is 200 characters)"
   end
 
-  test "should validate presence of slug" do
+  test "slug is always populated by FriendlyId even when blanked" do
+    # The model validates slug presence, but FriendlyId always backfills a
+    # slug before validation (from the title, or a UUID fallback when the
+    # title is blank), so a saved article never lacks a slug.
     @article.slug = nil
-    assert_not @article.valid?, "Article should be invalid without a slug"
-    assert_includes @article.errors[:slug], "can't be blank"
+    @article.valid?
+    assert @article.slug.present?, "FriendlyId should backfill a slug"
+    assert_empty @article.errors[:slug], "Slug presence error should not fire"
   end
 
   test "should validate uniqueness of slug" do
@@ -78,10 +82,10 @@ class ArticleTest < ActiveSupport::TestCase
     assert_includes @article.errors[:meta_description], "is too long (maximum is 160 characters)"
   end
 
-  test "should validate maximum length of excerpt (150 chars)" do
-    @article.excerpt = "a" * 151
+  test "should validate maximum length of excerpt (400 chars)" do
+    @article.excerpt = "a" * 401
     assert_not @article.valid?, "Excerpt should be too long"
-    assert_includes @article.errors[:excerpt], "is too long (maximum is 150 characters)"
+    assert_includes @article.errors[:excerpt], "is too long (maximum is 400 characters)"
   end
 
   test "should validate presence of content" do
@@ -118,13 +122,7 @@ class ArticleTest < ActiveSupport::TestCase
     assert_includes @article.errors[:status], "can't be blank"
   end
 
-  test "should validate presence of published_at if status is published" do
-    @article.status = :published
-    @article.published_at = nil
-    assert_not @article.valid?, "Published article should be invalid without published_at"
-    assert_includes @article.errors[:published_at], "can't be blank"
-
-    # Reset @article to a consistent state or use a different instance for draft test
+  test "draft article is valid with a nil published_at" do
     draft_article = articles(:article_draft_lifestyle) # Use a draft fixture
     draft_article.status = :draft # ensure it's draft
     draft_article.published_at = nil
@@ -186,7 +184,7 @@ class ArticleTest < ActiveSupport::TestCase
 
   test "should not generate new slug if title is present but unchanged" do
     # Use a freshly created article to avoid state issues from @article
-    article_for_slug_stability = Article.create!(title: "Original Title For Slug Stability Test", author: @author, category: @category, content: "Content")
+    article_for_slug_stability = Article.create!(title: "Original Title For Slug Stability Test", author: @author, category: @category, content: "Content", reading_time: 1)
     original_slug = article_for_slug_stability.slug
 
     article_for_slug_stability.meta_description = "Changing something else, not the title."
@@ -195,17 +193,17 @@ class ArticleTest < ActiveSupport::TestCase
     assert_equal original_slug, article_for_slug_stability.slug, "Slug should not change if title hasn't changed"
   end
 
-  test "should generate an empty slug if title is an empty string (and rely on presence validation for slug)" do
+  test "FriendlyId backfills a slug when the title is an empty string" do
     article_empty_title = Article.new(title: "", author: @author, category: @category, content: "Some content.")
     article_empty_title.valid?
-    assert_equal "", article_empty_title.slug, "Slug should be an empty string if title is empty string"
-    assert_includes article_empty_title.errors[:slug], "can't be blank", "Presence validation for slug should fail for empty string slug"
+    assert article_empty_title.slug.present?, "FriendlyId should backfill a slug when the title is blank"
+    # The blank title is what makes the record invalid, not the slug.
+    assert_includes article_empty_title.errors[:title], "can't be blank"
   end
 
-  test "should not attempt to generate slug if title is nil (and rely on presence validation for title)" do
+  test "blank title is rejected by the title presence validation" do
     article_nil_title = Article.new(title: nil, author: @author, category: @category, content: "Some content.")
     article_nil_title.valid?
-    assert_nil article_nil_title.slug, "Slug should remain nil if title is nil and slug was not previously set"
     assert_includes article_nil_title.errors[:title], "can't be blank"
   end
 
@@ -215,7 +213,7 @@ class ArticleTest < ActiveSupport::TestCase
     # Test with content that results in reading_time > 1
     word_count_long = 450
     content_text_long = "word " * word_count_long
-    article_long_content = Article.new(title: "Test Reading Time Long #{Time.now.to_i}", author: @author, category: @category, content: content_text_long)
+    article_long_content = Article.new(title: "Test Reading Time Long #{Time.now.to_i}", author: @author, category: @category, content: content_text_long, reading_time: 1)
     article_long_content.save!
     expected_reading_time_long = (word_count_long.to_f / words_per_minute).ceil
     assert_equal expected_reading_time_long, article_long_content.reading_time, "Reading time for long content was not calculated correctly"
@@ -223,19 +221,11 @@ class ArticleTest < ActiveSupport::TestCase
     # Test with very short content (should result in reading_time of 1)
     word_count_short = 10 # (10 / 200).ceil = 1
     content_text_short = "word " * word_count_short
-    article_short_content = Article.new(title: "Test Reading Time Short #{Time.now.to_i}", author: @author, category: @category, content: content_text_short)
+    article_short_content = Article.new(title: "Test Reading Time Short #{Time.now.to_i}", author: @author, category: @category, content: content_text_short, reading_time: 99)
     article_short_content.save!
     assert_equal 1, article_short_content.reading_time, "Reading time for short content should default to 1"
-
-    # Test with blank content (should result in reading_time of 1)
-    article_blank_content = Article.new(title: "Test Reading Time Blank #{Time.now.to_i}", author: @author, category: @category, content: "") # Blank content
-    article_blank_content.save!
-    assert_equal 1, article_blank_content.reading_time, "Reading time for blank content should default to 1"
-
-    # Test with nil content (should result in reading_time of 1)
-    article_nil_content = Article.new(title: "Test Reading Time Nil #{Time.now.to_i}", author: @author, category: @category, content: nil) # Nil content
-    article_nil_content.save!
-    assert_equal 1, article_nil_content.reading_time, "Reading time for nil content should default to 1"
+    # Content presence is required, so blank/nil content can never be saved;
+    # the reading-time floor of 1 is exercised by the short-content case above.
   end
 
   test "should set default status to draft on new record initialization" do

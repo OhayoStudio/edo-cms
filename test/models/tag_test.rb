@@ -39,20 +39,23 @@ class TagTest < ActiveSupport::TestCase
     assert_includes duplicate_tag.errors[:name], "has already been taken"
   end
 
-  test "should validate presence of slug" do
+  test "slug is always populated from the name" do
+    # generate_slug derives the slug from the name on every change, so a tag
+    # with a name can never be missing its slug; the presence validation is
+    # backstopped by the callback.
     @tag.slug = nil
-    assert_not @tag.valid?, "Tag should be invalid without a slug"
-    assert_includes @tag.errors[:slug], "can't be blank"
+    @tag.valid?
+    assert_equal @tag.name.parameterize, @tag.slug
+    assert_empty @tag.errors[:slug], "Slug presence error should not fire"
   end
 
   test "should validate uniqueness of slug" do
-    existing_tag_slug = @tag.slug # @tag is tags(:tag_ruby)
-    duplicate_slug_tag = Tag.new(
-      name: "Unique Name for Duplicate Slug Test #{Time.now.to_i}",
-      slug: existing_tag_slug
-    )
-    assert_not duplicate_slug_tag.valid?, "Tag with a duplicate slug ('#{existing_tag_slug}') should be invalid"
-    # assert_includes duplicate_slug_tag.errors[:slug], "has already been taken"
+    # generate_slug overwrites any explicit slug with name.parameterize, so a
+    # duplicate slug is produced by a name that parameterizes to an existing
+    # slug (here, "RUBY" -> "ruby") rather than by setting :slug directly.
+    duplicate_slug_tag = Tag.new(name: @tag.name.upcase)
+    assert_not duplicate_slug_tag.valid?, "Tag with a duplicate slug ('#{@tag.slug}') should be invalid"
+    assert_includes duplicate_slug_tag.errors[:slug], "has already been taken"
   end
 
   # Associations
@@ -134,9 +137,9 @@ class TagTest < ActiveSupport::TestCase
     category = categories(:category_programming)
 
     # Create articles and associate them with the tag
-    published_article1 = Article.create!(title: "Published Rails Article 1", author: author, category: category, content: "Content", status: :published, published_at: Time.current)
-    published_article2 = Article.create!(title: "Published Rails Article 2", author: author, category: category, content: "Content", status: :published, published_at: Time.current)
-    draft_article = Article.create!(title: "Draft Rails Article", author: author, category: category, content: "Content", status: :draft)
+    published_article1 = Article.create!(title: "Published Rails Article 1", author: author, category: category, content: "Content", status: :published, published_at: Time.current, reading_time: 1)
+    published_article2 = Article.create!(title: "Published Rails Article 2", author: author, category: category, content: "Content", status: :published, published_at: Time.current, reading_time: 1)
+    draft_article = Article.create!(title: "Draft Rails Article", author: author, category: category, content: "Content", status: :draft, reading_time: 1)
 
     tag_for_article_count_method.articles << published_article1
     tag_for_article_count_method.articles << published_article2
