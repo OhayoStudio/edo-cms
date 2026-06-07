@@ -31,7 +31,9 @@ class Article < ApplicationRecord
   validates :reading_time, numericality: { only_integer: true, greater_than: 0 }
   # validates :view_count, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :status, presence: true
-  validates :published_at, presence: true, if: -> { status == :published }
+  # `status` is a string-backed enum, so `status == :published` (symbol) was always
+  # false and this guard never fired. Use the enum predicate so it actually validates.
+  validates :published_at, presence: true, if: :published?
   # validates :featured_image, content_type: %i(png jpg jpeg), size: { less_than: 5.megabytes }
 
   # Callbacks

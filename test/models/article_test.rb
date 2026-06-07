@@ -129,6 +129,14 @@ class ArticleTest < ActiveSupport::TestCase
     assert draft_article.valid?, "Draft article should be valid with nil published_at. Errors: #{draft_article.errors.full_messages.join(", ")}"
   end
 
+  test "published article requires a published_at" do
+    # @article (article_published_tech) is published; the presence validation
+    # only fires for the published status (via the :published? enum predicate).
+    @article.published_at = nil
+    assert_not @article.valid?, "Published article should be invalid without published_at"
+    assert_includes @article.errors[:published_at], "can't be blank"
+  end
+
   # Associations
   test "should belong to an author" do
     assert_respond_to @article, :author
@@ -273,10 +281,10 @@ class ArticleTest < ActiveSupport::TestCase
     article_for_enum_test.review!
     assert article_for_enum_test.review?, "Article should be in review status"
 
-    article_for_enum_test.published!
-    # Model validation requires published_at for published status
+    # Publishing requires published_at (the presence validation fires), so set it
+    # before the bang method, which assigns the status and saves in one step.
     article_for_enum_test.published_at = Time.current
-    assert article_for_enum_test.save, "Saving published article should be successful"
+    article_for_enum_test.published!
     assert article_for_enum_test.published?, "Article should be in published status"
 
     article_for_enum_test.archived!
