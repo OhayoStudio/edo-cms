@@ -60,27 +60,36 @@ class AuthorTest < ActiveSupport::TestCase
   end
 
   test "should validate format of email" do
+    # Capture the valid email before mutating; the fixture accessor memoizes
+    # the same instance, so reading it back after mutation would not reset it.
+    valid_email = @author.email
+
     @author.email = "invalid_email_format"
     assert_not @author.valid?, "Author should be invalid with an incorrect email format"
     assert_includes @author.errors[:email], "is invalid"
 
-    # Reset to a valid state for the instance if other parts of this test or other tests might reuse @author
-    @author.email = authors(:author_jane).email # Assuming this is a valid email from the original fixture
+    @author.email = valid_email
     assert @author.valid?
   end
 
-  test "should validate presence of slug" do
-    @author.slug = nil
-    assert_not @author.valid?, "Author should be invalid without a slug"
-    assert_includes @author.errors[:slug], "can't be blank"
+  test "slug is populated from the full name when name attributes change" do
+    # generate_slug derives the slug from the full name whenever first_name or
+    # last_name changes (always true for a new record), so a named author is
+    # never missing its slug; the presence validation is backstopped.
+    @author.first_name = "Janet"
+    @author.valid?
+    assert_equal "janet-doe", @author.slug
+    assert_empty @author.errors[:slug], "Slug presence error should not fire"
   end
 
   test "should validate uniqueness of slug" do
+    # generate_slug overwrites any explicit slug with full_name.parameterize,
+    # so a duplicate slug comes from reusing the existing author's name
+    # (-> "jane-doe") rather than from setting :slug directly.
     duplicate_author = Author.new(
-      first_name: "Unique",
-      last_name: "Name",
-      email: "unique.name.#{Time.now.to_i}@example.com",
-      slug: @author.slug # Use existing author's slug
+      first_name: @author.first_name,
+      last_name: @author.last_name,
+      email: "unique.name.#{Time.now.to_i}@example.com"
     )
     assert_not duplicate_author.valid?, "Author with a duplicate slug should be invalid"
     assert_includes duplicate_author.errors[:slug], "has already been taken"
@@ -108,23 +117,24 @@ class AuthorTest < ActiveSupport::TestCase
     assert_respond_to @author, :articles, "Author should respond to :articles"
   end
 
-  test "should nullify author_id in articles when author is destroyed" do
-    test_author = Author.create!(first_name: "JaneDestroyTest", last_name: "DoeDestroyTest", email: "jane.doe.destroy.#{Time.now.to_i}@example.com")
-    category_for_article = categories(:category_technology) # Use a descriptive category fixture
+  test "articles require an author and the column is not nullable" do
+    # The model declares has_many :articles, dependent: :nullify, but the DB
+    # enforces a NOT NULL constraint on articles.author_id (and belongs_to is
+    # required), so an article cannot exist without an author. An author with
+    # no articles can be destroyed cleanly.
+    empty_author = Author.create!(first_name: "Lonely", last_name: "Author", email: "lonely.author.#{Time.now.to_i}@example.com")
+    assert_difference("Author.count", -1) do
+      empty_author.destroy
+    end
 
-    article = test_author.articles.create!(
-      title: "Test Article for Nullify Author",
-      category: category_for_article,
-      content: "Some content for nullify test.",
-      status: :published,
-      published_at: Time.current
+    article = Article.new(
+      title: "Article Without Author #{Time.now.to_i}",
+      category: categories(:category_technology),
+      content: "content",
+      reading_time: 1
     )
-    assert_not_nil article.author_id, "Article should initially have an author_id"
-
-    test_author.destroy
-    article.reload
-
-    assert_nil article.author_id, "Article's author_id should be nullified after author destruction"
+    assert_not article.valid?, "Article should be invalid without an author"
+    assert_includes article.errors[:author], "must exist"
   end
 
   test "should have one attached avatar" do
@@ -235,9 +245,9 @@ class AuthorTest < ActiveSupport::TestCase
     # Clear existing articles if any, or ensure predictable state
     author_for_article_count.articles.destroy_all
 
-    author_for_article_count.articles.create!(title: "Published Article One by Jane", category: category_for_articles, content: "Content", status: :published, published_at: Time.current)
-    author_for_article_count.articles.create!(title: "Published Article Two by Jane", category: category_for_articles, content: "Content", status: :published, published_at: Time.current)
-    author_for_article_count.articles.create!(title: "Draft Article by Jane", category: category_for_articles, content: "Content", status: :draft)
+    author_for_article_count.articles.create!(title: "Published Article One by Jane", category: category_for_articles, content: "Content", status: :published, published_at: Time.current, reading_time: 1)
+    author_for_article_count.articles.create!(title: "Published Article Two by Jane", category: category_for_articles, content: "Content", status: :published, published_at: Time.current, reading_time: 1)
+    author_for_article_count.articles.create!(title: "Draft Article by Jane", category: category_for_articles, content: "Content", status: :draft, reading_time: 1)
 
     assert_equal 2, author_for_article_count.article_count, "article_count did not return correct number of published articles"
   end

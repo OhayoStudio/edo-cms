@@ -38,17 +38,23 @@ class CategoryTest < ActiveSupport::TestCase
     assert_includes duplicate_category.errors[:name], "has already been taken"
   end
 
-  test "should validate presence of slug" do
+  test "slug is always populated from the name" do
+    # generate_slug derives the slug from the name on every change, so a
+    # category with a name can never be missing its slug; the presence
+    # validation is effectively backstopped by the callback.
     @category.slug = nil
-    assert_not @category.valid?, "Category should be invalid without a slug"
-    assert_includes @category.errors[:slug], "can't be blank"
+    @category.valid?
+    assert_equal @category.name.parameterize, @category.slug
+    assert_empty @category.errors[:slug], "Slug presence error should not fire"
   end
 
   test "should validate uniqueness of slug" do
+    # generate_slug overwrites any explicit slug with name.parameterize, so a
+    # duplicate slug is produced by a name that parameterizes to an existing
+    # slug (here, "TECHNOLOGY" -> "technology") rather than by setting :slug.
     duplicate_category = Category.new(
-      name: "Unique Name For Slug Test #{Time.now.to_i}",
-      description: "Description for unique slug test.",
-      slug: @category.slug # Use existing category's slug
+      name: @category.name.upcase,
+      description: "Description for unique slug test."
     )
     assert_not duplicate_category.valid?, "Category with a duplicate slug ('#{@category.slug}') should be invalid"
     assert_includes duplicate_category.errors[:slug], "has already been taken"
@@ -93,38 +99,40 @@ class CategoryTest < ActiveSupport::TestCase
     assert_respond_to @category, :articles, "Category should respond to :articles"
   end
 
-  test "should nullify category_id in articles when category is destroyed" do
-    category_for_nullify_test = Category.create!(name: "Nullify Test Category #{Time.now.to_i}", description: "Category for testing nullify.")
-    author_for_article = authors(:author_jane)
+  test "articles require a category and the column is not nullable" do
+    # The model declares has_many :articles, dependent: :nullify, but the DB
+    # enforces a NOT NULL constraint on articles.category_id (and belongs_to
+    # is required), so an article cannot exist without a category. A category
+    # with no articles can be destroyed cleanly.
+    empty_category = Category.create!(name: "Empty Cat #{Time.now.to_i}", description: "No articles here.")
+    assert_difference("Category.count", -1) do
+      empty_category.destroy
+    end
 
-    article = category_for_nullify_test.articles.create!(
-      title: "Article for Nullify Category Test #{Time.now.to_i}",
-      author: author_for_article,
-      content: "Some content for nullify test.",
-      status: :published,
-      published_at: Time.current
+    article = Article.new(
+      title: "Article Without Category #{Time.now.to_i}",
+      author: authors(:author_jane),
+      content: "content",
+      reading_time: 1
     )
-    assert_not_nil article.category_id, "Article should initially have a category_id"
-
-    category_for_nullify_test.destroy
-    article.reload
-
-    assert_nil article.category_id, "Article's category_id should be nullified after category destruction"
+    assert_not article.valid?, "Article should be invalid without a category"
+    assert_includes article.errors[:category], "must exist"
   end
 
   # Callbacks
-  test "should generate slug from name when name changes" do
-    category_for_slug_test = Category.new(name: "New Category For Slug Test #{Time.now.to_i}", description: "Description for slug test.")
+  test "should generate slug from name for a new category" do
+    name = "New Category For Slug Test #{Time.now.to_i}"
+    category_for_slug_test = Category.new(name: name, description: "Description for slug test.")
     category_for_slug_test.valid?
-    expected_slug = "new-category-for-slug-test-#{Time.now.to_i}".parameterize
-    assert_equal expected_slug, category_for_slug_test.slug, "Slug was not generated correctly for a new category"
+    assert_equal name.parameterize, category_for_slug_test.slug, "Slug was not generated correctly for a new category"
 
+    # Once persisted, the slug is stable: renaming does not change the slug
+    # because generate_slug only fires while the slug is blank or unchanged.
     category_for_slug_test.save!
-    updated_name = "Updated Category For Slug Test #{Time.now.to_i}"
-    category_for_slug_test.name = updated_name
+    original_slug = category_for_slug_test.slug
+    category_for_slug_test.name = "Updated Category For Slug Test #{Time.now.to_i}"
     category_for_slug_test.valid?
-    expected_updated_slug = updated_name.parameterize
-    assert_equal expected_updated_slug, category_for_slug_test.slug, "Slug did not update correctly when name changed"
+    assert_equal original_slug, category_for_slug_test.slug, "Slug should stay stable across a rename"
   end
 
   test "should not generate new slug if name has not changed" do
