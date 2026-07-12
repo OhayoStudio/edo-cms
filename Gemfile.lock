@@ -244,7 +244,7 @@ GEM
     kramdown (2.5.2)
       rexml (>= 3.4.4)
     language_server-protocol (3.17.0.5)
-    lexxy (0.9.22)
+    lexxy (0.9.23)
       rails (>= 8.0.2)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -424,9 +424,9 @@ GEM
     ruby-vips (2.2.3)
       ffi (~> 1.12)
       logger
-    rubyzip (3.4.0)
+    rubyzip (3.4.1)
     securerandom (0.4.1)
-    selenium-webdriver (4.45.0)
+    selenium-webdriver (4.46.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rexml (~> 3.2, >= 3.2.5)
@@ -547,7 +547,7 @@ DEPENDENCIES
   kamal
   kaminari
   kramdown (~> 2.4)
-  lexxy (~> 0.9.22)
+  lexxy (~> 0.9.23)
   meta-tags (~> 2.22)
   mini_magick
   pg (~> 1.1)
