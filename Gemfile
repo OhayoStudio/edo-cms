@@ -3,7 +3,7 @@ source "https://rubygems.org"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.3"
 gem "dotenv-rails", groups: %i[development test]
-gem "meta-tags", "~> 2.22"
+gem "meta-tags", "~> 2.24"
 gem "sitemap_generator"
 gem "google-cloud-storage", require: false
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
