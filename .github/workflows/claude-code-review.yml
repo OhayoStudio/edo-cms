@@ -1,7 +1,7 @@
 name: Claude Code Review
 
 on:
-  issue_comment:
+  issue_comment: # zizmor: ignore[dangerous-triggers] -- only way to trigger on a PR comment; job is gated to owner/member/collaborator authors, checks out the default branch (not PR code), has read-only permissions, and writes nothing to GITHUB_ENV/GITHUB_OUTPUT
     types: [created]
 
 permissions: {}
@@ -10,7 +10,8 @@ jobs:
   claude-review:
     if: |
       github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/claude-review')
+      contains(github.event.comment.body, '/claude-review') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
 
     runs-on: ubuntu-latest
     permissions:
