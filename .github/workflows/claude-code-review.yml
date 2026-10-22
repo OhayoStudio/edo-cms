@@ -1,7 +1,7 @@
 name: Claude Code Review
 
 on:
-  issue_comment:
+  issue_comment: # zizmor: ignore[dangerous-triggers] -- only way to trigger on a PR comment; job is gated to owner/member/collaborator authors, checks out the default branch (not PR code), has read-only permissions, and writes nothing to GITHUB_ENV/GITHUB_OUTPUT
     types: [created]
 
 permissions: {}
@@ -10,7 +10,8 @@ jobs:
   claude-review:
     if: |
       github.event.issue.pull_request &&
-      contains(github.event.comment.body, '/claude-review')
+      contains(github.event.comment.body, '/claude-review') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
 
     runs-on: ubuntu-latest
     permissions:
@@ -28,7 +29,7 @@ jobs:
 
       - name: Run Claude Code Review
         id: claude-review
-        uses: anthropics/claude-code-action@9171db3e57d6a3140a37ddc2ba92788584e0ead6 # v1.0.234
+        uses: anthropics/claude-code-action@374f254f5efaf968abfe15d399fd90972e8138b9 # v1.0.251
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }} # zizmor: ignore[secrets-outside-env] -- scoped OAuth token, official action, minimal job perms; GitHub Environment overhead unwarranted
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
