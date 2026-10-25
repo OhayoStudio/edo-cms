@@ -184,9 +184,10 @@ class ArticleTest < ActiveSupport::TestCase
 
   # Callbacks
   test "should generate slug from title before validation if title is present and changed" do
-    new_article = Article.new(title: "A New Unique Test Article For Slug Gen #{Time.now.to_i}", author: @author, category: @category, content: "Some content.")
+    stamp = Time.now.to_i
+    new_article = Article.new(title: "A New Unique Test Article For Slug Gen #{stamp}", author: @author, category: @category, content: "Some content.")
     new_article.valid? # Trigger callbacks
-    expected_slug = "a-new-unique-test-article-for-slug-gen-#{Time.now.to_i}".parameterize
+    expected_slug = "a-new-unique-test-article-for-slug-gen-#{stamp}".parameterize
     assert_equal expected_slug, new_article.slug, "Slug was not generated correctly"
   end
 
