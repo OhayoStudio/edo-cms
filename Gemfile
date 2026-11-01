@@ -51,7 +51,7 @@ gem "friendly_id"
 gem "httparty"
 gem "kaminari"
 gem "view_component"
-gem "lexxy", "~> 1.0.1"
+gem "lexxy", "~> 1.0.2"
 gem "sentry-ruby"
 gem "sentry-rails"
 
