@@ -1,0 +1,52 @@
+<%# Inert until cloned into the modal, so the iframe only loads on open. %>
+<template id="video-preview-<%= video.id %>">
+  <div class="aspect-video w-full bg-black rounded overflow-hidden">
+    <% if video.youtube_id %>
+      <iframe src="https://www.youtube-nocookie.com/embed/<%= video.youtube_id %>?rel=0"
+              title="<%= video.title %>"
+              class="w-full h-full" frameborder="0" allowfullscreen
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    <% else %>
+      <div class="w-full h-full flex items-center justify-center text-sm text-white px-6 text-center">
+        <%= t("admin.videos.preview.no_player") %>
+      </div>
+    <% end %>
+  </div>
+
+  <dl class="mt-5 grid grid-cols-[max-content_1fr] gap-x-4 gap-y-3 text-sm">
+    <dt class="font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.common.title") %></dt>
+    <dd class="text-gray-900 dark:text-gray-100 break-words"><%= video.title %></dd>
+
+    <dt class="font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.videos.video_url") %></dt>
+    <dd class="break-all">
+      <% if video.url.to_s.match?(%r{\Ahttps?://}i) %>
+        <%= link_to video.url, video.url, target: "_blank", rel: "noopener noreferrer",
+            class: "text-gray-900 dark:text-gray-100 underline hover:no-underline" %>
+      <% else %>
+        <span class="text-gray-900 dark:text-gray-100"><%= video.url %></span>
+      <% end %>
+    </dd>
+
+    <dt class="font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.common.description") %></dt>
+    <dd class="text-gray-900 dark:text-gray-100 whitespace-pre-line break-words max-h-48 overflow-y-auto"><%= video.description %></dd>
+
+    <dt class="font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.videos.preview.thumbnail") %></dt>
+    <dd>
+      <% if video.featured_image.attached? %>
+        <%= image_tag video.featured_image.variant(resize_to_limit: [ 240, 135 ]),
+            alt: "", class: "rounded border border-rule dark:border-ink-soft" %>
+      <% else %>
+        <span class="text-gray-900 dark:text-gray-100">—</span>
+      <% end %>
+    </dd>
+
+    <dt class="font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.common.status") %></dt>
+    <dd class="text-gray-900 dark:text-gray-100"><%= video.story&.is_published ? t("admin.common.published") : t("admin.common.unpublished") %></dd>
+
+    <dt class="font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.common.created") %></dt>
+    <dd class="text-gray-900 dark:text-gray-100"><%= video.created_at.strftime("%b %-d, %Y %H:%M") %></dd>
+
+    <dt class="font-semibold text-gray-900 dark:text-gray-100"><%= t("admin.common.updated") %></dt>
+    <dd class="text-gray-900 dark:text-gray-100"><%= video.updated_at.strftime("%b %-d, %Y %H:%M") %></dd>
+  </dl>
+</template>
