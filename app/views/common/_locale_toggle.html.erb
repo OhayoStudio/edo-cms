@@ -1,0 +1,9 @@
+<%# Admin language switch. Admin routes have no /<locale> segment, so this uses
+    ?locale= (persisted as a cookie by ApplicationController#switch_locale). %>
+<div class="flex items-center rounded overflow-hidden border border-white/25 text-xs font-semibold" role="group" aria-label="<%= t("admin.nav.language") %>">
+  <% I18n.available_locales.each do |loc| %>
+    <%= link_to t("locale_name_short", locale: loc), url_for(params.to_unsafe_h.merge(locale: loc)),
+        lang: loc, "aria-current": (I18n.locale == loc ? "true" : nil),
+        class: "px-2.5 py-1.5 transition-colors #{I18n.locale == loc ? 'bg-white/20 text-white' : 'text-white/70 hover:bg-white/10'}" %>
+  <% end %>
+</div>

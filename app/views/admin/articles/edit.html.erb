@@ -1,9 +1,9 @@
 <div class="mb-6 flex items-start justify-between gap-4">
   <div class="min-w-0">
-    <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Edit Article</h1>
+    <h1 class="text-2xl font-serif text-sage-deep dark:text-peach"><%= t("admin.articles.edit") %></h1>
     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate"><%= @article.title %></p>
   </div>
-  <%= link_to "Preview", preview_admin_article_path(@article),
+  <%= link_to t("admin.articles.preview"), preview_admin_article_path(@article),
         target: "_blank",
         class: "shrink-0 inline-flex items-center gap-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-ink-soft px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors" %>
 </div>

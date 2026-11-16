@@ -2,7 +2,7 @@
   <% if author.errors.any? %>
     <div class="bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4">
       <p class="text-sm font-medium text-red-800 dark:text-red-300 mb-2">
-        <%= pluralize(author.errors.count, "error") %> prevented this author from being saved:
+        <%= t("admin.common.errors_header", count: author.errors.count, model: t("admin.models.author")) %>
       </p>
       <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-1">
         <% author.errors.each do |error| %>
@@ -102,9 +102,9 @@
   </div>
 
   <div class="flex items-center gap-4 pt-2">
-    <%= f.submit author.persisted? ? "Update Author" : "Create Author",
+    <%= f.submit author.persisted? ? t("admin.authors.update") : t("admin.authors.create"),
         class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
-    <%= link_to "Cancel", admin_authors_path,
+    <%= link_to t("admin.common.cancel"), admin_authors_path,
         class: "px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
                 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" %>
   </div>

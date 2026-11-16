@@ -11,7 +11,7 @@ class Admin::SettingsController < Admin::BaseController
     apply_translation_overrides
 
     if @setting.update(setting_params)
-      redirect_to edit_admin_setting_path, notice: "Settings updated."
+      redirect_to edit_admin_setting_path, notice: t("admin.flash.settings_updated")
     else
       render :edit, status: :unprocessable_entity
     end

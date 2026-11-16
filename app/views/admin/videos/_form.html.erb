@@ -4,7 +4,7 @@
   <% if video.errors.any? %>
     <div class="bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4">
       <p class="text-sm font-medium text-red-800 dark:text-red-300 mb-2">
-        <%= pluralize(video.errors.count, "error") %> prevented this video from being saved:
+        <%= t("admin.common.errors_header", count: video.errors.count, model: t("admin.models.video")) %>
       </p>
       <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-1">
         <% video.errors.each do |error| %>
@@ -25,7 +25,7 @@
     </div>
 
     <div>
-      <%= f.label :url, "Video URL (YouTube)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.label :url, t("admin.videos.video_url"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.url_field :url,
           placeholder: "https://www.youtube.com/watch?v=...",
           data: { "youtube-thumbnail-target": "urlInput" },
@@ -53,7 +53,7 @@
           <%= image_tag video.featured_image.variant(resize_to_limit: [200, 120]),
               data: { "video-thumbnail-enhance-target": "featuredPreview" },
               class: "rounded border border-gray-200 dark:border-gray-600" %>
-          <p class="text-xs text-gray-400 mt-1">Current thumbnail — upload a new file to replace it</p>
+          <p class="text-xs text-gray-400 mt-1"><%= t("admin.videos.current_thumbnail") %></p>
         </div>
       <% end %>
       <div>
@@ -69,7 +69,7 @@
             class="hidden mt-2 px-3 py-1.5 text-xs rounded border border-sage-deep text-sage-deep
                    dark:text-rule dark:border-rule hover:bg-sage-deep hover:text-white
                    dark:hover:bg-sage-deep transition-colors">
-          Use YouTube thumbnail
+          <%= t("admin.videos.use_youtube") %>
         </button>
         <img src="" alt="YouTube thumbnail preview"
              data-youtube-thumbnail-target="preview"
@@ -79,9 +79,9 @@
   </div>
 
   <div class="flex items-center gap-4 pt-2">
-    <%= f.submit video.persisted? ? "Update Video" : "Create Video",
+    <%= f.submit video.persisted? ? t("admin.videos.update") : t("admin.videos.create"),
         class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
-    <%= link_to "Cancel", admin_videos_path,
+    <%= link_to t("admin.common.cancel"), admin_videos_path,
         class: "px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
                 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" %>
   </div>

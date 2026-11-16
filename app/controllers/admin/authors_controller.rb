@@ -18,7 +18,7 @@ class Admin::AuthorsController < Admin::BaseController
     @author = Author.new(author_params)
     assign_enum_fields(@author)
     if @author.save
-      redirect_to admin_authors_path, notice: "Author created."
+      redirect_to admin_authors_path, notice: t("admin.flash.created", model: t("admin.models_cap.author"))
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class Admin::AuthorsController < Admin::BaseController
   def update
     assign_enum_fields(@author)
     if @author.update(author_params)
-      redirect_to admin_authors_path, notice: "Author updated."
+      redirect_to admin_authors_path, notice: t("admin.flash.updated", model: t("admin.models_cap.author"))
     else
       render :edit, status: :unprocessable_entity
     end
@@ -37,7 +37,7 @@ class Admin::AuthorsController < Admin::BaseController
     @author.soft_delete
     respond_to do |format|
       format.json { head :no_content }
-      format.any  { redirect_to admin_authors_path, status: :see_other, notice: "Author deleted." }
+      format.any  { redirect_to admin_authors_path, status: :see_other, notice: t("admin.flash.deleted", model: t("admin.models_cap.author")) }
     end
   end
 

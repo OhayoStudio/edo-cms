@@ -1,6 +1,6 @@
 <div class="mb-6">
-  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">About</h1>
-  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Displayed at <a href="/about" target="_blank" class="underline">/about</a></p>
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach"><%= t("admin.about.title") %></h1>
+  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1"><%= t("admin.common.displayed_at") %> <a href="/about" target="_blank" class="underline">/about</a></p>
 </div>
 
 <div class="bg-white dark:bg-ink rounded-lg shadow p-6">
@@ -24,7 +24,7 @@
       </fieldset>
     <% end %>
 
-    <%= f.submit "Save",
+    <%= f.submit t("admin.common.save"),
         class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
   <% end %>
 </div>

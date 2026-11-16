@@ -27,7 +27,7 @@ class Admin::ArticlesController < Admin::BaseController
         is_top:       @article.featured? || false
       )
       generate_tags(@article)
-      redirect_to admin_articles_path, notice: "Article created."
+      redirect_to admin_articles_path, notice: t("admin.flash.created", model: t("admin.models_cap.article"))
     else
       render :new, status: :unprocessable_entity
     end
@@ -43,7 +43,7 @@ class Admin::ArticlesController < Admin::BaseController
         )
       end
       generate_tags(@article)
-      redirect_to admin_articles_path, notice: "Article updated."
+      redirect_to admin_articles_path, notice: t("admin.flash.updated", model: t("admin.models_cap.article"))
     else
       render :edit, status: :unprocessable_entity
     end
@@ -53,7 +53,7 @@ class Admin::ArticlesController < Admin::BaseController
     @article.destroy!
     respond_to do |format|
       format.json { head :no_content }
-      format.any  { redirect_to admin_articles_path, status: :see_other, notice: "Article deleted." }
+      format.any  { redirect_to admin_articles_path, status: :see_other, notice: t("admin.flash.deleted", model: t("admin.models_cap.article")) }
     end
   end
 
@@ -67,7 +67,7 @@ class Admin::ArticlesController < Admin::BaseController
     )
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.remove("article-row-#{@article.id}") }
-      format.html         { redirect_to admin_articles_path, notice: "Article published." }
+      format.html         { redirect_to admin_articles_path, notice: t("admin.flash.published", model: t("admin.models_cap.article")) }
     end
   end
 
@@ -76,7 +76,7 @@ class Admin::ArticlesController < Admin::BaseController
     @article.story&.update_column(:is_published, false)
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.remove("article-row-#{@article.id}") }
-      format.html         { redirect_to admin_articles_path, notice: "Article unpublished." }
+      format.html         { redirect_to admin_articles_path, notice: t("admin.flash.unpublished", model: t("admin.models_cap.article")) }
     end
   end
 
@@ -91,7 +91,7 @@ class Admin::ArticlesController < Admin::BaseController
       send_data image_data, type: "image/png",
                 filename: "#{@article.slug}-story.png", disposition: "attachment"
     else
-      redirect_to edit_admin_article_path(@article), alert: "No image found to generate story card."
+      redirect_to edit_admin_article_path(@article), alert: t("admin.flash.no_image_story_card")
     end
   end
 
@@ -102,7 +102,7 @@ class Admin::ArticlesController < Admin::BaseController
       send_data video_data, type: "video/mp4",
                 filename: "#{@article.slug}-story.mp4", disposition: "attachment"
     else
-      redirect_to edit_admin_article_path(@article), alert: "No image found to generate story video."
+      redirect_to edit_admin_article_path(@article), alert: t("admin.flash.no_image_story_video")
     end
   end
 

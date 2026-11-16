@@ -6,7 +6,7 @@ class Admin::ColophonsController < Admin::BaseController
   def update
     @colophon = Colophon.instance
     if @colophon.update(colophon_params)
-      redirect_to edit_admin_colophon_path, notice: "Colophon updated."
+      redirect_to edit_admin_colophon_path, notice: t("admin.flash.colophon_updated")
     else
       render :edit, status: :unprocessable_entity
     end

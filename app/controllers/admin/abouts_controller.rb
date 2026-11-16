@@ -6,7 +6,7 @@ class Admin::AboutsController < Admin::BaseController
   def update
     @about = About.instance
     if @about.update(about_params)
-      redirect_to edit_admin_about_path, notice: "About page updated."
+      redirect_to edit_admin_about_path, notice: t("admin.flash.about_updated")
     else
       render :edit, status: :unprocessable_entity
     end

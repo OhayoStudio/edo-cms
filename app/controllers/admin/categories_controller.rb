@@ -17,7 +17,7 @@ class Admin::CategoriesController < Admin::BaseController
   def create
     @category = Category.new(category_params)
     if @category.save
-      redirect_to admin_categories_path, notice: "Category created."
+      redirect_to admin_categories_path, notice: t("admin.flash.created", model: t("admin.models_cap.category"))
     else
       render :new, status: :unprocessable_entity
     end
@@ -25,7 +25,7 @@ class Admin::CategoriesController < Admin::BaseController
 
   def update
     if @category.update(category_params)
-      redirect_to admin_categories_path, notice: "Category updated."
+      redirect_to admin_categories_path, notice: t("admin.flash.updated", model: t("admin.models_cap.category"))
     else
       render :edit, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class Admin::CategoriesController < Admin::BaseController
 
   def destroy
     @category.destroy!
-    redirect_to admin_categories_path, status: :see_other, notice: "Category deleted."
+    redirect_to admin_categories_path, status: :see_other, notice: t("admin.flash.deleted", model: t("admin.models_cap.category"))
   end
 
   private
