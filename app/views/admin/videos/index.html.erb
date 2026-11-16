@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Videos</h1>
-  <%= link_to "New Video", new_admin_video_path,
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach"><%= t("admin.videos.title") %></h1>
+  <%= link_to t("admin.videos.new"), new_admin_video_path,
       class: "px-4 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors" %>
 </div>
 
@@ -8,20 +8,20 @@
   <table class="w-full text-sm">
     <thead class="bg-cream-soft dark:bg-ink-soft text-sage-deep dark:text-peach">
       <tr>
-        <th class="text-left px-4 py-3 font-semibold">Title</th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.title") %></th>
         <th class="text-left px-4 py-3 font-semibold">
           <%= select_tag :status,
                 options_for_select(
-                  [["All statuses", ""], ["Published", "published"], ["Unpublished", "unpublished"]],
+                  [[t("admin.common.all_statuses"), ""], [t("admin.common.published"), "published"], [t("admin.common.unpublished"), "unpublished"]],
                   params[:status].presence || ""
                 ),
                 onchange: "window.location = '#{admin_videos_path}?status=' + this.value",
                 class: "text-xs font-semibold bg-transparent border-0 text-sage-deep dark:text-peach
                         cursor-pointer focus:outline-none pr-1 -ml-1" %>
         </th>
-        <th class="text-left px-4 py-3 font-semibold">Created</th>
-        <th class="text-left px-4 py-3 font-semibold">Updated</th>
-        <th class="text-right px-4 py-3 font-semibold">Actions</th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.created") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.updated") %></th>
+        <th class="text-right px-4 py-3 font-semibold"><%= t("admin.common.actions") %></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -35,7 +35,7 @@
             <span class="px-2 py-0.5 rounded text-xs font-medium
               <%= published ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
                             : 'bg-peach-soft text-sage-deep dark:bg-sage-deep/40 dark:text-peach' %>">
-              <%= published ? "Published" : "Unpublished" %>
+              <%= published ? t("admin.common.published") : t("admin.common.unpublished") %>
             </span>
           </td>
           <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
@@ -46,18 +46,18 @@
           </td>
           <td class="px-4 py-3 text-right">
             <div class="flex items-center justify-end gap-2">
-              <%= link_to "Edit", edit_admin_video_path(video),
+              <%= link_to t("admin.common.edit"), edit_admin_video_path(video),
                   class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
                           dark:border-peach dark:text-peach rounded hover:bg-peach-tint
                           dark:hover:bg-sage-deep/20 transition-colors" %>
 
               <% if video.story&.is_published %>
-                <%= button_to "Unpublish", unpublish_admin_video_path(video), method: :patch,
+                <%= button_to t("admin.common.unpublish"), unpublish_admin_video_path(video), method: :patch,
                     class: "px-2 py-1 text-xs border border-gray-400 text-gray-600
                             dark:border-gray-500 dark:text-gray-300 rounded hover:bg-gray-100
                             dark:hover:bg-gray-700 transition-colors cursor-pointer" %>
               <% else %>
-                <%= button_to "Publish", publish_admin_video_path(video), method: :patch,
+                <%= button_to t("admin.common.publish"), publish_admin_video_path(video), method: :patch,
                     class: "px-2 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded transition-colors cursor-pointer" %>
               <% end %>
 
@@ -66,8 +66,8 @@
                       data-controller="admin-modal"
                       data-action="click->admin-modal#open"
                       data-admin-modal-url-value="<%= admin_video_path(video) %>"
-                      data-admin-modal-title-value="Delete &ldquo;<%= video.title %>&rdquo;?">
-                Delete
+                      data-admin-modal-title-value="<%= t("admin.common.delete_title", name: video.title) %>">
+                <%= t("admin.common.delete") %>
               </button>
             </div>
           </td>
@@ -77,7 +77,7 @@
       <% if @videos.empty? %>
         <tr>
           <td colspan="5" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
-            No videos yet.
+            <%= t("admin.videos.empty") %>
           </td>
         </tr>
       <% end %>

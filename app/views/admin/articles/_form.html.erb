@@ -2,7 +2,7 @@
   <% if article.errors.any? %>
     <div class="bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4">
       <p class="text-sm font-medium text-red-800 dark:text-red-300 mb-2">
-        <%= pluralize(article.errors.count, "error") %> prevented this article from being saved:
+        <%= t("admin.common.errors_header", count: article.errors.count, model: t("admin.models.article")) %>
       </p>
       <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-1">
         <% article.errors.each do |error| %>
@@ -29,18 +29,18 @@
     </div>
 
     <div>
-      <%= f.label :author_id, "Author", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.label :author_id, t("admin.articles.author"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.collection_select :author_id, Author.not_deleted.order(:first_name), :id, :display_name,
-          { include_blank: "— Select author —" },
+          { include_blank: t("admin.articles.select_author") },
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100
                   #{article.errors[:author_id].any? ? 'border-red-400' : 'border-gray-300 dark:border-gray-600'}" %>
     </div>
 
     <div>
-      <%= f.label :category_id, "Category", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.label :category_id, t("admin.articles.category"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.collection_select :category_id, Category.not_deleted.order(:name), :id, :name,
-          { include_blank: "— Select category —" },
+          { include_blank: t("admin.articles.select_category") },
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100
                   #{article.errors[:category_id].any? ? 'border-red-400' : 'border-gray-300 dark:border-gray-600'}" %>
@@ -48,18 +48,18 @@
 
     <div>
       <%= f.label :status, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-      <%= f.select :status, Article.statuses.keys.map { |s| [s.humanize, s] },
+      <%= f.select :status, Article.statuses.keys.map { |s| [t("admin.article_status.#{s}", default: s.humanize), s] },
           { include_blank: false },
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600" %>
     </div>
 
     <div>
-      <%= f.label :reading_time, "Reading time (min)", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.label :reading_time, t("admin.articles.reading_time"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.number_field :reading_time, min: 1,
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
-      <p class="mt-1 text-xs text-gray-400">Auto-calculated on save</p>
+      <p class="mt-1 text-xs text-gray-400"><%= t("admin.articles.auto_calc") %></p>
     </div>
 
     <div>
@@ -75,7 +75,7 @@
       <%= f.text_area :excerpt, rows: 3,
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
-      <p class="mt-1 text-xs text-gray-400">Max 150 characters</p>
+      <p class="mt-1 text-xs text-gray-400"><%= t("admin.common.max_chars", n: 150) %></p>
     </div>
 
     <div class="md:col-span-2">
@@ -88,16 +88,16 @@
       <%= f.text_area :meta_description, rows: 2,
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
-      <p class="mt-1 text-xs text-gray-400">Max 160 characters</p>
+      <p class="mt-1 text-xs text-gray-400"><%= t("admin.common.max_chars", n: 160) %></p>
     </div>
 
     <div class="md:col-span-2">
       <%= f.label :meta_keywords, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_field :meta_keywords,
-          placeholder: "comma, separated, tags",
+          placeholder: t("admin.articles.meta_keywords_placeholder"),
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
-      <p class="mt-1 text-xs text-gray-400">Comma-separated — will be created as Tags automatically</p>
+      <p class="mt-1 text-xs text-gray-400"><%= t("admin.articles.meta_keywords_hint") %></p>
     </div>
 
     <div data-controller="featured-image-drop"
@@ -113,7 +113,7 @@
       <% end %>
       <p data-featured-image-drop-target="hint"
          class="text-xs text-gray-400 mb-2 <%= article.persisted? && article.featured_image.attached? ? 'hidden' : '' %>">
-        Drop an image here or use the file picker below
+        <%= t("admin.articles.drop_image") %>
       </p>
       <%= f.file_field :featured_image, accept: "image/*",
           data: { featured_image_drop_target: "input" },
@@ -124,14 +124,14 @@
 
     <div class="flex items-center gap-2 pt-5">
       <%= f.check_box :featured, class: "rounded border-gray-300 text-sage-deep" %>
-      <%= f.label :featured, "Featured article", class: "text-sm text-gray-700 dark:text-gray-300" %>
+      <%= f.label :featured, t("admin.articles.featured"), class: "text-sm text-gray-700 dark:text-gray-300" %>
     </div>
   </div>
 
   <div class="flex items-center gap-4 pt-2">
-    <%= f.submit article.persisted? ? "Update Article" : "Create Article",
+    <%= f.submit article.persisted? ? t("admin.articles.update") : t("admin.articles.create"),
         class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
-    <%= link_to "Cancel", admin_articles_path,
+    <%= link_to t("admin.common.cancel"), admin_articles_path,
         class: "px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
                 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" %>
   </div>

@@ -50,7 +50,7 @@ class Admin::VideosController < Admin::BaseController
         is_published: true,
         published_at: Time.current
       )
-      redirect_to admin_videos_path, notice: "Video created."
+      redirect_to admin_videos_path, notice: t("admin.flash.created", model: t("admin.models_cap.video"))
     else
       render :new, status: :unprocessable_entity
     end
@@ -61,7 +61,7 @@ class Admin::VideosController < Admin::BaseController
     if @video.save
       attach_youtube_thumbnail(@video) if @video.use_youtube_thumbnail == "1"
       @video.story&.update(slug: @video.slug)
-      redirect_to admin_videos_path, notice: "Video updated."
+      redirect_to admin_videos_path, notice: t("admin.flash.updated", model: t("admin.models_cap.video"))
     else
       render :edit, status: :unprocessable_entity
     end
@@ -69,7 +69,7 @@ class Admin::VideosController < Admin::BaseController
 
   def destroy
     @video.destroy!
-    redirect_to admin_videos_path, status: :see_other, notice: "Video deleted."
+    redirect_to admin_videos_path, status: :see_other, notice: t("admin.flash.deleted", model: t("admin.models_cap.video"))
   end
 
   def publish
@@ -80,7 +80,7 @@ class Admin::VideosController < Admin::BaseController
     )
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.remove("video-row-#{@video.id}") }
-      format.html         { redirect_to admin_videos_path, notice: "Video published." }
+      format.html         { redirect_to admin_videos_path, notice: t("admin.flash.published", model: t("admin.models_cap.video")) }
     end
   end
 
@@ -88,7 +88,7 @@ class Admin::VideosController < Admin::BaseController
     @video.story&.update_column(:is_published, false)
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.remove("video-row-#{@video.id}") }
-      format.html         { redirect_to admin_videos_path, notice: "Video unpublished." }
+      format.html         { redirect_to admin_videos_path, notice: t("admin.flash.unpublished", model: t("admin.models_cap.video")) }
     end
   end
 

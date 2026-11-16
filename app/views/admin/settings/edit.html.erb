@@ -1,8 +1,8 @@
-<% content_for :title, "Settings — Admin" %>
+<% content_for :title, t("admin.settings.page_title") %>
 
 <div class="mb-6">
-  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Site Settings</h1>
-  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Branding, theme, navigation, social, analytics, and newsletter.</p>
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach"><%= t("admin.settings.title") %></h1>
+  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1"><%= t("admin.settings.lede") %></p>
 </div>
 
 <%= form_with model: @setting, url: admin_setting_path, method: :patch,
@@ -20,7 +20,7 @@
 
   <%# ─── Branding ──────────────────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Branding</h2>
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2"><%= t("admin.settings.section_branding") %></h2>
 
     <div>
       <%= f.label :site_name, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
@@ -30,14 +30,14 @@
 
     <div>
       <%= f.label :tagline, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-      <%= f.text_field :tagline, placeholder: "Short one-liner shown beside the site name",
+      <%= f.text_field :tagline, placeholder: t("admin.settings.tagline_ph"),
             class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
 
     <div>
       <%= f.label :meta_description, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.text_area :meta_description, rows: 2,
-            placeholder: "Default site meta description for SEO / social previews",
+            placeholder: t("admin.settings.meta_description_ph"),
             class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
 
@@ -65,8 +65,8 @@
 
   <%# ─── Theme ────────────────────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Theme colors</h2>
-    <p class="text-xs text-gray-500 dark:text-gray-400">Drive the CSS custom properties used across the site. Leave empty to fall back to defaults.</p>
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2"><%= t("admin.settings.section_theme") %></h2>
+    <p class="text-xs text-gray-500 dark:text-gray-400"><%= t("admin.settings.theme_lede") %></p>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <% Setting::THEME_DEFAULTS.each do |name, default| %>
@@ -90,16 +90,16 @@
 
   <%# ─── Navigation ──────────────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Navigation</h2>
-    <p class="text-xs text-gray-500 dark:text-gray-400">One <em>key</em> per line. Labels and URLs come from the registry below, so they stay translated and locale-prefixed automatically.</p>
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2"><%= t("admin.settings.section_navigation") %></h2>
+    <p class="text-xs text-gray-500 dark:text-gray-400"><%= t("admin.settings.nav_lede") %></p>
 
     <p class="text-xs text-gray-500 dark:text-gray-400">
-      <span class="font-medium text-gray-700 dark:text-gray-300">Available keys:</span>
+      <span class="font-medium text-gray-700 dark:text-gray-300"><%= t("admin.settings.available_keys") %></span>
       <code class="font-mono text-[11px] break-words"><%= nav_registry_keys.join(" · ") %></code>
     </p>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Primary nav</label>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><%= t("admin.settings.primary_nav") %></label>
       <%= text_area_tag "setting[nav_items_primary]",
             @setting.primary_nav_keys.join("\n"),
             rows: 6,
@@ -108,7 +108,7 @@
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Footer nav</label>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"><%= t("admin.settings.footer_nav") %></label>
       <%= text_area_tag "setting[nav_items_footer]",
             @setting.footer_nav_keys.join("\n"),
             rows: 6,
@@ -119,8 +119,8 @@
 
   <%# ─── Social ─────────────────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Social</h2>
-    <p class="text-xs text-gray-500 dark:text-gray-400">Handle or full URL. Blank to hide.</p>
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2"><%= t("admin.settings.section_social") %></h2>
+    <p class="text-xs text-gray-500 dark:text-gray-400"><%= t("admin.settings.social_lede") %></p>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <% %i[twitter instagram github mastodon rss].each do |key| %>
@@ -135,23 +135,23 @@
 
   <%# ─── Analytics ──────────────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Analytics</h2>
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2"><%= t("admin.settings.section_analytics") %></h2>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
       <div>
         <label class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
           <%= f.check_box :analytics_provider, { class: "rounded border-gray-300 dark:border-gray-600" }, "umami", "" %>
-          Enable Umami
+          <%= t("admin.settings.enable_umami") %>
         </label>
       </div>
       <div>
-        <%= f.label :analytics_website_id, "Website ID", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.label :analytics_website_id, t("admin.settings.website_id"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.text_field :analytics_website_id,
               class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
       <div>
-        <%= f.label :analytics_host, "Analytics host", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-        <%= f.text_field :analytics_host, placeholder: "e.g. analytics.example.com",
+        <%= f.label :analytics_host, t("admin.settings.analytics_host"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.text_field :analytics_host, placeholder: t("admin.settings.analytics_host_ph"),
               class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
     </div>
@@ -159,17 +159,17 @@
 
   <%# ─── Newsletter ─────────────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Newsletter</h2>
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2"><%= t("admin.settings.section_newsletter") %></h2>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <%= f.label :newsletter_provider, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.select :newsletter_provider,
-              [ [ "None", "" ], [ "Buttondown", "buttondown" ], [ "Mailchimp", "mailchimp" ], [ "Custom", "custom" ] ], {},
+              [ [ t("admin.settings.newsletter_none"), "" ], [ "Buttondown", "buttondown" ], [ "Mailchimp", "mailchimp" ], [ t("admin.settings.newsletter_custom"), "custom" ] ], {},
               class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
       <div>
-        <%= f.label :newsletter_form_action, "Form action URL", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+        <%= f.label :newsletter_form_action, t("admin.settings.form_action"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
         <%= f.url_field :newsletter_form_action, placeholder: "https://buttondown.com/api/emails/embed-subscribe/your-slug",
               class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
       </div>
@@ -178,16 +178,16 @@
 
   <%# ─── Announcement banner ──────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Announcement banner</h2>
-    <p class="text-xs text-gray-500 dark:text-gray-400">A dismissible strip shown site-wide above the header. Edit the message and link label per language in the Translations section below (<code class="font-mono text-[11px]">banner.message</code>, <code class="font-mono text-[11px]">banner.cta</code>).</p>
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2"><%= t("admin.settings.section_banner") %></h2>
+    <p class="text-xs text-gray-500 dark:text-gray-400"><%= t("admin.settings.banner_lede") %> (<code class="font-mono text-[11px]">banner.message</code>, <code class="font-mono text-[11px]">banner.cta</code>).</p>
 
     <label class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
       <%= f.check_box :banner_enabled, class: "rounded border-gray-300 dark:border-gray-600" %>
-      Show the announcement banner
+      <%= t("admin.settings.show_banner") %>
     </label>
 
     <div>
-      <%= f.label :banner_cta_url, "Link URL", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.label :banner_cta_url, t("admin.settings.link_url"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.url_field :banner_cta_url, placeholder: "https://example.com/news — leave blank for a text-only banner",
             class: "block w-full rounded border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-ink-soft text-gray-900 dark:text-gray-100" %>
     </div>
@@ -195,14 +195,14 @@
 
   <%# ─── Translations ──────────────────────────────────────────────── %>
   <section class="bg-white dark:bg-ink rounded-lg shadow p-6 space-y-4">
-    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2">Translations</h2>
-    <p class="text-xs text-gray-500 dark:text-gray-400">Override individual i18n strings without redeploying. Leave a field blank to keep the default shown as placeholder.</p>
+    <h2 class="text-lg font-serif text-sage-deep dark:text-peach border-b border-gray-200 dark:border-gray-700 pb-2"><%= t("admin.settings.section_translations") %></h2>
+    <p class="text-xs text-gray-500 dark:text-gray-400"><%= t("admin.settings.translations_lede") %></p>
 
     <div class="overflow-x-auto -mx-6 px-6">
       <table class="w-full text-sm">
         <thead class="text-left text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
           <tr>
-            <th class="py-2 pr-4 font-medium">Key</th>
+            <th class="py-2 pr-4 font-medium"><%= t("admin.settings.key_col") %></th>
             <% I18n.available_locales.each do |loc| %>
               <th class="py-2 pr-4 font-medium"><%= t("locale_name", locale: loc) %></th>
             <% end %>
@@ -231,7 +231,7 @@
   </section>
 
   <div class="flex items-center gap-4 pt-2">
-    <%= f.submit "Save settings",
+    <%= f.submit t("admin.settings.save"),
           class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
   </div>
 <% end %>

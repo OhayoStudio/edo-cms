@@ -2,7 +2,7 @@
   <% if category.errors.any? %>
     <div class="bg-red-50 dark:bg-red-900/20 border border-red-300 dark:border-red-700 rounded-lg p-4">
       <p class="text-sm font-medium text-red-800 dark:text-red-300 mb-2">
-        <%= pluralize(category.errors.count, "error") %> prevented this category from being saved:
+        <%= t("admin.common.errors_header", count: category.errors.count, model: t("admin.models.category")) %>
       </p>
       <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-400 space-y-1">
         <% category.errors.each do |error| %>
@@ -22,10 +22,10 @@
     </div>
 
     <div>
-      <%= f.label :parent_id, "Parent category", class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
+      <%= f.label :parent_id, t("admin.categories.parent_category"), class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
       <%= f.collection_select :parent_id,
           Category.where.not(id: category.id).order(:name), :id, :name,
-          { include_blank: "— None (root category) —" },
+          { include_blank: t("admin.categories.none_root") },
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600" %>
     </div>
@@ -43,7 +43,7 @@
       <%= f.text_field :meta_title,
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
-      <p class="mt-1 text-xs text-gray-400">Max 60 characters</p>
+      <p class="mt-1 text-xs text-gray-400"><%= t("admin.common.max_chars", n: 60) %></p>
     </div>
 
     <div>
@@ -51,7 +51,7 @@
       <%= f.text_field :meta_description,
           class: "block w-full rounded border px-3 py-2 text-sm bg-white dark:bg-ink-soft
                   text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600 focus:outline-sage-deep" %>
-      <p class="mt-1 text-xs text-gray-400">Max 160 characters</p>
+      <p class="mt-1 text-xs text-gray-400"><%= t("admin.common.max_chars", n: 160) %></p>
     </div>
 
     <div>
@@ -64,14 +64,14 @@
 
     <div class="flex items-center gap-2 pt-5">
       <%= f.check_box :featured, class: "rounded border-gray-300 text-sage-deep" %>
-      <%= f.label :featured, "Featured category", class: "text-sm text-gray-700 dark:text-gray-300" %>
+      <%= f.label :featured, t("admin.categories.featured"), class: "text-sm text-gray-700 dark:text-gray-300" %>
     </div>
   </div>
 
   <div class="flex items-center gap-4 pt-2">
-    <%= f.submit category.persisted? ? "Update Category" : "Create Category",
+    <%= f.submit category.persisted? ? t("admin.categories.update") : t("admin.categories.create"),
         class: "px-5 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors cursor-pointer" %>
-    <%= link_to "Cancel", admin_categories_path,
+    <%= link_to t("admin.common.cancel"), admin_categories_path,
         class: "px-5 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300
                 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" %>
   </div>

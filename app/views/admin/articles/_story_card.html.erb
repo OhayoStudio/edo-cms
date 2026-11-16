@@ -18,14 +18,14 @@
      data-story-preview-video-url-value="<%= story_video_admin_article_path(article) %>"
      data-story-preview-share-url-value="<%= share_instagram_admin_article_path(article) %>">
 
-  <h2 class="text-base font-semibold text-sage-deep dark:text-peach mb-1">Instagram Story</h2>
-  <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Preview and position the image, then download or share directly to Instagram.</p>
+  <h2 class="text-base font-semibold text-sage-deep dark:text-peach mb-1"><%= t("admin.articles.story.heading") %></h2>
+  <p class="text-sm text-gray-500 dark:text-gray-400 mb-4"><%= t("admin.articles.story.lede") %></p>
 
   <button type="button"
           data-action="click->story-preview#open"
           class="inline-block text-sm font-medium text-white rounded px-4 py-2 transition-opacity hover:opacity-90"
           style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
-    Preview &amp; Download Story Card
+    <%= t("admin.articles.story.open") %>
   </button>
 
   <%# ── Modal ───────────────────────────────────────────────────────────── %>
@@ -37,7 +37,7 @@
     <div class="bg-white dark:bg-ink rounded-xl shadow-2xl flex flex-col gap-4 p-5 max-h-screen overflow-y-auto" style="max-width:460px;width:100%">
 
       <div class="flex items-center justify-between">
-        <h3 class="font-semibold text-gray-800 dark:text-gray-100">Position your image</h3>
+        <h3 class="font-semibold text-gray-800 dark:text-gray-100"><%= t("admin.articles.story.position") %></h3>
         <button type="button" data-action="click->story-preview#close"
                 class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl leading-none">&times;</button>
       </div>
@@ -87,7 +87,7 @@
 
       <%# Zoom slider %>
       <div class="flex items-center gap-3">
-        <span class="text-xs text-gray-500 dark:text-gray-400 shrink-0">Zoom</span>
+        <span class="text-xs text-gray-500 dark:text-gray-400 shrink-0"><%= t("admin.articles.story.zoom") %></span>
         <input type="range" min="100" max="350" value="100" step="1"
                data-story-preview-target="zoom"
                data-action="input->story-preview#onZoom"
@@ -96,7 +96,7 @@
 
       <%# Gradient slider %>
       <div class="flex items-center gap-3">
-        <span class="text-xs text-gray-500 dark:text-gray-400 shrink-0">Overlay</span>
+        <span class="text-xs text-gray-500 dark:text-gray-400 shrink-0"><%= t("admin.articles.story.overlay") %></span>
         <input type="range" min="0" max="100" value="55" step="1"
                data-story-preview-target="gradient"
                data-action="input->story-preview#onGradient"
@@ -110,19 +110,19 @@
       <div class="flex gap-3 justify-end flex-wrap">
         <button type="button" data-action="click->story-preview#close"
                 class="px-4 py-2 text-sm rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
-          Cancel
+          <%= t("admin.articles.story.cancel") %>
         </button>
         <button type="button"
                 data-action="click->story-preview#download"
                 class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
                 style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
-          PNG (static)
+          <%= t("admin.articles.story.png") %>
         </button>
         <button type="button"
                 data-action="click->story-preview#downloadVideo"
                 class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
                 style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
-          MP4 (animated)
+          <%= t("admin.articles.story.mp4") %>
         </button>
         <% if InstagramService.new.configured? %>
           <button type="button"
@@ -130,18 +130,18 @@
                   data-story-preview-target="shareImageBtn"
                   class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
                   style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
-            Share PNG
+            <%= t("admin.articles.story.share_png") %>
           </button>
           <button type="button"
                   data-action="click->story-preview#shareVideo"
                   data-story-preview-target="shareVideoBtn"
                   class="px-4 py-2 text-sm font-medium text-white rounded border border-white/20 hover:opacity-90 transition-opacity"
                   style="background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);">
-            Share MP4
+            <%= t("admin.articles.story.share_mp4") %>
           </button>
         <% else %>
           <span class="px-3 py-2 text-xs text-gray-400 dark:text-gray-500 self-center">
-            Set INSTAGRAM_ACCESS_TOKEN + INSTAGRAM_USER_ID to enable sharing
+            <%= t("admin.articles.story.not_configured") %>
           </span>
         <% end %>
       </div>

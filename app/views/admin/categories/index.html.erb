@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Categories</h1>
-  <%= link_to "New Category", new_admin_category_path,
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach"><%= t("admin.categories.title") %></h1>
+  <%= link_to t("admin.categories.new"), new_admin_category_path,
       class: "px-4 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors" %>
 </div>
 
@@ -8,12 +8,12 @@
   <table class="w-full text-sm">
     <thead class="bg-cream-soft dark:bg-ink-soft text-sage-deep dark:text-peach">
       <tr>
-        <th class="text-left px-4 py-3 font-semibold">Name</th>
-        <th class="text-left px-4 py-3 font-semibold">Parent</th>
-        <th class="text-left px-4 py-3 font-semibold">Status</th>
-        <th class="text-left px-4 py-3 font-semibold">Created</th>
-        <th class="text-left px-4 py-3 font-semibold">Updated</th>
-        <th class="text-right px-4 py-3 font-semibold">Actions</th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.name") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.categories.parent") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.status") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.created") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.updated") %></th>
+        <th class="text-right px-4 py-3 font-semibold"><%= t("admin.common.actions") %></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -40,7 +40,7 @@
           </td>
           <td class="px-4 py-3 text-right">
             <div class="flex items-center justify-end gap-2">
-              <%= link_to "Edit", edit_admin_category_path(category),
+              <%= link_to t("admin.common.edit"), edit_admin_category_path(category),
                   class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
                           dark:border-peach dark:text-peach rounded hover:bg-peach-tint
                           dark:hover:bg-sage-deep/20 transition-colors" %>
@@ -50,8 +50,8 @@
                       data-controller="admin-modal"
                       data-action="click->admin-modal#open"
                       data-admin-modal-url-value="<%= admin_category_path(category) %>"
-                      data-admin-modal-title-value="Delete &ldquo;<%= category.name %>&rdquo;?">
-                Delete
+                      data-admin-modal-title-value="<%= t("admin.common.delete_title", name: category.name) %>">
+                <%= t("admin.common.delete") %>
               </button>
             </div>
           </td>
@@ -61,7 +61,7 @@
       <% if @categories.empty? %>
         <tr>
           <td colspan="6" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
-            No categories yet.
+            <%= t("admin.categories.empty") %>
           </td>
         </tr>
       <% end %>

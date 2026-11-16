@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Articles</h1>
-  <%= link_to "New Article", new_admin_article_path,
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach"><%= t("admin.articles.title") %></h1>
+  <%= link_to t("admin.articles.new"), new_admin_article_path,
       class: "px-4 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors" %>
 </div>
 
@@ -8,12 +8,12 @@
   <table class="w-full text-sm">
     <thead class="bg-cream-soft dark:bg-ink-soft text-sage-deep dark:text-peach">
       <tr>
-        <th class="text-left px-4 py-3 font-semibold">Title</th>
-        <th class="text-left px-4 py-3 font-semibold">Author</th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.title") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.articles.author") %></th>
         <th class="text-left px-4 py-3 font-semibold">
           <%= select_tag :category_id,
                 options_from_collection_for_select(
-                  [Struct.new(:id, :name).new("", "All categories")] + @categories.to_a,
+                  [Struct.new(:id, :name).new("", t("admin.articles.all_categories"))] + @categories.to_a,
                   :id, :name,
                   params[:category_id].presence || ""
                 ),
@@ -24,17 +24,17 @@
         <th class="text-left px-4 py-3 font-semibold">
           <%= select_tag :status,
                 options_for_select(
-                  [["All statuses", ""], *Article.statuses.keys.map { |s| [s.humanize, s] }],
+                  [[t("admin.common.all_statuses"), ""], *Article.statuses.keys.map { |s| [t("admin.article_status.#{s}", default: s.humanize), s] }],
                   params[:status].presence || ""
                 ),
                 onchange: "window.location = '#{admin_articles_path}?category_id=#{params[:category_id]}&status=' + this.value",
                 class: "text-xs font-semibold bg-transparent border-0 text-sage-deep dark:text-peach
                         cursor-pointer focus:outline-none pr-1 -ml-1" %>
         </th>
-        <th class="text-center px-4 py-3 font-semibold">Priority</th>
-        <th class="text-left px-4 py-3 font-semibold">Created</th>
-        <th class="text-left px-4 py-3 font-semibold">Updated</th>
-        <th class="text-right px-4 py-3 font-semibold">Actions</th>
+        <th class="text-center px-4 py-3 font-semibold"><%= t("admin.articles.priority") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.created") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.updated") %></th>
+        <th class="text-right px-4 py-3 font-semibold"><%= t("admin.common.actions") %></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -75,7 +75,7 @@
             <span class="px-2 py-0.5 rounded text-xs font-medium
               <%= article.published? ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
                                      : 'bg-peach-soft text-sage-deep dark:bg-sage-deep/40 dark:text-peach' %>">
-              <%= article.status.humanize %>
+              <%= t("admin.article_status.#{article.status}", default: article.status.humanize) %>
             </span>
           </td>
           <td class="px-4 py-3 text-center"
@@ -105,18 +105,18 @@
           </td>
           <td class="px-4 py-3 text-right">
             <div class="flex items-center justify-end gap-2 flex-wrap">
-              <%= link_to "Edit", edit_admin_article_path(article),
+              <%= link_to t("admin.common.edit"), edit_admin_article_path(article),
                   class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
                           dark:border-peach dark:text-peach rounded hover:bg-peach-tint
                           dark:hover:bg-sage-deep/20 transition-colors" %>
 
               <% if article.published? %>
-                <%= button_to "Unpublish", unpublish_admin_article_path(article), method: :patch,
+                <%= button_to t("admin.common.unpublish"), unpublish_admin_article_path(article), method: :patch,
                     class: "px-2 py-1 text-xs border border-gray-400 text-gray-600
                             dark:border-gray-500 dark:text-gray-300 rounded hover:bg-gray-100
                             dark:hover:bg-gray-700 transition-colors cursor-pointer" %>
               <% else %>
-                <%= button_to "Publish", publish_admin_article_path(article), method: :patch,
+                <%= button_to t("admin.common.publish"), publish_admin_article_path(article), method: :patch,
                     class: "px-2 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded transition-colors cursor-pointer" %>
               <% end %>
 
@@ -126,8 +126,8 @@
                       data-action="click->admin-modal#open"
                       data-admin-modal-url-value="<%= admin_article_path(article) %>"
                       data-admin-modal-row-value="article-row-<%= article.id %>"
-                      data-admin-modal-title-value="Delete &ldquo;<%= article.title %>&rdquo;?">
-                Delete
+                      data-admin-modal-title-value="<%= t("admin.common.delete_title", name: article.title) %>">
+                <%= t("admin.common.delete") %>
               </button>
             </div>
           </td>
@@ -137,7 +137,7 @@
       <% if @articles.empty? %>
         <tr>
           <td colspan="8" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
-            No articles yet.
+            <%= t("admin.articles.empty") %>
           </td>
         </tr>
       <% end %>

@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between mb-6">
-  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach">Authors</h1>
-  <%= link_to "New Author", new_admin_author_path,
+  <h1 class="text-2xl font-serif text-sage-deep dark:text-peach"><%= t("admin.authors.title") %></h1>
+  <%= link_to t("admin.authors.new"), new_admin_author_path,
       class: "px-4 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors" %>
 </div>
 
@@ -8,12 +8,12 @@
   <table class="w-full text-sm">
     <thead class="bg-cream-soft dark:bg-ink-soft text-sage-deep dark:text-peach">
       <tr>
-        <th class="text-left px-4 py-3 font-semibold">Author</th>
-        <th class="text-left px-4 py-3 font-semibold">Email</th>
-        <th class="text-left px-4 py-3 font-semibold">Role</th>
-        <th class="text-left px-4 py-3 font-semibold">Status</th>
-        <th class="text-center px-4 py-3 font-semibold">Articles</th>
-        <th class="text-right px-4 py-3 font-semibold">Actions</th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.authors.author_col") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.email") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.role") %></th>
+        <th class="text-left px-4 py-3 font-semibold"><%= t("admin.common.status") %></th>
+        <th class="text-center px-4 py-3 font-semibold"><%= t("admin.common.articles") %></th>
+        <th class="text-right px-4 py-3 font-semibold"><%= t("admin.common.actions") %></th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -52,7 +52,7 @@
           </td>
           <td class="px-4 py-3 text-right">
             <div class="flex items-center justify-end gap-2">
-              <%= link_to "Edit", edit_admin_author_path(author),
+              <%= link_to t("admin.common.edit"), edit_admin_author_path(author),
                   class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
                           dark:border-peach dark:text-peach rounded hover:bg-peach-tint
                           dark:hover:bg-sage-deep/20 transition-colors" %>
@@ -62,8 +62,8 @@
                       data-action="click->admin-modal#open"
                       data-admin-modal-url-value="<%= admin_author_path(author) %>"
                       data-admin-modal-row-value="author-row-<%= author.id %>"
-                      data-admin-modal-title-value="Delete &ldquo;<%= author.display_name %>&rdquo;?">
-                Delete
+                      data-admin-modal-title-value="<%= t("admin.common.delete_title", name: author.display_name) %>">
+                <%= t("admin.common.delete") %>
               </button>
             </div>
           </td>
@@ -73,7 +73,7 @@
       <% if @authors.empty? %>
         <tr>
           <td colspan="6" class="px-4 py-8 text-center text-gray-400 dark:text-gray-500">
-            No authors yet.
+            <%= t("admin.authors.empty") %>
           </td>
         </tr>
       <% end %>
