@@ -52,19 +52,8 @@
           </td>
           <td class="px-4 py-3 text-right">
             <div class="flex items-center justify-end gap-2">
-              <%= link_to t("admin.common.edit"), edit_admin_author_path(author),
-                  class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
-                          dark:border-peach dark:text-peach rounded hover:bg-peach-tint
-                          dark:hover:bg-sage-deep/20 transition-colors" %>
-              <button type="button"
-                      class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors cursor-pointer"
-                      data-controller="admin-modal"
-                      data-action="click->admin-modal#open"
-                      data-admin-modal-url-value="<%= admin_author_path(author) %>"
-                      data-admin-modal-row-value="author-row-<%= author.id %>"
-                      data-admin-modal-title-value="<%= t("admin.common.delete_title", name: author.display_name) %>">
-                <%= t("admin.common.delete") %>
-              </button>
+              <%= admin_edit_icon_link(edit_admin_author_path(author), name: author.display_name) %>
+              <%= admin_delete_icon_button(url: admin_author_path(author), confirm_title: t("admin.common.delete_title", name: author.display_name), name: author.display_name, row: "author-row-#{author.id}") %>
             </div>
           </td>
         </tr>

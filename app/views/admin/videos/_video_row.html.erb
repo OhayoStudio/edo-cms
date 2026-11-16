@@ -1,0 +1,48 @@
+<tr id="video-row-<%= video.id %>" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+  <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 max-w-xs">
+    <% preview_data = { action: "video-preview#open", video_id: video.id, video_title: video.title } %>
+    <div class="flex items-center gap-2 min-w-0">
+      <button type="button" <%= tag.attributes(data: preview_data) %>
+              aria-label="<%= t("admin.videos.preview.play", title: video.title) %>"
+              title="<%= t("admin.videos.preview.open") %>"
+              class="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-full
+                     bg-sage-deep text-white hover:bg-ink-soft transition-colors cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 ml-0.5" aria-hidden="true">
+          <path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11.04-6.86a1 1 0 0 0 0-1.72L9.5 4.28A1 1 0 0 0 8 5.14z"/>
+        </svg>
+      </button>
+      <button type="button" <%= tag.attributes(data: preview_data) %>
+              class="truncate text-left text-gray-900 dark:text-gray-100 hover:underline cursor-pointer">
+        <%= video.title %>
+      </button>
+    </div>
+    <%= render "preview", video: video %>
+  </td>
+  <td class="px-4 py-3">
+    <% published = video.story&.is_published %>
+    <span class="px-2 py-0.5 rounded text-xs font-medium
+      <%= published ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
+                    : 'bg-peach-soft text-sage-deep dark:bg-sage-deep/40 dark:text-peach' %>">
+      <%= published ? t("admin.common.published") : t("admin.common.unpublished") %>
+    </span>
+  </td>
+  <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+    <%= video.created_at.strftime("%b %-d, %Y") %>
+  </td>
+  <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+    <%= video.updated_at.strftime("%b %-d, %Y") %>
+  </td>
+  <td class="px-4 py-3 text-right">
+    <div class="flex items-center justify-end gap-2">
+      <%= admin_edit_icon_link(edit_admin_video_path(video), name: video.title) %>
+
+      <% if video.story&.is_published %>
+        <%= admin_unpublish_icon_button(unpublish_admin_video_path(video), name: video.title) %>
+      <% else %>
+        <%= admin_publish_icon_button(publish_admin_video_path(video), name: video.title) %>
+      <% end %>
+
+      <%= admin_delete_icon_button(url: admin_video_path(video), confirm_title: t("admin.common.delete_title", name: video.title), name: video.title) %>
+    </div>
+  </td>
+</tr>

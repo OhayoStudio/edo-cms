@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>" class="brand-theme">
+  <head>
+    <title><%= site_name %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= cms_theme_style_tag %>
+    <%= yield :head %>
+    <%= render "layouts/assets" %>
+  </head>
+
+  <%# Admin preview modal: the article only, without site header, nav or footer. %>
+  <body class="brand-theme h-full bg-cream dark:bg-ink" data-controller="dark-mode">
+    <main class="dark:bg-ink">
+      <%= yield %>
+    </main>
+  </body>
+</html>

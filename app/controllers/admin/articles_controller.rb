@@ -66,7 +66,7 @@ class Admin::ArticlesController < Admin::BaseController
       is_top:       @article.featured? || false
     )
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.remove("article-row-#{@article.id}") }
+      format.turbo_stream { render turbo_stream: replace_article_row }
       format.html         { redirect_to admin_articles_path, notice: t("admin.flash.published", model: t("admin.models_cap.article")) }
     end
   end
@@ -75,13 +75,14 @@ class Admin::ArticlesController < Admin::BaseController
     @article.update_column(:status, Article.statuses[:draft])
     @article.story&.update_column(:is_published, false)
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.remove("article-row-#{@article.id}") }
+      format.turbo_stream { render turbo_stream: replace_article_row }
       format.html         { redirect_to admin_articles_path, notice: t("admin.flash.unpublished", model: t("admin.models_cap.article")) }
     end
   end
 
+  # ?embed=1: bare layout for the admin preview modal (no site nav or footer).
   def preview
-    render template: "articles/show", layout: "application"
+    render template: "articles/show", layout: params[:embed].present? ? "article_preview" : "application"
   end
 
   # GET /admin/articles/:id/story_card — download a 1080×1920 PNG story card
@@ -164,6 +165,12 @@ class Admin::ArticlesController < Admin::BaseController
   end
 
   private
+
+  # Publish/unpublish keep the row and redraw it with its new status.
+  def replace_article_row
+    turbo_stream.replace("article-row-#{@article.id}", partial: "admin/articles/article_row",
+                         locals: { article: @article, categories: Category.not_deleted.order(:name) })
+  end
 
   def set_article
     @article = Article.friendly.find(params[:id])
