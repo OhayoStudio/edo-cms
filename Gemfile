@@ -51,7 +51,7 @@ gem "friendly_id"
 gem "httparty"
 gem "kaminari"
 gem "view_component"
-gem "lexxy", "~> 1.0.3"
+gem "lexxy", "~> 1.0.4"
 gem "sentry-ruby"
 gem "sentry-rails"
 
@@ -78,7 +78,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # Find missing/unused translation keys (bin/i18n-tasks missing | unused).
-  gem "i18n-tasks", "~> 1.0", require: false
+  gem "i18n-tasks", "~> 1.2", require: false
 end
 
 group :development do
