@@ -91,6 +91,15 @@ ja:
       video_url: "動画 URL（YouTube）"
       current_thumbnail: "現在のサムネイル — 新しいファイルをアップロードして置き換えます"
       use_youtube: "YouTube のサムネイルを使用"
+      autofill:
+        loading: "YouTube からタイトルと説明を取得しています…"
+        error: "YouTube から情報を取得できませんでした。手動で入力してください。"
+      preview:
+        open: "動画をプレビュー"
+        play: "「%{title}」をプレビュー"
+        close: "プレビューを閉じる"
+        thumbnail: "サムネイル"
+        no_player: "この URL は YouTube のリンクとして認識できないため、ここでは再生できません。"
     articles:
       title: "記事"
       new: "新規記事"

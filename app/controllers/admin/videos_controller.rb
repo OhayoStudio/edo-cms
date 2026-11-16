@@ -18,19 +18,8 @@ class Admin::VideosController < Admin::BaseController
     return render json: {}, status: :bad_request unless match
     id = match[1]
 
-    oembed = HTTParty.get("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=#{id}&format=json")
-    title  = oembed.success? ? oembed["title"] : nil
-
-    description = nil
-    if ENV["YOUTUBE_API_KEY"].present?
-      api = HTTParty.get(
-        "https://www.googleapis.com/youtube/v3/videos",
-        query: { id: id, part: "snippet", key: ENV["YOUTUBE_API_KEY"] }
-      )
-      description = api.dig("items", 0, "snippet", "description") if api.success?
-    end
-
-    render json: { title: title, description: description }
+    render json: { title:       youtube_oembed_title(id),
+                   description: youtube_api_description(id) }
   end
 
   def new
@@ -94,7 +83,7 @@ class Admin::VideosController < Admin::BaseController
 
   private
 
-  YOUTUBE_ID_RE = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  YOUTUBE_ID_RE = Video::YOUTUBE_ID_RE
 
   def set_video
     @video = Video.friendly.find(params[:id])
@@ -102,6 +91,23 @@ class Admin::VideosController < Admin::BaseController
 
   def video_params
     params.require(:video).permit(:title, :description, :url, :featured_image, :use_youtube_thumbnail)
+  end
+
+  def youtube_oembed_title(id)
+    oembed = HTTParty.get("https://www.youtube.com/oembed",
+                          query: { url: "https://www.youtube.com/watch?v=#{id}", format: "json" }, timeout: 5)
+    oembed["title"].presence if oembed.success?
+  rescue StandardError
+    nil
+  end
+
+  def youtube_api_description(id)
+    return if ENV["YOUTUBE_API_KEY"].blank?
+    api = HTTParty.get("https://www.googleapis.com/youtube/v3/videos",
+                       query: { id: id, part: "snippet", key: ENV["YOUTUBE_API_KEY"] }, timeout: 5)
+    api.dig("items", 0, "snippet", "description").presence if api.success?
+  rescue StandardError
+    nil
   end
 
   def attach_youtube_thumbnail(video)

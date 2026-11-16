@@ -9,6 +9,8 @@ class Video < ApplicationRecord
     end
     has_one :story, as: :storyable
 
+    YOUTUBE_ID_RE = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+
     attr_accessor :use_youtube_thumbnail
 
     validates :title, presence: true
@@ -22,6 +24,10 @@ class Video < ApplicationRecord
 
     def to_s
         title
+    end
+
+    def youtube_id
+        url.to_s[YOUTUBE_ID_RE, 1]
     end
 
     def to_param

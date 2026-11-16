@@ -92,6 +92,15 @@ en:
       video_url: "Video URL (YouTube)"
       current_thumbnail: "Current thumbnail — upload a new file to replace it"
       use_youtube: "Use YouTube thumbnail"
+      autofill:
+        loading: "Fetching title and description from YouTube…"
+        error: "Couldn't fetch details from YouTube — fill them in manually."
+      preview:
+        open: "Preview video"
+        play: "Preview “%{title}”"
+        close: "Close preview"
+        thumbnail: "Thumbnail"
+        no_player: "This URL is not a recognised YouTube link, so it can't be played here."
     articles:
       title: "Articles"
       new: "New Article"
