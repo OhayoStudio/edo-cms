@@ -1,0 +1,91 @@
+<tr id="article-row-<%= article.id %>" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+  <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 max-w-xs">
+    <div class="flex items-center gap-2 min-w-0">
+      <%= link_to preview_admin_article_path(article), target: "_blank", rel: "noopener",
+            data: { action: "click->frame-preview#open", preview_title: article.title,
+                     preview_frame_url: preview_admin_article_path(article, embed: 1) },
+            aria: { label: t("admin.articles.preview_label", title: article.title), haspopup: "dialog" },
+            title: t("admin.articles.preview"),
+            class: "shrink-0 inline-flex items-center justify-center w-8 h-8 rounded
+                    text-sage-deep dark:text-peach hover:bg-peach-tint dark:hover:bg-sage-deep/20 transition-colors" do %>
+        <%= admin_icon(:eye) %>
+      <% end %>
+      <% if article.published? %>
+        <%= link_to article.title, article_path(article), target: "_blank", rel: "noopener",
+              class: "truncate hover:underline", title: t("admin.articles.open_published") %>
+      <% else %>
+        <span class="truncate"><%= article.title %></span>
+      <% end %>
+    </div>
+  </td>
+  <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs">
+    <%= article.author&.display_name %>
+  </td>
+  <td class="px-4 py-3 text-xs whitespace-nowrap"
+      data-controller="inline-field"
+      data-inline-field-url-value="<%= patch_field_admin_article_path(article) %>"
+      data-inline-field-field-value="category_id">
+    <span data-inline-field-target="label"
+          data-action="click->inline-field#show"
+          class="text-gray-500 dark:text-gray-400 cursor-pointer hover:text-sage-deep dark:hover:text-peach hover:underline">
+      <%= article.category&.name || "—" %>
+    </span>
+    <select data-inline-field-target="select"
+            data-action="change->inline-field#change keydown->inline-field#keydown blur->inline-field#hide"
+            class="hidden text-xs bg-white dark:bg-ink-soft border border-gray-300 dark:border-gray-600
+                   text-gray-900 dark:text-gray-100 rounded px-1 py-0.5 focus:outline-sage-deep">
+      <% categories.each do |cat| %>
+        <option value="<%= cat.id %>" <%= "selected" if article.category_id == cat.id %>>
+          <%= cat.name %>
+        </option>
+      <% end %>
+    </select>
+  </td>
+  <td class="px-4 py-3">
+    <span class="px-2 py-0.5 rounded text-xs font-medium
+      <%= article.published? ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
+                             : 'bg-peach-soft text-sage-deep dark:bg-sage-deep/40 dark:text-peach' %>">
+      <%= t("admin.article_status.#{article.status}", default: article.status.humanize) %>
+    </span>
+  </td>
+  <td class="px-4 py-3 text-center"
+      data-controller="inline-number"
+      data-inline-number-url-value="<%= patch_field_admin_article_path(article) %>"
+      data-inline-number-field-value="priority">
+    <span data-inline-number-target="label"
+          data-action="click->inline-number#show"
+          class="cursor-pointer font-mono text-sm font-semibold
+                 <%= article.priority > 0 ? 'text-sage-deep dark:text-peach' : 'text-gray-400 dark:text-gray-600' %>
+                 hover:text-sage-deep dark:hover:text-peach">
+      <%= article.priority %>
+    </span>
+    <input type="number" min="0"
+           data-inline-number-target="input"
+           data-action="blur->inline-number#save keydown->inline-number#keydown"
+           value="<%= article.priority %>"
+           class="hidden w-14 text-center text-sm font-mono rounded border border-sage-deep
+                  dark:border-peach bg-white dark:bg-ink-soft
+                  text-gray-900 dark:text-gray-100 px-1 py-0.5 focus:outline-sage-deep">
+  </td>
+  <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+    <%= article.created_at.strftime("%b %-d, %Y") %>
+  </td>
+  <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+    <%= article.updated_at.strftime("%b %-d, %Y") %>
+  </td>
+  <td class="px-4 py-3 text-right">
+    <div class="flex items-center justify-end gap-2 flex-wrap">
+      <%= admin_edit_icon_link(edit_admin_article_path(article), name: article.title) %>
+
+      <% if article.published? %>
+        <%= admin_unpublish_icon_button(unpublish_admin_article_path(article), name: article.title) %>
+      <% else %>
+        <%= admin_publish_icon_button(publish_admin_article_path(article), name: article.title) %>
+      <% end %>
+
+      <%= admin_delete_icon_button(url: admin_article_path(article),
+            confirm_title: t("admin.common.delete_title", name: article.title),
+            name: article.title, row: "article-row-#{article.id}") %>
+    </div>
+  </td>
+</tr>

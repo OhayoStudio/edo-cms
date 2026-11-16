@@ -40,19 +40,9 @@
           </td>
           <td class="px-4 py-3 text-right">
             <div class="flex items-center justify-end gap-2">
-              <%= link_to t("admin.common.edit"), edit_admin_category_path(category),
-                  class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
-                          dark:border-peach dark:text-peach rounded hover:bg-peach-tint
-                          dark:hover:bg-sage-deep/20 transition-colors" %>
+              <%= admin_edit_icon_link(edit_admin_category_path(category), name: category.name) %>
 
-              <button type="button"
-                      class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors cursor-pointer"
-                      data-controller="admin-modal"
-                      data-action="click->admin-modal#open"
-                      data-admin-modal-url-value="<%= admin_category_path(category) %>"
-                      data-admin-modal-title-value="<%= t("admin.common.delete_title", name: category.name) %>">
-                <%= t("admin.common.delete") %>
-              </button>
+              <%= admin_delete_icon_button(url: admin_category_path(category), confirm_title: t("admin.common.delete_title", name: category.name), name: category.name) %>
             </div>
           </td>
         </tr>

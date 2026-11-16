@@ -68,7 +68,7 @@ class Admin::VideosController < Admin::BaseController
       published_at: Time.current
     )
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.remove("video-row-#{@video.id}") }
+      format.turbo_stream { render turbo_stream: replace_video_row }
       format.html         { redirect_to admin_videos_path, notice: t("admin.flash.published", model: t("admin.models_cap.video")) }
     end
   end
@@ -76,12 +76,17 @@ class Admin::VideosController < Admin::BaseController
   def unpublish
     @video.story&.update_column(:is_published, false)
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.remove("video-row-#{@video.id}") }
+      format.turbo_stream { render turbo_stream: replace_video_row }
       format.html         { redirect_to admin_videos_path, notice: t("admin.flash.unpublished", model: t("admin.models_cap.video")) }
     end
   end
 
   private
+
+  # Publish/unpublish keep the row and redraw it with its new status.
+  def replace_video_row
+    turbo_stream.replace("video-row-#{@video.id}", partial: "admin/videos/video_row", locals: { video: @video.reload })
+  end
 
   YOUTUBE_ID_RE = Video::YOUTUBE_ID_RE
 
