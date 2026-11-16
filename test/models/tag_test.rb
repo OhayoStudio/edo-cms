@@ -75,7 +75,7 @@ class TagTest < ActiveSupport::TestCase
   test "should generate slug from name when name changes on a new record" do
     new_tag_for_slug_test = Tag.new(name: "A Fresh Tag Name For Slug Test #{Time.now.to_i}")
     new_tag_for_slug_test.valid?
-    expected_slug = "a-fresh-tag-name-for-slug-test-#{Time.now.to_i}".parameterize
+    expected_slug = new_tag_for_slug_test.name.parameterize
     assert_equal expected_slug, new_tag_for_slug_test.slug, "Slug was not generated correctly for a new tag"
   end
 
