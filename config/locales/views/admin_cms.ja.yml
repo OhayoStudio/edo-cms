@@ -15,6 +15,10 @@ ja:
       settings: "設定"
       logout: "ログアウト"
     common:
+      edit_label: "「%{name}」を編集"
+      delete_label: "「%{name}」を削除"
+      publish_label: "「%{name}」を公開"
+      unpublish_label: "「%{name}」を非公開にする"
       edit: "編集"
       delete: "削除"
       cancel: "キャンセル"
@@ -91,6 +95,15 @@ ja:
       video_url: "動画 URL（YouTube）"
       current_thumbnail: "現在のサムネイル — 新しいファイルをアップロードして置き換えます"
       use_youtube: "YouTube のサムネイルを使用"
+      autofill:
+        loading: "YouTube からタイトルと説明を取得しています…"
+        error: "YouTube から情報を取得できませんでした。手動で入力してください。"
+      preview:
+        open: "動画をプレビュー"
+        play: "「%{title}」をプレビュー"
+        close: "プレビューを閉じる"
+        thumbnail: "サムネイル"
+        no_player: "この URL は YouTube のリンクとして認識できないため、ここでは再生できません。"
     articles:
       title: "記事"
       new: "新規記事"
@@ -100,6 +113,10 @@ ja:
       empty: "記事がまだありません。"
       preview: "プレビュー"
       priority: "優先度"
+      open_published: "公開中の記事を新しいタブで開く"
+      preview_label: "「%{title}」をプレビュー"
+      preview_close: "プレビューを閉じる"
+      preview_new_tab: "新しいタブで開く"
       all_categories: "すべてのカテゴリー"
       author: "著者"
       category: "カテゴリー"

@@ -15,6 +15,10 @@ en:
       settings: "Settings"
       logout: "Logout"
     common:
+      edit_label: "Edit “%{name}”"
+      delete_label: "Delete “%{name}”"
+      publish_label: "Publish “%{name}”"
+      unpublish_label: "Unpublish “%{name}”"
       edit: "Edit"
       delete: "Delete"
       cancel: "Cancel"
@@ -92,6 +96,15 @@ en:
       video_url: "Video URL (YouTube)"
       current_thumbnail: "Current thumbnail — upload a new file to replace it"
       use_youtube: "Use YouTube thumbnail"
+      autofill:
+        loading: "Fetching title and description from YouTube…"
+        error: "Couldn't fetch details from YouTube — fill them in manually."
+      preview:
+        open: "Preview video"
+        play: "Preview “%{title}”"
+        close: "Close preview"
+        thumbnail: "Thumbnail"
+        no_player: "This URL is not a recognised YouTube link, so it can't be played here."
     articles:
       title: "Articles"
       new: "New Article"
@@ -101,6 +114,10 @@ en:
       empty: "No articles yet."
       preview: "Preview"
       priority: "Priority"
+      open_published: "Open the published article in a new tab"
+      preview_label: "Preview “%{title}”"
+      preview_close: "Close preview"
+      preview_new_tab: "Open in a new tab"
       all_categories: "All categories"
       author: "Author"
       category: "Category"

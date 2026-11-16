@@ -1,0 +1,23 @@
+<%# Fonts, stylesheets, JS and the theme script shared by the full and bare layouts. %>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "theme", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "lexxy" %>
+<%= javascript_importmap_tags %>
+<script>
+  // Prevent Flash Of Wrong Theme (FOWT) and ensure correct theme on Turbo navigation
+  function applyTheme() {
+    const theme = localStorage.getItem('theme') || 'light';
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.style.colorScheme = 'dark';
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.style.colorScheme = 'light';
+    }
+  }
+  applyTheme();
+  document.addEventListener('turbo:load', applyTheme);
+</script>

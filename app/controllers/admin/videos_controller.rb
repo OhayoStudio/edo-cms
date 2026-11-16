@@ -18,19 +18,8 @@ class Admin::VideosController < Admin::BaseController
     return render json: {}, status: :bad_request unless match
     id = match[1]
 
-    oembed = HTTParty.get("https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=#{id}&format=json")
-    title  = oembed.success? ? oembed["title"] : nil
-
-    description = nil
-    if ENV["YOUTUBE_API_KEY"].present?
-      api = HTTParty.get(
-        "https://www.googleapis.com/youtube/v3/videos",
-        query: { id: id, part: "snippet", key: ENV["YOUTUBE_API_KEY"] }
-      )
-      description = api.dig("items", 0, "snippet", "description") if api.success?
-    end
-
-    render json: { title: title, description: description }
+    render json: { title:       youtube_oembed_title(id),
+                   description: youtube_api_description(id) }
   end
 
   def new
@@ -79,7 +68,7 @@ class Admin::VideosController < Admin::BaseController
       published_at: Time.current
     )
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.remove("video-row-#{@video.id}") }
+      format.turbo_stream { render turbo_stream: replace_video_row }
       format.html         { redirect_to admin_videos_path, notice: t("admin.flash.published", model: t("admin.models_cap.video")) }
     end
   end
@@ -87,14 +76,19 @@ class Admin::VideosController < Admin::BaseController
   def unpublish
     @video.story&.update_column(:is_published, false)
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.remove("video-row-#{@video.id}") }
+      format.turbo_stream { render turbo_stream: replace_video_row }
       format.html         { redirect_to admin_videos_path, notice: t("admin.flash.unpublished", model: t("admin.models_cap.video")) }
     end
   end
 
   private
 
-  YOUTUBE_ID_RE = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  # Publish/unpublish keep the row and redraw it with its new status.
+  def replace_video_row
+    turbo_stream.replace("video-row-#{@video.id}", partial: "admin/videos/video_row", locals: { video: @video.reload })
+  end
+
+  YOUTUBE_ID_RE = Video::YOUTUBE_ID_RE
 
   def set_video
     @video = Video.friendly.find(params[:id])
@@ -102,6 +96,23 @@ class Admin::VideosController < Admin::BaseController
 
   def video_params
     params.require(:video).permit(:title, :description, :url, :featured_image, :use_youtube_thumbnail)
+  end
+
+  def youtube_oembed_title(id)
+    oembed = HTTParty.get("https://www.youtube.com/oembed",
+                          query: { url: "https://www.youtube.com/watch?v=#{id}", format: "json" }, timeout: 5)
+    oembed["title"].presence if oembed.success?
+  rescue StandardError
+    nil
+  end
+
+  def youtube_api_description(id)
+    return if ENV["YOUTUBE_API_KEY"].blank?
+    api = HTTParty.get("https://www.googleapis.com/youtube/v3/videos",
+                       query: { id: id, part: "snippet", key: ENV["YOUTUBE_API_KEY"] }, timeout: 5)
+    api.dig("items", 0, "snippet", "description").presence if api.success?
+  rescue StandardError
+    nil
   end
 
   def attach_youtube_thumbnail(video)

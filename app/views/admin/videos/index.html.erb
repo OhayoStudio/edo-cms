@@ -4,6 +4,7 @@
       class: "px-4 py-2 bg-sage-deep hover:bg-ink-soft text-white rounded text-sm transition-colors" %>
 </div>
 
+<div data-controller="video-preview" data-action="keydown.esc@window->video-preview#close">
 <div class="bg-white dark:bg-ink rounded-lg shadow overflow-hidden">
   <table class="w-full text-sm">
     <thead class="bg-cream-soft dark:bg-ink-soft text-sage-deep dark:text-peach">
@@ -25,54 +26,7 @@
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-      <% @videos.each do |video| %>
-        <tr id="video-row-<%= video.id %>" class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-          <td class="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 max-w-xs truncate">
-            <%= video.title %>
-          </td>
-          <td class="px-4 py-3">
-            <% published = video.story&.is_published %>
-            <span class="px-2 py-0.5 rounded text-xs font-medium
-              <%= published ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
-                            : 'bg-peach-soft text-sage-deep dark:bg-sage-deep/40 dark:text-peach' %>">
-              <%= published ? t("admin.common.published") : t("admin.common.unpublished") %>
-            </span>
-          </td>
-          <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
-            <%= video.created_at.strftime("%b %-d, %Y") %>
-          </td>
-          <td class="px-4 py-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
-            <%= video.updated_at.strftime("%b %-d, %Y") %>
-          </td>
-          <td class="px-4 py-3 text-right">
-            <div class="flex items-center justify-end gap-2">
-              <%= link_to t("admin.common.edit"), edit_admin_video_path(video),
-                  class: "px-2 py-1 text-xs border border-sage-deep text-sage-deep
-                          dark:border-peach dark:text-peach rounded hover:bg-peach-tint
-                          dark:hover:bg-sage-deep/20 transition-colors" %>
-
-              <% if video.story&.is_published %>
-                <%= button_to t("admin.common.unpublish"), unpublish_admin_video_path(video), method: :patch,
-                    class: "px-2 py-1 text-xs border border-gray-400 text-gray-600
-                            dark:border-gray-500 dark:text-gray-300 rounded hover:bg-gray-100
-                            dark:hover:bg-gray-700 transition-colors cursor-pointer" %>
-              <% else %>
-                <%= button_to t("admin.common.publish"), publish_admin_video_path(video), method: :patch,
-                    class: "px-2 py-1 text-xs bg-green-600 hover:bg-green-700 text-white rounded transition-colors cursor-pointer" %>
-              <% end %>
-
-              <button type="button"
-                      class="px-2 py-1 text-xs bg-red-600 hover:bg-red-700 text-white rounded transition-colors cursor-pointer"
-                      data-controller="admin-modal"
-                      data-action="click->admin-modal#open"
-                      data-admin-modal-url-value="<%= admin_video_path(video) %>"
-                      data-admin-modal-title-value="<%= t("admin.common.delete_title", name: video.title) %>">
-                <%= t("admin.common.delete") %>
-              </button>
-            </div>
-          </td>
-        </tr>
-      <% end %>
+      <%= render partial: "video_row", collection: @videos, as: :video %>
 
       <% if @videos.empty? %>
         <tr>
@@ -83,6 +37,22 @@
       <% end %>
     </tbody>
   </table>
+</div>
+
+<div data-video-preview-target="modal" data-action="click->video-preview#closeOnBackdrop"
+     role="dialog" aria-modal="true" aria-labelledby="video-preview-title"
+     class="hidden fixed inset-0 z-50 items-center justify-center bg-black/60 p-4">
+  <div class="bg-white dark:bg-ink text-gray-900 dark:text-gray-100 border border-rule dark:border-ink-soft rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-5">
+    <div class="flex items-start justify-between gap-4 mb-4">
+      <h2 id="video-preview-title" data-video-preview-target="title"
+          class="text-lg font-serif text-sage-deep dark:text-peach break-words"></h2>
+      <button type="button" data-action="video-preview#close" data-video-preview-close
+              aria-label="<%= t("admin.videos.preview.close") %>"
+              class="text-gray-900 dark:text-gray-100 opacity-70 hover:opacity-100 text-2xl leading-none cursor-pointer">&times;</button>
+    </div>
+    <div data-video-preview-target="body"></div>
+  </div>
+</div>
 </div>
 
 <div class="mt-6 flex justify-center">
