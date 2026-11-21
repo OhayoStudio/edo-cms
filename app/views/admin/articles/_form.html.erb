@@ -104,7 +104,7 @@
          data-action="dragover->featured-image-drop#dragover dragleave->featured-image-drop#dragleave drop->featured-image-drop#drop"
          class="rounded border-2 border-dashed border-gray-200 dark:border-gray-600 p-3 transition-colors">
       <%= f.label :featured_image, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
-      <% if article.persisted? && article.featured_image.attached? && article.featured_image.blob.persisted? %>
+      <% if stored_attachment?(article.featured_image) %>
         <img src="<%= url_for(article.featured_image.variant(resize_to_limit: [200, 120])) %>"
              data-featured-image-drop-target="preview"
              class="rounded border border-gray-200 dark:border-gray-600 mb-2" />

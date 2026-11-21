@@ -1,12 +1,12 @@
 <% return unless article.published? %>
 
 <% image_blob =
-  if article.featured_image.attached?
+  if stored_attachment?(article.featured_image)
     article.featured_image.blob
   else
     article.content.embeds.find { |e| e.blob.image? }&.blob
   end %>
-<% return unless image_blob %>
+<% return unless image_blob&.persisted? %>
 
 <% canvas_color = cms_setting.theme_color("text") %>
 <% accent_color = cms_setting.theme_color("secondary") %>

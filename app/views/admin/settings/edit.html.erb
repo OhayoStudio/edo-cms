@@ -51,7 +51,7 @@
       <% %i[logo_light logo_dark favicon og_default_image].each do |field| %>
         <div>
           <%= f.label field, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-          <% if @setting.public_send(field).attached? %>
+          <% if stored_attachment?(@setting.public_send(field)) %>
             <div class="mb-2">
               <%= image_tag @setting.public_send(field), class: "h-12 w-auto bg-gray-100 dark:bg-ink-soft rounded p-1" %>
             </div>
