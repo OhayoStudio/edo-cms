@@ -13,10 +13,8 @@ class AuthorsControllerTest < ActionDispatch::IntegrationTest
     assert_equal @author, assigns(:author), "@author should be assigned correctly"
   end
 
-  test "should redirect to root for an unknown author id" do
-    # Author.find raises RecordNotFound, which ApplicationController rescues
-    # into a redirect to the root path.
+  test "an unknown author is not found" do
     get author_url(id: -1)
-    assert_redirected_to root_path
+    assert_response :not_found
   end
 end

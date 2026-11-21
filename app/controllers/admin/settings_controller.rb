@@ -13,6 +13,7 @@ class Admin::SettingsController < Admin::BaseController
     if @setting.update(setting_params)
       redirect_to edit_admin_setting_path, notice: t("admin.flash.settings_updated")
     else
+      keep_uploads(@setting)
       render :edit, status: :unprocessable_entity
     end
   end

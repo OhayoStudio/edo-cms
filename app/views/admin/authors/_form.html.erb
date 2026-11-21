@@ -90,10 +90,11 @@
 
     <div>
       <%= f.label :avatar, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" %>
-      <% if author.persisted? && author.avatar.attached? %>
+      <% if stored_attachment?(author.avatar) %>
         <img src="<%= url_for(author.avatar.variant(:thumb)) %>"
              class="w-16 h-16 rounded-full object-cover border border-gray-200 dark:border-gray-600 mb-2" />
       <% end %>
+      <%= render "admin/shared/kept_upload", f: f, attribute: :avatar %>
       <%= f.file_field :avatar, accept: "image/*",
           class: "block w-full text-sm text-gray-500 dark:text-gray-400
                   file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0

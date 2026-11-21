@@ -52,7 +52,7 @@
           data: { "youtube-thumbnail-target": "flag" } %>
 
       <%= f.label :featured_image, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-      <% if video.persisted? && video.featured_image.attached? %>
+      <% if stored_attachment?(video.featured_image) %>
         <div class="mb-2">
           <%= image_tag video.featured_image.variant(resize_to_limit: [200, 120]),
               data: { "video-thumbnail-enhance-target": "featuredPreview" },
@@ -61,6 +61,7 @@
         </div>
       <% end %>
       <div>
+        <%= render "admin/shared/kept_upload", f: f, attribute: :featured_image %>
         <%= f.file_field :featured_image, accept: "image/*",
             required: !video.featured_image.attached?,
             data: { "youtube-thumbnail-target": "fileInput" },

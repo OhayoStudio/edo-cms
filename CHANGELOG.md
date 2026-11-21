@@ -4,6 +4,18 @@ Notable changes to EDO CMS. Brand forks track this file to know what's worth che
 
 This project doesn't use tagged releases — `main` is the canonical state. Entries are reverse-chronological and grouped loosely by surface.
 
+## 2026-11 — admin error handling, not found page, story video
+
+Ported from uchi-energy-cms (#252, #257, #258, #260, #261, #262, #263).
+
+- **Fix**: a failed admin save with a new upload (article, video, author, settings) crashed with "Cannot get a signed_id for a new record" instead of showing the errors. New helper `stored_attachment?`.
+- **Admin**: the file picked before a failed save is kept and sent back by reference (`Admin::BaseController#keep_uploads`, `admin/shared/_kept_upload`), so it doesn't have to be picked again.
+- **Admin**: the article form requires a title (5–200 characters) and a body before it is sent (Lexxy's `required`).
+- **Not found page**: every 404 renders `ErrorsController#not_found` in the site layout and the visitor's language, with status 404 and `noindex`. A missing or unpublished record no longer redirects to the home page. `config.exceptions_app` in `config/application.rb`.
+- **Story video**: one encode at a time (file lock, `Busy` → flash), `nice -n 10`, killed after 100 s; `proxy.response_timeout: 120` in `config/deploy.yml`.
+- **Article page**: the hero image uses `object-contain`, so it is shown whole instead of cropped.
+- **Brakeman** 8.1.1 (CI runs it with `--ensure-latest`).
+
 ## Unreleased
 
 _Polish for going public:_ added `CONTRIBUTING.md`, `SECURITY.md`, this changelog, and a "Why is this public?" header in the README. No code changes.

@@ -25,6 +25,9 @@ proxy:
   # Don't add www without the CNAME — a failed challenge for one SAN fails the
   # whole cert and leaves the site without TLS.
   host: <%= ENV.fetch("APPLICATION_HOST", "your-domain.example") %>
+  # The admin's story video encode runs in the request (up to 100 s, see
+  # InstagramStoryVideoService). The default 30 s returned a 504 mid-encode.
+  response_timeout: 120
 
 registry:
   server: ghcr.io

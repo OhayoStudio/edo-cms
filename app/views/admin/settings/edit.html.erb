@@ -51,11 +51,12 @@
       <% %i[logo_light logo_dark favicon og_default_image].each do |field| %>
         <div>
           <%= f.label field, class: "block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" %>
-          <% if @setting.public_send(field).attached? %>
+          <% if stored_attachment?(@setting.public_send(field)) %>
             <div class="mb-2">
               <%= image_tag @setting.public_send(field), class: "h-12 w-auto bg-gray-100 dark:bg-ink-soft rounded p-1" %>
             </div>
           <% end %>
+          <%= render "admin/shared/kept_upload", f: f, attribute: field %>
           <%= f.file_field field, accept: "image/*",
                 class: "block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:bg-sage-deep file:text-white hover:file:bg-ink-soft" %>
         </div>

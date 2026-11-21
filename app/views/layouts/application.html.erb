@@ -8,10 +8,13 @@
           og:      { site_name: site_name, type: "website" },
           twitter: { site: cms_setting.social_links["twitter"].presence, card: "summary_large_image" }.compact
         ) %>
-    <% I18n.available_locales.each do |loc| %>
-      <link rel="alternate" hreflang="<%= loc %>" href="<%= url_for(locale: loc, only_path: false) %>">
+    <%# The not found page has no route of its own to build language versions from. %>
+    <% unless content_for?(:no_alternates) %>
+      <% I18n.available_locales.each do |loc| %>
+        <link rel="alternate" hreflang="<%= loc %>" href="<%= url_for(locale: loc, only_path: false) %>">
+      <% end %>
+      <link rel="alternate" hreflang="x-default" href="<%= url_for(locale: I18n.default_locale, only_path: false) %>">
     <% end %>
-    <link rel="alternate" hreflang="x-default" href="<%= url_for(locale: I18n.default_locale, only_path: false) %>">
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />

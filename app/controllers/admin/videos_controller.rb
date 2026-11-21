@@ -41,6 +41,7 @@ class Admin::VideosController < Admin::BaseController
       )
       redirect_to admin_videos_path, notice: t("admin.flash.created", model: t("admin.models_cap.video"))
     else
+      keep_uploads(@video)
       render :new, status: :unprocessable_entity
     end
   end
@@ -52,6 +53,7 @@ class Admin::VideosController < Admin::BaseController
       @video.story&.update(slug: @video.slug)
       redirect_to admin_videos_path, notice: t("admin.flash.updated", model: t("admin.models_cap.video"))
     else
+      keep_uploads(@video)
       render :edit, status: :unprocessable_entity
     end
   end

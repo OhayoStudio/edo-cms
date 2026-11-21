@@ -1,0 +1,8 @@
+<%# The file picked before a failed save, stored by Admin::BaseController#keep_uploads,
+    sent back by reference. It goes before the file field: a newly picked file wins,
+    and an empty file field sends nothing. %>
+<% change = f.object.attachment_changes[attribute.to_s] %>
+<% if change.respond_to?(:blob) && change.blob.persisted? %>
+  <%= f.hidden_field attribute, value: change.blob.signed_id, id: nil %>
+  <p class="text-xs text-gray-500 dark:text-gray-400 mb-1"><%= t("admin.common.kept_upload", filename: change.blob.filename) %></p>
+<% end %>

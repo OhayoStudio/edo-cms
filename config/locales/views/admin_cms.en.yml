@@ -15,6 +15,7 @@ en:
       settings: "Settings"
       logout: "Logout"
     common:
+      kept_upload: "Kept from your last try: %{filename}. Pick another file to replace it."
       edit_label: "Edit “%{name}”"
       delete_label: "Delete “%{name}”"
       publish_label: "Publish “%{name}”"
@@ -174,6 +175,7 @@ en:
       settings_updated: "Settings updated."
       no_image_story_card: "No image found to generate story card."
       no_image_story_video: "No image found to generate story video."
+      story_video_busy: "Another story video is being generated. Try again in a minute."
       record_not_found: "Record not found (%{detail})."
     settings:
       page_title: "Settings — Admin"

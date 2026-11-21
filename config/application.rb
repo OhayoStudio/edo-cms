@@ -34,6 +34,16 @@ module EdoCms
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
+
+    # A 404 renders ErrorsController#not_found, in the site layout and language;
+    # every other error status keeps its static page in public/.
+    config.exceptions_app = lambda do |env|
+      if env["PATH_INFO"] == "/404"
+        ErrorsController.action(:not_found).call(env)
+      else
+        ActionDispatch::PublicExceptions.new(Rails.public_path).call(env)
+      end
+    end
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end

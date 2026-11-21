@@ -29,6 +29,7 @@ class Admin::ArticlesController < Admin::BaseController
       generate_tags(@article)
       redirect_to admin_articles_path, notice: t("admin.flash.created", model: t("admin.models_cap.article"))
     else
+      keep_uploads(@article)
       render :new, status: :unprocessable_entity
     end
   end
@@ -45,6 +46,7 @@ class Admin::ArticlesController < Admin::BaseController
       generate_tags(@article)
       redirect_to admin_articles_path, notice: t("admin.flash.updated", model: t("admin.models_cap.article"))
     else
+      keep_uploads(@article)
       render :edit, status: :unprocessable_entity
     end
   end
@@ -105,6 +107,8 @@ class Admin::ArticlesController < Admin::BaseController
     else
       redirect_to edit_admin_article_path(@article), alert: t("admin.flash.no_image_story_video")
     end
+  rescue InstagramStoryVideoService::Busy
+    redirect_to edit_admin_article_path(@article), alert: t("admin.flash.story_video_busy")
   end
 
   # POST /admin/articles/:id/share_instagram — generate the export, expose it

@@ -71,10 +71,8 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     assert_equal @article, assigns(:article), "Should find the article by slug"
   end
 
-  test "should redirect to root for a non-published article" do
-    # The published-only scope raises RecordNotFound for a draft, which
-    # ApplicationController rescues into a redirect to the root path.
+  test "a non-published article is not found" do
     get article_url(id: @draft.slug)
-    assert_redirected_to root_path
+    assert_response :not_found
   end
 end

@@ -1,0 +1,21 @@
+<% content_for :title, t("not_found.title") %>
+<% content_for :no_alternates, true %>
+<% content_for :head do %>
+  <meta name="robots" content="noindex">
+<% end %>
+
+<div class="mx-auto max-w-[720px] px-5 md:px-8 pt-14 md:pt-24 pb-16 md:pb-24">
+  <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-sage-deep dark:text-peach mb-4">
+    404
+  </div>
+  <h1 class="font-serif font-medium text-[40px] md:text-[56px] leading-[1.05] tracking-[-0.025em] text-ink dark:text-cream m-0 text-balance">
+    <%= t("not_found.title") %>
+  </h1>
+  <p class="mt-6 font-serif text-[18px] md:text-[20px] leading-[1.6] text-ink-soft dark:text-ink-faint text-pretty">
+    <%= t("not_found.body") %>
+  </p>
+  <p class="mt-10 flex flex-wrap gap-x-6 gap-y-3 font-mono text-[12px] uppercase tracking-[0.14em]">
+    <%= link_to t("not_found.home"), root_path, class: "text-sage-deep dark:text-peach hover:underline" %>
+    <%= link_to t("not_found.articles"), articles_path, class: "text-sage-deep dark:text-peach hover:underline" %>
+  </p>
+</div>
