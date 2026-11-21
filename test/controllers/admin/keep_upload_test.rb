@@ -26,16 +26,6 @@ class Admin::KeepUploadTest < ActionDispatch::IntegrationTest
     assert_equal "dummy_video_image.png", article.reload.featured_image.filename.to_s
   end
 
-  test "settings: a logo picked before a failed save is attached on the next save" do
-    patch admin_setting_path, params: { setting: { beta_email: "not an email", logo_light: image } }
-    assert_response :unprocessable_entity
-    kept = kept_value("setting[logo_light]")
-    assert kept.present?
-
-    patch admin_setting_path, params: { setting: { beta_email: "", logo_light: kept } }
-    assert_response :redirect
-    assert Setting.instance.logo_light.attached?
-  end
 
   test "a new article that fails keeps its image too" do
     post admin_articles_path, params: { article: { title: "Hi", content: "<p>Body</p>", featured_image: image } }

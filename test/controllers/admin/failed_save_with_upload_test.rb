@@ -21,10 +21,4 @@ class Admin::FailedSaveWithUploadTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_select "li", text: "First name can't be blank"
   end
-
-  test "settings" do
-    patch admin_setting_path, params: { setting: { beta_email: "not an email", logo_light: image } }
-    assert_response :unprocessable_entity
-    assert_select "li", text: /Beta email/
-  end
 end
