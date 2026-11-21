@@ -1,0 +1,6 @@
+en:
+  not_found:
+    title: This page doesn't exist
+    body: The address may be mistyped, or the page has moved or been taken down.
+    home: Go to the home page
+    articles: Read the articles

@@ -44,11 +44,8 @@ class VideosControllerTest < ActionDispatch::IntegrationTest
     assert_equal @video, assigns(:video), "Should find the video by slug"
   end
 
-  test "should redirect to root for a video without a published story" do
-    # video_short_clip has no associated story, so it is not published. The
-    # published-only scope raises RecordNotFound, which ApplicationController
-    # rescues into a redirect to the root path.
+  test "a video without a published story is not found" do
     get video_url(id: videos(:video_short_clip).slug)
-    assert_redirected_to root_path
+    assert_response :not_found
   end
 end
