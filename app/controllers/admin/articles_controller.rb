@@ -105,6 +105,8 @@ class Admin::ArticlesController < Admin::BaseController
     else
       redirect_to edit_admin_article_path(@article), alert: t("admin.flash.no_image_story_video")
     end
+  rescue InstagramStoryVideoService::Busy
+    redirect_to edit_admin_article_path(@article), alert: t("admin.flash.story_video_busy")
   end
 
   # POST /admin/articles/:id/share_instagram — generate the export, expose it

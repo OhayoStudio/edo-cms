@@ -173,6 +173,7 @@ ja:
       settings_updated: "設定を更新しました。"
       no_image_story_card: "ストーリーカードを生成する画像が見つかりません。"
       no_image_story_video: "ストーリー動画を生成する画像が見つかりません。"
+      story_video_busy: "別のストーリー動画を生成中です。1分ほどしてから再度お試しください。"
       record_not_found: "レコードが見つかりません（%{detail}）。"
     settings:
       page_title: "設定 — 管理"

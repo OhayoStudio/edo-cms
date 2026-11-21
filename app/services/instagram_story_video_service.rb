@@ -1,12 +1,19 @@
 require "mini_magick"
-require "open3"
 
 # Renders an 8-second 1080×1920 Instagram-story MP4: a slow Ken Burns
 # zoom over the article image, a gradient + text that fade out to reveal
 # a clean photo, and the site logo. Brand palette/logo/domain come from
 # Setting via InstagramStoryAssets. Requires ffmpeg (set FFMPEG_PATH or
 # have it on PATH).
+#
+# It runs inside the admin's web request on a 1 CPU / 1 GB server, where
+# one encode takes about 350 MB. Two at once pushed the server into swap
+# and stalled the public site for minutes (17 Nov 2026). So: one encode at
+# a time across all Puma threads (a file lock; a second request gets
+# Busy), ffmpeg at low CPU priority, and killed after ENCODE_TIMEOUT.
 class InstagramStoryVideoService
+  class Busy < StandardError; end
+
   include InstagramStoryAssets
 
   FPS          = 25
@@ -18,6 +25,11 @@ class InstagramStoryVideoService
   FOCAL_X      = [ 0.50, 0.30, 0.70, 0.40, 0.60 ].freeze
   FADE_OUT_AT  = 5.0     # gradient + text start fading out at this second
   FADE_OUT_DUR = 3.0     # fade-out duration (reaches clean image at DURATION)
+
+  ENCODE_TIMEOUT = 100   # seconds; kamal-proxy's response_timeout is 120
+
+  # Shared by every Puma thread on the host. Tests give each worker its own.
+  class_attribute :lock_path, default: Rails.root.join("tmp/story_video.lock")
 
   # The `drawtext` filter needs an ffmpeg built with libfreetype. Most Linux
   # distro packages include it; Homebrew's plain `ffmpeg` does not, so prefer
@@ -37,7 +49,33 @@ class InstagramStoryVideoService
   end
 
   # Returns MP4 bytes, or nil if no image source is available.
+  # Raises Busy when another encode is running.
   def generate
+    File.open(lock_path, File::RDWR | File::CREAT, 0o644) do |lock|
+      raise Busy, "Another story video is being generated. Try again in a minute." unless lock.flock(File::LOCK_EX | File::LOCK_NB)
+
+      render_video
+    end
+  end
+
+  # Runs a command at low CPU priority, killing it after `timeout` seconds.
+  # Raises with the command's stderr on failure or timeout.
+  def self.run_limited(args, timeout: ENCODE_TIMEOUT)
+    Tempfile.create("story_video_err") do |err|
+      pid = Process.spawn("nice", "-n", "10", *args, out: File::NULL, err: err.path)
+      waiter = Process.detach(pid)
+      unless waiter.join(timeout)
+        Process.kill("KILL", pid) rescue Errno::ESRCH
+        waiter.join
+        raise "FFmpeg took longer than #{timeout}s and was stopped"
+      end
+      raise "FFmpeg failed: #{File.read(err.path).last(2000)}" unless waiter.value.success?
+    end
+  end
+
+  private
+
+  def render_video
     blob = image_blob
     return nil unless blob
 
@@ -92,16 +130,13 @@ class InstagramStoryVideoService
       out_file.path
     ]
 
-    _stdout, stderr, status = Open3.capture3(*args)
-    raise "FFmpeg failed: #{stderr}" unless status.success?
+    self.class.run_limited(args)
 
     out_file.read
   ensure
     source&.destroy!
     [ still_file, gradient_file, out_file, logo_file ].each { |f| f&.close; f&.unlink }
   end
-
-  private
 
   def build_filter_graph(logo:)
     total_frames = FPS * DURATION
