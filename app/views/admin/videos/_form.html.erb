@@ -61,6 +61,7 @@
         </div>
       <% end %>
       <div>
+        <%= render "admin/shared/kept_upload", f: f, attribute: :featured_image %>
         <%= f.file_field :featured_image, accept: "image/*",
             required: !video.featured_image.attached?,
             data: { "youtube-thumbnail-target": "fileInput" },

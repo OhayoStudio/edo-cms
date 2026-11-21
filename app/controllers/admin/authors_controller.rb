@@ -20,6 +20,7 @@ class Admin::AuthorsController < Admin::BaseController
     if @author.save
       redirect_to admin_authors_path, notice: t("admin.flash.created", model: t("admin.models_cap.author"))
     else
+      keep_uploads(@author)
       render :new, status: :unprocessable_entity
     end
   end
@@ -29,6 +30,7 @@ class Admin::AuthorsController < Admin::BaseController
     if @author.update(author_params)
       redirect_to admin_authors_path, notice: t("admin.flash.updated", model: t("admin.models_cap.author"))
     else
+      keep_uploads(@author)
       render :edit, status: :unprocessable_entity
     end
   end

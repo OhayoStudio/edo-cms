@@ -15,6 +15,7 @@ en:
       settings: "Settings"
       logout: "Logout"
     common:
+      kept_upload: "Kept from your last try: %{filename}. Pick another file to replace it."
       edit_label: "Edit “%{name}”"
       delete_label: "Delete “%{name}”"
       publish_label: "Publish “%{name}”"

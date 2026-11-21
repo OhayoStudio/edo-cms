@@ -116,6 +116,7 @@
          class="text-xs text-gray-400 mb-2 <%= article.persisted? && article.featured_image.attached? ? 'hidden' : '' %>">
         <%= t("admin.articles.drop_image") %>
       </p>
+      <%= render "admin/shared/kept_upload", f: f, attribute: :featured_image %>
       <%= f.file_field :featured_image, accept: "image/*",
           data: { featured_image_drop_target: "input" },
           class: "block w-full text-sm text-gray-500 dark:text-gray-400

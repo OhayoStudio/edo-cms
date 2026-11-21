@@ -15,6 +15,7 @@ ja:
       settings: "設定"
       logout: "ログアウト"
     common:
+      kept_upload: "前回選んだファイルを保持しています：%{filename}。差し替える場合は別のファイルを選んでください。"
       edit_label: "「%{name}」を編集"
       delete_label: "「%{name}」を削除"
       publish_label: "「%{name}」を公開"
