@@ -96,24 +96,19 @@ class ArticleTest < ActiveSupport::TestCase
     assert_includes @article.errors[:content], "can't be blank"
   end
 
-  test "should validate numericality of reading_time (integer, greater than 0)" do
-    @article.reading_time = 0
-    assert_not @article.valid?, "Reading time should be invalid if 0"
-    assert_includes @article.errors[:reading_time], "must be greater than 0"
+  test "reading time is calculated before validation, whatever the field held" do
+    [ nil, "", 0, -1, "abc" ].each do |given|
+      @article.reading_time = given
+      assert @article.valid?, "reading_time #{given.inspect} should not block a save: #{@article.errors.full_messages.join(', ')}"
+      assert_operator @article.reading_time, :>=, 1
+    end
+  end
 
-    @article.reading_time = -1
-    assert_not @article.valid?, "Reading time should be invalid if negative"
-    assert_includes @article.errors[:reading_time], "must be greater than 0"
-
-    @article.reading_time = 1.5
-    assert_not @article.valid?, "Reading time should be invalid if a float"
-    assert_includes @article.errors[:reading_time], "must be an integer"
-
-    @article.reading_time = "abc" # Non-numeric
-    assert_not @article.valid?, "Reading time should be invalid if not a number"
-    assert_includes @article.errors[:reading_time], "is not a number"
-
-    @article.reading_time = 5 # Reset to valid for other potential checks on @article
+  test "a new article with an empty reading time saves" do
+    article = Article.new(title: "An article without a reading time", author: @author, category: @category,
+      content: "word " * 450, status: :draft, reading_time: "")
+    assert article.save, article.errors.full_messages.join(", ")
+    assert_equal 3, article.reading_time # 450 words at 200 a minute
   end
 
   test "should validate presence of status" do

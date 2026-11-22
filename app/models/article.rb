@@ -38,7 +38,9 @@ class Article < ApplicationRecord
 
   # Callbacks
   before_validation :generate_slug
-  before_save :calculate_reading_time
+  # Before validation, not before save: the form says "auto-calculated on save", and an
+  # empty field would otherwise fail the numericality check before it was ever filled.
+  before_validation :calculate_reading_time
   after_initialize :set_default_status, if: :new_record?
 
   # Scopes
