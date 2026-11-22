@@ -4,6 +4,12 @@ Notable changes to EDO CMS. Brand forks track this file to know what's worth che
 
 This project doesn't use tagged releases — `main` is the canonical state. Entries are reverse-chronological and grouped loosely by surface.
 
+## 2026-11 — article reading time
+
+Ported from uchi-energy-cms (#269).
+
+- **Fix**: creating an article with the "Reading time" field empty failed with "Reading time is not a number", though the field says it is calculated on save. `Article#calculate_reading_time` now runs `before_validation` instead of `before_save`.
+
 ## 2026-11 — admin error handling, not found page, story video
 
 Ported from uchi-energy-cms (#252, #257, #258, #260, #261, #262, #263).
