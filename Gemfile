@@ -61,7 +61,7 @@ gem "rails-i18n", "~> 8.0"
 
 # Markdown for static pages served by PagesController (terms, privacy,
 # and any per-site additions). Pure Ruby — no system deps.
-gem "kramdown", "~> 2.4"
+gem "kramdown", "~> 2.6"
 
 # Leaving default gems in Ruby 3.5 — declared so mini_magick (and others
 # that `require "benchmark"`) don't emit deprecation warnings on 3.4.
